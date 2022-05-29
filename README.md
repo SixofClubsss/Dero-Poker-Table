@@ -1,8 +1,6 @@
 # Dero-Poker-Table
 Ui for Dero Private Poker Table.
-
-![logo_optimized](https://user-images.githubusercontent.com/84689659/165416164-7e63fc07-e2ef-4391-9e6b-ed8eeaa6d2af.png)
-
+![dReamTablesFooter](https://user-images.githubusercontent.com/84689659/170848755-d2cb4933-df2b-46f9-80e6-4349621871a3.png)
 Written in C++/Qt. Used Qt 5.12.8 to build the Ui. This app is for playing **private** poker built on **Dero**. The poker table is a _smart contract_, it deals out the cards and takes the Dero bets. The owner of the table sets the ante/limits and seats at the table then invites players to join.
 
 ![PokerMenu](https://user-images.githubusercontent.com/84689659/168459412-95a0da71-3464-4095-b286-2937998d597e.png)
