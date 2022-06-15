@@ -1,14 +1,17 @@
 # Dero-Poker-Table
 Ui for Dero Private Poker Table.
 ![dReamTablesFooter](https://user-images.githubusercontent.com/84689659/170848755-d2cb4933-df2b-46f9-80e6-4349621871a3.png)
-Written in C++/Qt. Used Qt 5.12.8 to build the Ui. This app is for playing **private** poker built on **Dero**. The poker table is a _smart contract_, it deals out the cards and takes the Dero bets. The owner of the table sets the ante/limits and seats at the table then invites players to join.
+Written in C++/Qt. Used Qt 5.12.8 to build the Ui. This app is for playing dReam Tables **private** poker, built on **Dero**. The poker table is a _smart contract_, it deals out the cards and takes the Dero bets. The owner of the table sets the ante/limits and seats at the table then invites players to join.
 
-![PokerMenu](https://user-images.githubusercontent.com/84689659/168459412-95a0da71-3464-4095-b286-2937998d597e.png)
+![dReamTablesFiveCardMenu](https://user-images.githubusercontent.com/84689659/173752350-7db0d82f-328a-47f7-950c-b4a6bc34a1c3.png)
 
 ## Current Tables
-- **Five Card Draw**  -  Up to five players at the table, minimum bet is ante with single no limit raise.
+- **Five Card Draw**  
+  - Up to six players at the table, minimum bet is ante with single no limit raise.
+  - Sit & Go play with public listing contract.
+  - Auto table generate function in app.
 
-![FiveCardDrawTable](https://user-images.githubusercontent.com/84689659/168459898-428109ec-16d2-4549-821c-edb108a834bb.png)
+![dReamTablesFiveCardMain](https://user-images.githubusercontent.com/84689659/173752469-c58ba17f-9f52-4192-85e8-74d9691b72f3.png)
 
 - More to come...
 
@@ -33,14 +36,15 @@ sudo apt install --no-install-recommends qtbase5-dev qttools5-dev libqt5svg5-dev
 **Download repo & build**
 ```
 git clone https://github.com/SixofClubsss/Dero-Poker-Table.git
-cd Dero-Poker-Table/Testnet-FiveCardDraw
+cd Dero-Poker-Table/Mainnet-Dero-FiveCardDraw
 qmake
 make
 ```
 
 **Start app**
 ```
-./Testnet-FiveCardDraw
+./Dero-FiveCardDraw
 ```
+To build testnet version `cd Dero-Poker-Table/Testnet-FiveCardDraw` then `qmake` & `make`
 
 ---
