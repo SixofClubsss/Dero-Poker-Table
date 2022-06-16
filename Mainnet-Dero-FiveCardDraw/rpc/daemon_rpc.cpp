@@ -162,14 +162,6 @@ int rpc::fetchScData()       /// Get SC variables
       QJsonValue sixcard4_jv = cbStringKeys.value("Player6card4");
       QJsonValue sixcard5_jv = cbStringKeys.value("Player6card5");
 
-      if(MainWindow::startUpSkip == false){
-
-      double turnCheck = Turn_jv.toDouble();
-          if(turnCheck != rpc::turn){
-              MainWindow::skipCount = 6;
-          }
-      }
-
       rpc::seats = Seats_jv.toInt();
       rpc::ante = Ante_jv.toDouble();
       rpc::turn = Turn_jv.toDouble();
