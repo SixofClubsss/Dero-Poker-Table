@@ -104,7 +104,7 @@ void MainWindow::refresh()
         controller();
     }else {
         MainWindow::skipCount++;
-        if(MainWindow::skipCount >= 6){
+        if(MainWindow::skipCount >= 7){
             clicked = false;
             MainWindow::skipCount = 0;
         }
