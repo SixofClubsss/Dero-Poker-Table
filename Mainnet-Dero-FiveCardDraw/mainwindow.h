@@ -92,6 +92,8 @@ private slots:
 
     void on_leaveButton_clicked();
 
+    void on_handRankButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 

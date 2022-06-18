@@ -74,8 +74,6 @@ private slots:
 
     void on_findTablesButton_clicked();
 
-    void on_pushButton_clicked();
-
 private:
     Ui::Menu *ui;
 };

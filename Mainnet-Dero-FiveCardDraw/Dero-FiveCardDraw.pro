@@ -24,6 +24,7 @@ SOURCES += \
     aes/qaesencryption.cpp \
     confirm.cpp \
     controller.cpp \
+    handranks.cpp \
     main.cpp \
     mainwindow.cpp \
     menu.cpp \
@@ -34,12 +35,14 @@ SOURCES += \
 HEADERS += \
     aes/qaesencryption.h \
     confirm.h \
+    handranks.h \
     mainwindow.h \
     menu.h \
     rpc/rpc.h
 
 FORMS += \
     confirm.ui \
+    handranks.ui \
     mainwindow.ui \
     menu.ui
 

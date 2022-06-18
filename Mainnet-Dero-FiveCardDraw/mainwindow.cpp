@@ -3,6 +3,7 @@
 #include "./ui_mainwindow.h"
 #include "menu.h"
 #include "rpc/rpc.h"
+#include "handranks.h"
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -24,7 +25,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->p5CheckBox->setFocusPolicy(Qt::NoFocus);
     ui->p6CheckBox->setAttribute(Qt::WA_TransparentForMouseEvents);
     ui->p6CheckBox->setFocusPolicy(Qt::NoFocus);
-    ui->logTextBrowser->setText("dReam Tables, Built on Dero\n\nTable v1.0");
+    ui->logTextBrowser->setText("dReam Tables, Built on Dero\n\nTable v1.0.2");
     MainWindow::skipCount = 0;
     ui->dealHandPushButton->setEnabled(false);
     ui->drawPushButton->setEnabled(false);
@@ -94,6 +95,7 @@ void MainWindow::setFonts()
     ui->anteIsDSB->setFont(ubuntuRegular);
     ui->dsbPot->setFont(ubuntuRegular);
     ui->dsbSeats->setFont(ubuntuRegular);
+    ui->handRankButton->setFont(ubuntuRegular);
 }
 
 
@@ -193,6 +195,14 @@ void MainWindow::on_leaveButton_clicked()
 {
     buttonCatch();
     playerLeave();
+}
+
+void MainWindow::on_handRankButton_clicked()
+{
+    HandRanks hr;
+    hr.setModal(false);
+    hr.exec();
+
 }
 
 

@@ -118,7 +118,7 @@ void Menu::setFonts()
     macondoRegular.setPointSize(17);
     macondoRegular.setBold(true);
     ui->menuTextBrowser->setFont(macondoRegular);
-    ui->menuTextBrowser->setText("Welcome to dReam Tables Five Card Poker\nTable v1.0.1");
+    ui->menuTextBrowser->setText("Welcome to dReam Tables Five Card Poker\nTable v1.0.2");
 
     int fontId2 = QFontDatabase::addApplicationFont(":/fonts/Ubuntu-R.ttf");
     QString fontFamily2 = QFontDatabase::applicationFontFamilies(fontId2).at(0);
@@ -262,10 +262,4 @@ void Menu::on_findTablesButton_clicked()
 {
     ui->menuTextBrowser->setText("Public Tables:\n");
     fetchListingScData();
-}
-
-
-void Menu::on_pushButton_clicked()
-{
-    ui->menuTextBrowser->setText(QString::number(Menu::afPayout));
 }
