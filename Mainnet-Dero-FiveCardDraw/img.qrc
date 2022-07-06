@@ -60,5 +60,6 @@
         <file>fonts/Macondo-Regular.ttf</file>
         <file>fonts/Ubuntu-R.ttf</file>
         <file>contract/FiveCard.enc</file>
+        <file>images/dReamTablesIcon.png</file>
     </qresource>
 </RCC>

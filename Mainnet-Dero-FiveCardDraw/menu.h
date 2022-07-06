@@ -25,7 +25,7 @@ public:
     static bool walletConnected;
     static bool mainnet;
     static bool dReams;
-    static bool afPayout;
+    static bool autoPayout;
     void setFonts();
     void loginInfo();
     void delay();
@@ -42,6 +42,7 @@ public:
     int checkIfListed();
     int listTable();
     int delistTable();
+
 
 private slots:
     void daemonToggle();
@@ -66,13 +67,13 @@ private slots:
 
     void on_newTableButton_clicked();
 
-    void on_autoFoldPayRButton_clicked();
-
     void on_listTableButton_clicked();
 
     void on_delistTableButton_clicked();
 
     void on_findTablesButton_clicked();
+
+    void on_autoPayRButton_clicked();
 
 private:
     Ui::Menu *ui;

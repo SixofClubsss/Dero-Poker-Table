@@ -25,8 +25,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->p5CheckBox->setFocusPolicy(Qt::NoFocus);
     ui->p6CheckBox->setAttribute(Qt::WA_TransparentForMouseEvents);
     ui->p6CheckBox->setFocusPolicy(Qt::NoFocus);
-    ui->logTextBrowser->setText("dReam Tables, Built on Dero\n\nTable v1.0.2");
+    ui->logTextBrowser->setText("dReam Tables, Built on Dero\n\nTable v1.1.0");
     MainWindow::skipCount = 0;
+    ui->entryPushButton->setEnabled(false);
     ui->dealHandPushButton->setEnabled(false);
     ui->drawPushButton->setEnabled(false);
     ui->drawComboBox->setEnabled(false);
@@ -35,7 +36,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->leaveButton->setEnabled(false);
     ui->payoutPushButton->setEnabled(false);
     ui->winnerComboBox->setEnabled(false);
-    clicked = false;
+    MainWindow::clicked = false;
     blankDisplay();
 
     connect(ui->drawComboBox, SIGNAL(activated(int)),
@@ -53,7 +54,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::offset()            /// Offset timer
 {
-    QTime dieTime = QTime::currentTime().addSecs(1);
+    QTime dieTime = QTime::currentTime().addMSecs(500);
     while (QTime::currentTime() < dieTime)
     QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 }
@@ -86,6 +87,15 @@ void MainWindow::setFonts()
     QFont ubuntuRegular(fontFamily2);
     ubuntuRegular.setPointSize(10);
     ui->groupBoxP1->setFont(ubuntuRegular);
+    ui->playerId->setFont(ubuntuRegular);
+    ui->dsbTurn->setFont(ubuntuRegular);
+    ui->dsbDealer->setFont(ubuntuRegular);
+    ui->betSpinBox->setFont(ubuntuRegular);
+    ui->checkButton->setFont(ubuntuRegular);
+    ui->betButton->setFont(ubuntuRegular);
+    ui->dealHandPushButton->setFont(ubuntuRegular);
+    ui->drawPushButton->setFont(ubuntuRegular);
+    ui->drawComboBox->setFont(ubuntuRegular);
     ui->payoutPushButton->setFont(ubuntuRegular);
     ui->winnerComboBox->setFont(ubuntuRegular);
     ui->balanceDoubleSpinBox->setFont(ubuntuRegular);
@@ -96,29 +106,38 @@ void MainWindow::setFonts()
     ui->dsbPot->setFont(ubuntuRegular);
     ui->dsbSeats->setFont(ubuntuRegular);
     ui->handRankButton->setFont(ubuntuRegular);
+    ui->dsbBlockHeight->setFont(ubuntuRegular);
+    ui->txLogTextBrowser->setFont(ubuntuRegular);
 }
 
 
-void MainWindow::refresh()
+void MainWindow::refresh()      /// Controller refresh rate
 {
+
+    if(rpc::turn != ui->playerId->value()-1 && rpc::blockHeight > rpc::clickedHeight+1 && ui->playerId->value() != 0){
+        MainWindow::clicked = false;
+    }
+
+    ui->dsbBlockHeight->setValue(rpc::blockHeight);
     offset();
-    if(clicked == false){
+    if(MainWindow::clicked == false){
         controller();
+        MainWindow::skipCount = 0;
     }else {
         MainWindow::skipCount++;
-        if(MainWindow::skipCount >= 7){
-            clicked = false;
+        if(MainWindow::skipCount >= 8){
+            MainWindow::clicked = false;
             MainWindow::skipCount = 0;
         }
-
     }
 }
 
 
-void MainWindow::buttonCatch()
+void MainWindow::buttonCatch()  /// When player confirms a action
 {
     buttonDelay();
-    clicked = true;
+    MainWindow::clicked = true;
+    rpc::clickedHeight = ui->dsbBlockHeight->value();
 }
 
 
@@ -206,7 +225,7 @@ void MainWindow::on_handRankButton_clicked()
 }
 
 
-void MainWindow::highlightCards()
+void MainWindow::clearHighlight()
 {
     ui->localPlayerCard1->setStyleSheet( "QLabel{ border: 0px; };" );
     ui->localPlayerCard2->setStyleSheet( "QLabel{ border: 0px; };" );
@@ -214,6 +233,14 @@ void MainWindow::highlightCards()
     ui->localPlayerCard4->setStyleSheet( "QLabel{ border: 0px; };" );
     ui->localPlayerCard5->setStyleSheet( "QLabel{ border: 0px; };" );
 
+}
+
+
+void MainWindow::highlightCards()
+{
+    clearHighlight();
+
+    if(rpc::draw == 1 && Hand::endSignal == false){
         switch(ui->drawComboBox->currentIndex()){
         case 1: ui->localPlayerCard1->setStyleSheet( "QLabel{ border: 1px solid gray; border-radius: 5px; };" );  break;
 
@@ -255,6 +282,7 @@ void MainWindow::highlightCards()
         case 15: ui->localPlayerCard4->setStyleSheet( "QLabel{ border: 1px solid gray; border-radius: 5px; };" );
                  ui->localPlayerCard5->setStyleSheet( "QLabel{ border: 1px solid gray; border-radius: 5px; };" );  break;
 
+        }
     }
 
 }

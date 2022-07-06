@@ -1,7 +1,8 @@
 #ifndef HANDRANKS_H
 #define HANDRANKS_H
 
-#include <QDialog>
+#include "QDialog"
+
 
 namespace Ui {
 class HandRanks;

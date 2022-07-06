@@ -40,9 +40,7 @@ int Menu::checkDaemon()       /// Check connection to daemon
     const char *postthis = addThis.c_str();
 
     string dStr = rpc::daemonAddress.toStdString();   /// Player dameon address from menu
-    const char *dCh = dStr.c_str ();
-
-    const char *loginCh = rpc::rpcLogin.c_str ();   /// Gets login info from menu
+    const char *dCh = dStr.c_str();
 
     curlDaemonCheck = curl_easy_init();
 
@@ -57,7 +55,7 @@ int Menu::checkDaemon()       /// Check connection to daemon
       curl_easy_setopt(curlDaemonCheck, CURLOPT_URL, dCh);
       curl_easy_setopt(curlDaemonCheck, CURLOPT_VERBOSE, 1L);
       curl_easy_setopt(curlDaemonCheck, CURLOPT_ERRORBUFFER, error);
-      curl_easy_setopt(curlDaemonCheck, CURLOPT_USERPWD, loginCh);
+      /// curl_easy_setopt(curlDaemonCheck, CURLOPT_SSL_VERIFYPEER, 0);   *Remove comment for windows SSL disable*
       curl_easy_setopt(curlDaemonCheck, CURLOPT_POSTFIELDS, postthis);
       curl_easy_setopt(curlDaemonCheck, CURLOPT_POSTFIELDSIZE, (long)strlen(postthis));
       curl_easy_setopt(curlDaemonCheck, CURLOPT_WRITEFUNCTION, WriteCallback);
@@ -103,9 +101,9 @@ int Menu::checkWallet()  /// Echo blockchain to confirm wallet is connected
     static const char *postthis = "{\"jsonrpc\":\"2.0\",\"id\":\"1\",\"method\":\"Echo\",\"params\":[\"Hello\", \"World\", \"!\"]}";
 
     string pStr = rpc::playerAddress.toStdString();
-    const char *pCh = pStr.c_str ();
+    const char *pCh = pStr.c_str();
 
-    const char *loginCh = rpc::rpcLogin.c_str ();
+    const char *loginCh = rpc::rpcLogin.c_str();
 
     curlWalletCheck = curl_easy_init();
 
@@ -182,7 +180,7 @@ int Menu::checkContract()       /// Check if table is valid
     const char *postthis = addThis.c_str();
 
     string dStr = rpc::daemonAddress.toStdString();
-    const char *dCh = dStr.c_str ();
+    const char *dCh = dStr.c_str();
 
     curlContract = curl_easy_init();
 
@@ -198,6 +196,7 @@ int Menu::checkContract()       /// Check if table is valid
       curl_easy_setopt(curlContract, CURLOPT_VERBOSE, 1L);
       curl_easy_setopt(curlContract, CURLOPT_ERRORBUFFER, error);
       curl_easy_setopt(curlContract, CURLOPT_POSTFIELDS, postthis);
+      /// curl_easy_setopt(curlContract, CURLOPT_SSL_VERIFYPEER, 0);   *Remove comment for windows SSL disable*
       curl_easy_setopt(curlContract, CURLOPT_POSTFIELDSIZE, (long)strlen(postthis));
       curl_easy_setopt(curlContract, CURLOPT_WRITEFUNCTION, WriteCallback);
       curl_easy_setopt(curlContract, CURLOPT_WRITEDATA, &contractReadBuffer);
@@ -232,12 +231,12 @@ int Menu::checkContract()       /// Check if table is valid
       if(tableOwnerId == rpc::IdHash ){             /// If user is owner of table
           ui->cleanTableButton->setEnabled(true);
           ui->menuTextBrowser->setText("You Own Table "+Menu::contractAddress+"\n");
-          ui->autoFoldPayRButton->setEnabled(true);
+          ui->autoPayRButton->setEnabled(true);
           ui->listTableButton->setEnabled(true);
           ui->delistTableButton->setEnabled(true);
       }else {
           ui->cleanTableButton->setEnabled(false);
-          ui->autoFoldPayRButton->setEnabled(false);
+          ui->autoPayRButton->setEnabled(true);
           ui->listTableButton->setEnabled(false);
           ui->delistTableButton->setEnabled(false);
     }
@@ -258,9 +257,9 @@ int Menu::checkAddress()  /// Gets player wallet address and hashes to get playe
     static const char *postthis = "{\"jsonrpc\": \"2.0\",\"id\": \"1\",\"method\": \"GetAddress\"}";
 
     string pStr = rpc::playerAddress.toStdString();
-    const char *pCh = pStr.c_str ();
+    const char *pCh = pStr.c_str();
 
-    const char *loginCh = rpc::rpcLogin.c_str ();
+    const char *loginCh = rpc::rpcLogin.c_str();
 
     curlAddressCheck = curl_easy_init();
 
@@ -315,9 +314,9 @@ int Menu::setTable()      /// Owner set table player limit and ante
     const char *postthis = addThis.c_str();
 
     string pStr = rpc::playerAddress.toStdString();
-    const char *stCh = pStr.c_str ();
+    const char *stCh = pStr.c_str();
 
-    const char *loginCh = rpc::rpcLogin.c_str ();
+    const char *loginCh = rpc::rpcLogin.c_str();
 
     curlSetTable = curl_easy_init();
 
@@ -374,9 +373,9 @@ int Menu::cleanTable()      /// Clean table function to withdraw any funds at ta
     const char *postthis = addThis.c_str();
 
     string pStr = rpc::playerAddress.toStdString();
-    const char *stCh = pStr.c_str ();
+    const char *stCh = pStr.c_str();
 
-    const char *loginCh = rpc::rpcLogin.c_str ();
+    const char *loginCh = rpc::rpcLogin.c_str();
 
     curlCleanTable = curl_easy_init();
 
@@ -432,7 +431,7 @@ int Menu::getDreams()      /// Gets dReams Tokens
     const char *postthis = addThis.c_str();
 
     string pStr = rpc::playerAddress.toStdString();
-    const char *gDr = pStr.c_str ();
+    const char *gDr = pStr.c_str();
 
     const char *loginCh = rpc::rpcLogin.c_str();
 
@@ -496,7 +495,7 @@ void Menu::unlockTable()   /// Unlocks contract file for use
         QByteArray hashIV = QCryptographicHash::hash(iv.toLocal8Bit(), QCryptographicHash::Md5);
         QByteArray decodeText = encryption.decode(lockedBytes, hashKey, hashIV);
         QString decodedString = QString(encryption.removePadding(decodeText));
-        if(Menu::dReams == true){
+       if(Menu::dReams == true){
             QFile unlockedFile("contract/FiveCard.bas");
             unlockedFile.open(QIODevice::ReadWrite);
             if(unlockedFile.exists()){
@@ -514,14 +513,14 @@ void Menu::unlockTable()   /// Unlocks contract file for use
             tableOwner.chop(9);
 
             if(scriptFile.exists()){
-              scriptFile.write("curl -u "+userPass+"  --request POST --data-binary   @contract/FiveCard.bas "+tableOwner+"/install_sc;");
+              scriptFile.write("curl -u "+userPass+"  --request POST --data-binary  @contract/FiveCard.bas "+tableOwner+"/install_sc >> contract/Tables.txt");
             }
 
             scriptFile.setPermissions(QFile::ReadOwner|QFile::WriteOwner|QFile::ExeOwner|QFile::ReadGroup|QFile::ExeGroup|QFile::ReadOther|QFile::ExeOther);
             scriptFile.close();
 
             if(unlockedFile.exists()){
-              system("./contract/createTable.sh >> contract/Tables.txt");
+              system("./contract/createTable.sh");
             }else {
                 ui->menuTextBrowser->setText("No Contract File To Upload");
             }
@@ -543,9 +542,7 @@ int Menu::fetchInfo()  /// Fetch blockchain info for contract uploads
     static const char *postthis = "{\"jsonrpc\": \"2.0\",\"id\": \"1\",\"method\": \"DERO.GetInfo\"}";
 
     string dStr = rpc::daemonAddress.toStdString();
-    const char *fdCh = dStr.c_str ();
-
-    const char *loginCh = rpc::rpcLogin.c_str();
+    const char *fdCh = dStr.c_str();
 
     curlFetchInfo = curl_easy_init();
 
@@ -560,7 +557,7 @@ int Menu::fetchInfo()  /// Fetch blockchain info for contract uploads
       curl_easy_setopt(curlFetchInfo, CURLOPT_URL, fdCh);
       curl_easy_setopt(curlFetchInfo, CURLOPT_VERBOSE, 1L);
       curl_easy_setopt(curlFetchInfo, CURLOPT_ERRORBUFFER, error);
-      curl_easy_setopt(curlFetchInfo, CURLOPT_USERPWD, loginCh);
+      /// curl_easy_setopt(curlFetchInfo, CURLOPT_SSL_VERIFYPEER, 0);   *Remove comment for widnows SSL disable*
       curl_easy_setopt(curlFetchInfo, CURLOPT_POSTFIELDS, postthis);
       curl_easy_setopt(curlFetchInfo, CURLOPT_POSTFIELDSIZE, (long)strlen(postthis));
       curl_easy_setopt(curlFetchInfo, CURLOPT_WRITEFUNCTION, WriteCallback);
@@ -597,9 +594,9 @@ int Menu::listTable()      /// Owner can list table for public sit an go play
     const char *postthis = addThis.c_str();
 
     string pStr = rpc::playerAddress.toStdString();
-    const char *stCh = pStr.c_str ();
+    const char *stCh = pStr.c_str();
 
-    const char *loginCh = rpc::rpcLogin.c_str ();
+    const char *loginCh = rpc::rpcLogin.c_str();
 
     curlListTable = curl_easy_init();
 
@@ -654,9 +651,9 @@ int Menu::delistTable()      /// Owner can remove listing made by current addres
     const char *postthis = addThis.c_str();
 
     string pStr = rpc::playerAddress.toStdString();
-    const char *stCh = pStr.c_str ();
+    const char *stCh = pStr.c_str();
 
-    const char *loginCh = rpc::rpcLogin.c_str ();
+    const char *loginCh = rpc::rpcLogin.c_str();
 
     curlDelistTable = curl_easy_init();
 
@@ -711,9 +708,7 @@ int Menu::checkIfListed()       /// Checks if players table is already listed
     const char *postthis = addThis.c_str();
 
     string dStr = rpc::daemonAddress.toStdString();
-    const char *fdCh = dStr.c_str ();
-
-    const char *loginCh = rpc::rpcLogin.c_str ();
+    const char *fdCh = dStr.c_str();
 
     curlListedCheck = curl_easy_init();
 
@@ -728,7 +723,7 @@ int Menu::checkIfListed()       /// Checks if players table is already listed
       curl_easy_setopt(curlListedCheck, CURLOPT_URL, fdCh);
       curl_easy_setopt(curlListedCheck, CURLOPT_VERBOSE, 1L);
       curl_easy_setopt(curlListedCheck, CURLOPT_ERRORBUFFER, error);
-      curl_easy_setopt(curlListedCheck, CURLOPT_USERPWD, loginCh);
+      /// curl_easy_setopt(curlFetchInfo, CURLOPT_SSL_VERIFYPEER, 0);   *Remove comment for widnows SSL disable*
       curl_easy_setopt(curlListedCheck, CURLOPT_POSTFIELDS, postthis);
       curl_easy_setopt(curlListedCheck, CURLOPT_POSTFIELDSIZE, (long)strlen(postthis));
       curl_easy_setopt(curlListedCheck, CURLOPT_WRITEFUNCTION, WriteCallback);
@@ -776,9 +771,7 @@ int Menu::fetchListingScData()       /// Fetch Public table listings and display
     const char *postthis = addThis.c_str();
 
     string dStr = rpc::daemonAddress.toStdString();
-    const char *fdCh = dStr.c_str ();
-
-    const char *loginCh = rpc::rpcLogin.c_str ();
+    const char *fdCh = dStr.c_str();
 
     curlListingFetch = curl_easy_init();
 
@@ -793,7 +786,7 @@ int Menu::fetchListingScData()       /// Fetch Public table listings and display
       curl_easy_setopt(curlListingFetch, CURLOPT_URL, fdCh);
       curl_easy_setopt(curlListingFetch, CURLOPT_VERBOSE, 1L);
       curl_easy_setopt(curlListingFetch, CURLOPT_ERRORBUFFER, error);
-      curl_easy_setopt(curlListingFetch, CURLOPT_USERPWD, loginCh);
+      /// curl_easy_setopt(curlFetchInfo, CURLOPT_SSL_VERIFYPEER, 0);   *Remove comment for widnows SSL disable*
       curl_easy_setopt(curlListingFetch, CURLOPT_POSTFIELDS, postthis);
       curl_easy_setopt(curlListingFetch, CURLOPT_POSTFIELDSIZE, (long)strlen(postthis));
       curl_easy_setopt(curlListingFetch, CURLOPT_WRITEFUNCTION, WriteCallback);

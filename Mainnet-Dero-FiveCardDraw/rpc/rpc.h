@@ -29,6 +29,9 @@ class rpc
 
 public:
     static bool inGame;
+    static bool paidOut;
+    static double blockHeight;
+    static double clickedHeight;
     static std::string rpcLogin;
     static QString salt;
     static QString playerAddress;
@@ -66,6 +69,8 @@ public:
     static int p5Out;
     static int p6Out;
     static int checkPlayerId;
+    static int full;
+    static int open;
 
     static QString hashOneone;
     static QString hashOnetwo;
@@ -110,9 +115,9 @@ public:
     static QString hashFive;
 
     int getBalance();
+    int getHeight();
     int fetchScData();
     int getDreams();
-
 
 };
 
@@ -139,19 +144,14 @@ class Worker : public QObject
 public:
     static QThread workThread;
 
-    static QThread unlockThread;
-
 private slots:
     void onTimeout()
     {
         rpc rpcData;
+        rpcData.getHeight();
         rpcData.fetchScData();
         rpcData.getBalance();
     }
-
-
-
-private:
 
 };
 

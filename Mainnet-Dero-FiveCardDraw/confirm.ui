@@ -36,14 +36,14 @@
 
 QPushButton:enabled{
 	color: rgb(255, 255, 255);
-	background-color: rgb(85, 88, 93, 90);
+	background-color: rgba(85, 88, 93, 90);
     border: 2px solid #8f8f91;
     border-radius: 6px;
     min-width: 80px;
 }
 
 QPushButton:hover {
-	background-color: rgb(79, 186, 196, 150);
+	background-color: rgba(79, 186, 196, 150);
 }
 
 QPushButton:pressed {
@@ -87,7 +87,7 @@ QPushButton:pressed {
     border-width: 2px;
     border-radius: 6px;
     padding: 3px;
-    background-color: rgb(85, 88, 93, 90);
+    background-color: rgba(85, 88, 93, 90);
     color: rgb(255, 255, 255);
 }
 </string>

@@ -3,6 +3,7 @@
 #include "confirm.h"
 #include "ui_confirm.h"
 
+
 bool Confirm::actionConfirmed;
 int Confirm::whichText;
 

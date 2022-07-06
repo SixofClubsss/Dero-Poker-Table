@@ -53,14 +53,14 @@ QLineEdit {
 
 QPushButton:enabled{
 	color: rgb(255, 255, 255);
-	background-color: rgb(85, 88, 93, 90);
+	background-color: rgba(85, 88, 93, 90);
     border: 2px solid #8f8f91;
     border-radius: 6px;
     min-width: 80px;
 }
 
 QPushButton:hover {
-	background-color: rgb(79, 186, 196, 150);
+	background-color: rgba(79, 186, 196, 150);
 }
 
 QPushButton:pressed {
@@ -69,16 +69,16 @@ QPushButton:pressed {
 
 QPushButton:!enabled{
     border: 2px solid;
-	border-color: rgb(143, 143, 145, 90);
+	border-color: rgba(143, 143, 145, 90);
     border-radius: 6px;
-	color: rgb(0, 0, 0, 0);
+	color: rgba(0, 0, 0, 0);
     border-radius: 6px;
     min-width: 80px;
 }
 
 QDoubleSpinBox{
 	color: rgb(255, 255, 255);
-	background-color: rgb(0, 0, 0, 0);
+	background-color: rgba(0, 0, 0, 0);
     border-style: inset;
     border-width: 1px;
     border-radius: 6px;
@@ -87,7 +87,7 @@ QDoubleSpinBox{
 }
 
 QDoubleSpinBox:hover {
-	background-color: rgb(79, 186, 196, 90);
+	background-color: rgba(79, 186, 196, 90);
 }
 QDoubleSpinBox::up-button:pressed {
 	background-color: rgb(56, 47, 165);
@@ -110,27 +110,26 @@ QDoubleSpinBox::down-button {
 }
 
 QDoubleSpinBox:!enabled{;
-	background-color: rgb(0, 0, 0, 0);
+	background-color: rgba(0, 0, 0, 0);
     border-style: inset;
     border-width: 1px;
     border-radius: 6px;
-    border-color: rgb(143, 143, 145, 90);
+    border-color: rgba(143, 143, 145, 90);
     padding-right: 10px;
 }
 
 QComboBox::enabled {
 	color: rgb(0, 0, 0);
-	/*background-color: rgb(143, 143, 145, 30);*/
-	background-color: rgb(255, 255, 255, 150);
+	background-color: rgba(255, 255, 255, 150);
     border: 2px solid #8f8f91;
     border-radius: 6px;
     min-width: 80px;
 }
 
 QComboBox:!enabled{
-    background-color: rgb(0, 0, 0, 0);
+    background-color: rgba(0, 0, 0, 0);
     border: 2px solid;
-	border-color: rgb(143, 143, 145, 90);
+	border-color: rgba(143, 143, 145, 90);
     border-radius: 6px;
 	color: rgb(0, 0, 0);
     border-radius: 6px;
@@ -146,11 +145,11 @@ QComboBox::drop-down {
 QComboBox QAbstractItemView {
 	color: rgb(255, 255, 255);
     border: 2px solid darkgray;
-	background-color: rgb(255, 255, 255, 150);
+	background-color: rgba(255, 255, 255, 150);
 }
 
 QComboBox:hover {
-	background-color: rgb(79, 186, 196, 150);
+	background-color: rgba(79, 186, 196, 150);
 }</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
@@ -244,7 +243,7 @@ QComboBox:hover {
       <string notr="true">QGroupBox {
     border: 2px solid gray;
     border-radius: 5px;
-	background-color: rgb(0, 0, 0, 120);
+	background-color: rgba(0, 0, 0, 120);
 }
 
 QGroupBox::title {
@@ -265,62 +264,6 @@ QGroupBox::indicator {
       <string>Player</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_3">
-      <item row="0" column="1">
-       <widget class="QLineEdit" name="userInput">
-        <property name="minimumSize">
-         <size>
-          <width>300</width>
-          <height>24</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>300</width>
-          <height>24</height>
-         </size>
-        </property>
-        <property name="styleSheet">
-         <string notr="true"/>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="readOnly">
-         <bool>false</bool>
-        </property>
-        <property name="placeholderText">
-         <string>User:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QLineEdit" name="passwordInput">
-        <property name="minimumSize">
-         <size>
-          <width>308</width>
-          <height>24</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>308</width>
-          <height>24</height>
-         </size>
-        </property>
-        <property name="styleSheet">
-         <string notr="true"/>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="echoMode">
-         <enum>QLineEdit::Password</enum>
-        </property>
-        <property name="placeholderText">
-         <string>Password:</string>
-        </property>
-       </widget>
-      </item>
       <item row="1" column="0">
        <widget class="QCheckBox" name="daemonConnectedBox">
         <property name="enabled">
@@ -349,47 +292,6 @@ QGroupBox::indicator {
         </property>
         <property name="autoExclusive">
          <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1" colspan="2">
-       <widget class="QLineEdit" name="daemonRPCinput">
-        <property name="minimumSize">
-         <size>
-          <width>615</width>
-          <height>24</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>615</width>
-          <height>24</height>
-         </size>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="placeholderText">
-         <string>Enter Daemon RPC Address</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="3">
-       <widget class="QPushButton" name="daemonRPCbutton">
-        <property name="minimumSize">
-         <size>
-          <width>84</width>
-          <height>20</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>84</width>
-          <height>20</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>Connect</string>
         </property>
        </widget>
       </item>
@@ -424,6 +326,131 @@ QGroupBox::indicator {
         </property>
        </widget>
       </item>
+      <item row="0" column="2">
+       <widget class="QLineEdit" name="passwordInput">
+        <property name="minimumSize">
+         <size>
+          <width>308</width>
+          <height>24</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>308</width>
+          <height>24</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="echoMode">
+         <enum>QLineEdit::Password</enum>
+        </property>
+        <property name="placeholderText">
+         <string>Password:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="3">
+       <widget class="QPushButton" name="contractButton">
+        <property name="minimumSize">
+         <size>
+          <width>84</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>84</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string>Check</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="3">
+       <widget class="QPushButton" name="walletRPCbutton">
+        <property name="minimumSize">
+         <size>
+          <width>84</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>84</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string>Connect</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="userInput">
+        <property name="minimumSize">
+         <size>
+          <width>300</width>
+          <height>24</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>300</width>
+          <height>24</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="readOnly">
+         <bool>false</bool>
+        </property>
+        <property name="placeholderText">
+         <string>User:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1" colspan="2">
+       <widget class="QLineEdit" name="contractLineEdit">
+        <property name="minimumSize">
+         <size>
+          <width>615</width>
+          <height>24</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>615</width>
+          <height>24</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="placeholderText">
+         <string>Table Contract Address:</string>
+        </property>
+       </widget>
+      </item>
       <item row="2" column="1" colspan="2">
        <widget class="QLineEdit" name="walletRPCinput">
         <property name="minimumSize">
@@ -446,8 +473,8 @@ QGroupBox::indicator {
         </property>
        </widget>
       </item>
-      <item row="2" column="3">
-       <widget class="QPushButton" name="walletRPCbutton">
+      <item row="1" column="3">
+       <widget class="QPushButton" name="daemonRPCbutton">
         <property name="minimumSize">
          <size>
           <width>84</width>
@@ -459,9 +486,6 @@ QGroupBox::indicator {
           <width>84</width>
           <height>20</height>
          </size>
-        </property>
-        <property name="styleSheet">
-         <string notr="true"/>
         </property>
         <property name="text">
          <string>Connect</string>
@@ -490,8 +514,8 @@ QGroupBox::indicator {
         </property>
        </widget>
       </item>
-      <item row="3" column="1" colspan="2">
-       <widget class="QLineEdit" name="contractLineEdit">
+      <item row="1" column="1" colspan="2">
+       <widget class="QLineEdit" name="daemonRPCinput">
         <property name="minimumSize">
          <size>
           <width>615</width>
@@ -508,32 +532,7 @@ QGroupBox::indicator {
          <string/>
         </property>
         <property name="placeholderText">
-         <string>Table Contract Address:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="3">
-       <widget class="QPushButton" name="contractButton">
-        <property name="minimumSize">
-         <size>
-          <width>84</width>
-          <height>20</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>84</width>
-          <height>20</height>
-         </size>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::StrongFocus</enum>
-        </property>
-        <property name="styleSheet">
-         <string notr="true"/>
-        </property>
-        <property name="text">
-         <string>Check</string>
+         <string>Enter Daemon RPC Address</string>
         </property>
        </widget>
       </item>
@@ -605,7 +604,7 @@ QGroupBox::indicator {
       <string notr="true">QGroupBox {
     border: 2px solid gray;
     border-radius: 5px;
-	background-color: rgb(0, 0, 0, 150);
+	background-color: rgba(0, 0, 0, 150);
 }
 
 QGroupBox::title {
@@ -625,225 +624,232 @@ QGroupBox::indicator {
      <property name="title">
       <string>Owner</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="5">
-       <widget class="QRadioButton" name="autoFoldPayRButton">
-        <property name="minimumSize">
-         <size>
-          <width>204</width>
-          <height>22</height>
-         </size>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">color: rgb(255, 255, 255);</string>
-        </property>
-        <property name="text">
-         <string>Auto Pay on All Players Folded</string>
-        </property>
-       </widget>
+     <widget class="QRadioButton" name="autoPayRButton">
+      <property name="geometry">
+       <rect>
+        <x>560</x>
+        <y>10</y>
+        <width>150</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>150</width>
+        <height>22</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(255, 255, 255);</string>
+      </property>
+      <property name="text">
+       <string>Auto Payout Enabled</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="newTableButton">
+      <property name="geometry">
+       <rect>
+        <x>734</x>
+        <y>10</y>
+        <width>84</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>84</width>
+        <height>20</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="text">
+       <string>New Table</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="listTableButton">
+      <property name="geometry">
+       <rect>
+        <x>734</x>
+        <y>45</y>
+        <width>84</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>84</width>
+        <height>20</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="text">
+       <string>List Table</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="playersComboBox">
+      <property name="geometry">
+       <rect>
+        <x>12</x>
+        <y>81</y>
+        <width>84</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>84</width>
+        <height>22</height>
+       </size>
+      </property>
+      <property name="autoFillBackground">
+       <bool>false</bool>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <item>
+       <property name="text">
+        <string>Players</string>
+       </property>
       </item>
-      <item row="1" column="2">
-       <widget class="QPushButton" name="setTableButton">
-        <property name="minimumSize">
-         <size>
-          <width>84</width>
-          <height>20</height>
-         </size>
-        </property>
-        <property name="styleSheet">
-         <string notr="true"/>
-        </property>
-        <property name="text">
-         <string>Set Table</string>
-        </property>
-       </widget>
+      <item>
+       <property name="text">
+        <string>Close Table</string>
+       </property>
       </item>
-      <item row="0" column="6">
-       <widget class="QPushButton" name="newTableButton">
-        <property name="minimumSize">
-         <size>
-          <width>84</width>
-          <height>20</height>
-         </size>
-        </property>
-        <property name="styleSheet">
-         <string notr="true"/>
-        </property>
-        <property name="text">
-         <string>New Table</string>
-        </property>
-       </widget>
+      <item>
+       <property name="text">
+        <string>2</string>
+       </property>
       </item>
-      <item row="1" column="5">
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>208</width>
-          <height>17</height>
-         </size>
-        </property>
-       </spacer>
+      <item>
+       <property name="text">
+        <string>3</string>
+       </property>
       </item>
-      <item row="0" column="0">
-       <widget class="QPushButton" name="listTableButton">
-        <property name="minimumSize">
-         <size>
-          <width>84</width>
-          <height>20</height>
-         </size>
-        </property>
-        <property name="styleSheet">
-         <string notr="true"/>
-        </property>
-        <property name="text">
-         <string>List Table</string>
-        </property>
-       </widget>
+      <item>
+       <property name="text">
+        <string>4</string>
+       </property>
       </item>
-      <item row="1" column="4">
-       <widget class="QPushButton" name="cleanTableButton">
-        <property name="minimumSize">
-         <size>
-          <width>84</width>
-          <height>20</height>
-         </size>
-        </property>
-        <property name="styleSheet">
-         <string notr="true"/>
-        </property>
-        <property name="text">
-         <string>Clean Table</string>
-        </property>
-       </widget>
+      <item>
+       <property name="text">
+        <string>5</string>
+       </property>
       </item>
-      <item row="1" column="1">
-       <widget class="QDoubleSpinBox" name="anteSpinBox">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>141</width>
-          <height>20</height>
-         </size>
-        </property>
-        <property name="buttonSymbols">
-         <enum>QAbstractSpinBox::UpDownArrows</enum>
-        </property>
-        <property name="prefix">
-         <string>Ante: </string>
-        </property>
-        <property name="maximum">
-         <double>1200.000000000000000</double>
-        </property>
-        <property name="singleStep">
-         <double>0.100000000000000</double>
-        </property>
-        <property name="value">
-         <double>0.100000000000000</double>
-        </property>
-       </widget>
+      <item>
+       <property name="text">
+        <string>6</string>
+       </property>
       </item>
-      <item row="1" column="3">
-       <spacer name="horizontalSpacer_2">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>133</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="1" column="0">
-       <widget class="QComboBox" name="playersComboBox">
-        <property name="minimumSize">
-         <size>
-          <width>84</width>
-          <height>22</height>
-         </size>
-        </property>
-        <property name="autoFillBackground">
-         <bool>false</bool>
-        </property>
-        <property name="styleSheet">
-         <string notr="true"/>
-        </property>
-        <item>
-         <property name="text">
-          <string>Players</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Close Table</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>2</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>3</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>4</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>5</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>6</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QPushButton" name="delistTableButton">
-        <property name="minimumSize">
-         <size>
-          <width>84</width>
-          <height>20</height>
-         </size>
-        </property>
-        <property name="styleSheet">
-         <string notr="true"/>
-        </property>
-        <property name="text">
-         <string>Remove List</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <spacer name="verticalSpacer_2">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>26</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-     </layout>
+     </widget>
+     <widget class="QDoubleSpinBox" name="anteSpinBox">
+      <property name="geometry">
+       <rect>
+        <x>102</x>
+        <y>81</y>
+        <width>141</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>141</width>
+        <height>20</height>
+       </size>
+      </property>
+      <property name="buttonSymbols">
+       <enum>QAbstractSpinBox::UpDownArrows</enum>
+      </property>
+      <property name="prefix">
+       <string>Ante: </string>
+      </property>
+      <property name="maximum">
+       <double>1200.000000000000000</double>
+      </property>
+      <property name="singleStep">
+       <double>0.100000000000000</double>
+      </property>
+      <property name="value">
+       <double>0.100000000000000</double>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="setTableButton">
+      <property name="geometry">
+       <rect>
+        <x>249</x>
+        <y>81</y>
+        <width>84</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>84</width>
+        <height>20</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="text">
+       <string>Set Table</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="cleanTableButton">
+      <property name="geometry">
+       <rect>
+        <x>434</x>
+        <y>81</y>
+        <width>84</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>84</width>
+        <height>20</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="text">
+       <string>Clean Table</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="delistTableButton">
+      <property name="geometry">
+       <rect>
+        <x>734</x>
+        <y>81</y>
+        <width>84</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>84</width>
+        <height>20</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="text">
+       <string>Remove List</string>
+      </property>
+     </widget>
     </widget>
    </item>
    <item row="5" column="2">

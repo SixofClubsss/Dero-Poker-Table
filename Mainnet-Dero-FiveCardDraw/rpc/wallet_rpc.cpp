@@ -17,9 +17,9 @@ int MainWindow::playerEntry()      /// Player registry (sit down at table)
     const char *postthis = addThis.c_str();
 
     string pStr = rpc::playerAddress.toStdString(); /// Player address from menu
-    const char *dealCh = pStr.c_str ();
+    const char *dealCh = pStr.c_str();
 
-    const char *loginCh = rpc::rpcLogin.c_str ();  /// Player login from menu
+    const char *loginCh = rpc::rpcLogin.c_str();  /// Player login from menu
 
     curlPlayerEntry = curl_easy_init();
 
@@ -54,10 +54,11 @@ int MainWindow::playerEntry()      /// Player registry (sit down at table)
           ui->txLogTextBrowser->append("TXID: "+entryTxid.toString()+"\n");
           ui->entryPushButton->setEnabled(false);
           ui->winnerComboBox->setEnabled(false);
+          MainWindow::skipCount = 3;
       }else {
 
           ui->logTextBrowser->setText("Error No Entry TXID");      /// No TXID was recieved
-          MainWindow::skipCount = 2;
+          MainWindow::skipCount = 5;
       }
 
     }
@@ -78,9 +79,9 @@ int MainWindow::playerLeave()      /// Player leave table
     const char *postthis = addThis.c_str();
 
     string pStr = rpc::playerAddress.toStdString();
-    const char *dealCh = pStr.c_str ();
+    const char *dealCh = pStr.c_str();
 
-    const char *loginCh = rpc::rpcLogin.c_str ();
+    const char *loginCh = rpc::rpcLogin.c_str();
 
     curlplayerLeave = curl_easy_init();
 
@@ -114,12 +115,12 @@ int MainWindow::playerLeave()      /// Player leave table
           ui->logTextBrowser->setText("Player Leave TXID: "+leaveTxid.toString());
           ui->txLogTextBrowser->append("TXID: "+leaveTxid.toString()+"\n");
           ui->entryPushButton->setEnabled(false);
-          ui->winnerComboBox->setEnabled(false);;
+          ui->winnerComboBox->setEnabled(false);
+          if(ui->playerId->value() != 1)
           ui->playerId->setValue(0);
       }else {
-
           ui->logTextBrowser->setText("Error No Leave TXID");
-          MainWindow::skipCount = 2;
+          MainWindow::skipCount = 5;
       }
 
     }
@@ -140,7 +141,7 @@ int MainWindow::dealFiveCardHand()      /// Ante and deals player a hand
     const char *postthis = addThis.c_str();
 
     string pStr = rpc::playerAddress.toStdString();
-    const char *dealCh = pStr.c_str ();
+    const char *dealCh = pStr.c_str();
 
     const char *loginCh = rpc::rpcLogin.c_str();
 
@@ -178,7 +179,7 @@ int MainWindow::dealFiveCardHand()      /// Ante and deals player a hand
       }else {
 
           ui->logTextBrowser->setText("Error No Deal Five Cards TXID");
-          MainWindow::skipCount = 2;
+          MainWindow::skipCount = 5;
       }
 
     }
@@ -199,7 +200,7 @@ int MainWindow::bet()      /// Place bet also for call and raise
     const char *postthis = addThis.c_str();
 
     string pStr = rpc::playerAddress.toStdString();
-    const char *bCh = pStr.c_str ();
+    const char *bCh = pStr.c_str();
 
     const char *loginCh = rpc::rpcLogin.c_str();
 
@@ -238,7 +239,7 @@ int MainWindow::bet()      /// Place bet also for call and raise
       }else {
 
           ui->logTextBrowser->setText("Error No Bet TXID");
-          MainWindow::skipCount = 2;
+          MainWindow::skipCount = 5;
       }
 
     }
@@ -258,9 +259,9 @@ int MainWindow::check()      /// Check also used to fold on bet
     const char *postthis = addThis.c_str();
 
     string pStr = rpc::playerAddress.toStdString();
-    const char *cfCh = pStr.c_str ();
+    const char *cfCh = pStr.c_str();
 
-    const char *loginCh = rpc::rpcLogin.c_str ();
+    const char *loginCh = rpc::rpcLogin.c_str();
 
     curlCheck = curl_easy_init();
 
@@ -296,7 +297,7 @@ int MainWindow::check()      /// Check also used to fold on bet
       }else {
 
           ui->logTextBrowser->setText("Error No Check/Fold TXID");
-          MainWindow::skipCount = 2;
+          MainWindow::skipCount = 5;
        }
 
     }
@@ -360,7 +361,7 @@ int MainWindow::drawCards() /// Get new cards at draw
         }else {
 
             ui->logTextBrowser->setText("Error No Draw Card TXID");
-            MainWindow::skipCount = 2;
+            MainWindow::skipCount = 5;
         }
 
     }
@@ -381,9 +382,9 @@ int MainWindow::winner()     /// Owner sends payout to winner
     const char *postthis = addThis.c_str();
 
     string pStr = rpc::playerAddress.toStdString();
-    const char *pCh = pStr.c_str ();
+    const char *pCh = pStr.c_str();
 
-    const char *loginCh = rpc::rpcLogin.c_str ();
+    const char *loginCh = rpc::rpcLogin.c_str();
 
     curlWinner = curl_easy_init();
 
@@ -420,7 +421,7 @@ int MainWindow::winner()     /// Owner sends payout to winner
         }else {
 
             ui->logTextBrowser->setText("Error No Winner TXID");
-            MainWindow::skipCount = 6;
+            MainWindow::skipCount = 5;
         }
 
     }
@@ -428,9 +429,9 @@ int MainWindow::winner()     /// Owner sends payout to winner
 }
 
 
-int MainWindow::allFoldedWinner(QString whoWon)     /// Owner sends payout to winner
+int MainWindow::autopayWinner(QString whoWon)     /// Owner sends payout to winner
 {
-    CURL *curlAllFoldWinner;
+    CURL *curlAutopayWinner;
     CURLcode res;
     string afWinnerReadBuffer;
     char error[CURL_ERROR_SIZE];
@@ -440,31 +441,31 @@ int MainWindow::allFoldedWinner(QString whoWon)     /// Owner sends payout to wi
     const char *postthis = addThis.c_str();
 
     string pStr = rpc::playerAddress.toStdString();
-    const char *pCh = pStr.c_str ();
+    const char *pCh = pStr.c_str();
 
-    const char *loginCh = rpc::rpcLogin.c_str ();
+    const char *loginCh = rpc::rpcLogin.c_str();
 
-    curlAllFoldWinner = curl_easy_init();
+    curlAutopayWinner = curl_easy_init();
 
-    if(curlAllFoldWinner) {
+    if(curlAutopayWinner) {
       struct curl_slist *headers = NULL;
       /// Add request headers
       headers = curl_slist_append(headers, "Accept: application/json");
       headers = curl_slist_append(headers, "Content-Type: application/json");
       headers = curl_slist_append(headers, "charset: utf-8");
       /// cUrl options
-      curl_easy_setopt(curlAllFoldWinner, CURLOPT_HTTPHEADER, headers);
-      curl_easy_setopt(curlAllFoldWinner, CURLOPT_URL, pCh);
-      curl_easy_setopt(curlAllFoldWinner, CURLOPT_VERBOSE, 1L);
-      curl_easy_setopt(curlAllFoldWinner, CURLOPT_ERRORBUFFER, error);
-      curl_easy_setopt(curlAllFoldWinner, CURLOPT_USERPWD, loginCh);
-      curl_easy_setopt(curlAllFoldWinner, CURLOPT_POSTFIELDS, postthis);
-      curl_easy_setopt(curlAllFoldWinner, CURLOPT_POSTFIELDSIZE, (long)strlen(postthis));
-      curl_easy_setopt(curlAllFoldWinner, CURLOPT_WRITEFUNCTION, WriteCallback);
-      curl_easy_setopt(curlAllFoldWinner, CURLOPT_WRITEDATA, &afWinnerReadBuffer);
+      curl_easy_setopt(curlAutopayWinner, CURLOPT_HTTPHEADER, headers);
+      curl_easy_setopt(curlAutopayWinner, CURLOPT_URL, pCh);
+      curl_easy_setopt(curlAutopayWinner, CURLOPT_VERBOSE, 1L);
+      curl_easy_setopt(curlAutopayWinner, CURLOPT_ERRORBUFFER, error);
+      curl_easy_setopt(curlAutopayWinner, CURLOPT_USERPWD, loginCh);
+      curl_easy_setopt(curlAutopayWinner, CURLOPT_POSTFIELDS, postthis);
+      curl_easy_setopt(curlAutopayWinner, CURLOPT_POSTFIELDSIZE, (long)strlen(postthis));
+      curl_easy_setopt(curlAutopayWinner, CURLOPT_WRITEFUNCTION, WriteCallback);
+      curl_easy_setopt(curlAutopayWinner, CURLOPT_WRITEDATA, &afWinnerReadBuffer);
 
-      res = curl_easy_perform(curlAllFoldWinner);
-      curl_easy_cleanup(curlAllFoldWinner);
+      res = curl_easy_perform(curlAutopayWinner);
+      curl_easy_cleanup(curlAutopayWinner);
 
       QByteArray br = afWinnerReadBuffer.c_str();
       QJsonDocument cbDoc = QJsonDocument::fromJson(br);
@@ -478,7 +479,7 @@ int MainWindow::allFoldedWinner(QString whoWon)     /// Owner sends payout to wi
         }else {
 
             ui->logTextBrowser->setText("Error Couldn't Pay Winner");
-            MainWindow::skipCount = 2;
+            MainWindow::skipCount = 5;
         }
 
     }

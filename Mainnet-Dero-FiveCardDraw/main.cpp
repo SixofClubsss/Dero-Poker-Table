@@ -3,6 +3,7 @@
 #include "menu.h"
 #include "QApplication"
 
+
 QThread Worker::workThread;
 
 

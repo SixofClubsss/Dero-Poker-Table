@@ -14,9 +14,9 @@ int rpc::getBalance()  /// Gets players dero balance
     static const char *postthis = "{\"jsonrpc\":\"2.0\",\"id\": \"1\",\"method\": \"GetBalance\"}";
 
     string pStr = rpc::playerAddress.toStdString();
-    const char *pCh = pStr.c_str ();
+    const char *pCh = pStr.c_str();
 
-    const char *loginCh = rpc::rpcLogin.c_str ();
+    const char *loginCh = rpc::rpcLogin.c_str();
 
     curlBalanceCheck = curl_easy_init();
 
@@ -51,6 +51,52 @@ int rpc::getBalance()  /// Gets players dero balance
     return 0;
 }
 
+
+int rpc::getHeight()  /// Gets current block height
+{
+    CURL *curlHeightCheck;
+    CURLcode res;
+    string heightReadBuffer;
+    char error[CURL_ERROR_SIZE];
+
+    static const char *postthis = "{\"jsonrpc\":\"2.0\",\"id\": \"1\",\"method\": \"DERO.GetHeight\"}";
+
+    string dStr = rpc::daemonAddress.toStdString();
+    const char *fhCh = dStr.c_str();
+
+    curlHeightCheck = curl_easy_init();
+
+    if(curlHeightCheck) {
+      struct curl_slist *headers = NULL;
+      /// Add request headers
+      headers = curl_slist_append(headers, "Accept: application/json");
+      headers = curl_slist_append(headers, "Content-Type: application/json");
+      headers = curl_slist_append(headers, "charset: utf-8");
+      /// cUrl options
+      curl_easy_setopt(curlHeightCheck, CURLOPT_HTTPHEADER, headers);
+      curl_easy_setopt(curlHeightCheck, CURLOPT_URL, fhCh);
+      curl_easy_setopt(curlHeightCheck, CURLOPT_VERBOSE, 1L);
+      curl_easy_setopt(curlHeightCheck, CURLOPT_ERRORBUFFER, error);
+      /// curl_easy_setopt(curlHeightCheck, CURLOPT_SSL_VERIFYPEER, 0);   *Remove comment for windows SSL disable*
+      curl_easy_setopt(curlHeightCheck, CURLOPT_POSTFIELDS, postthis);
+      curl_easy_setopt(curlHeightCheck, CURLOPT_POSTFIELDSIZE, (long)strlen(postthis));
+      curl_easy_setopt(curlHeightCheck, CURLOPT_WRITEFUNCTION, WriteCallback);
+      curl_easy_setopt(curlHeightCheck, CURLOPT_WRITEDATA, &heightReadBuffer);
+      res = curl_easy_perform(curlHeightCheck);
+      curl_easy_cleanup(curlHeightCheck);
+
+      QByteArray br = heightReadBuffer.c_str();
+      QJsonDocument cbDoc = QJsonDocument::fromJson(br);
+      QJsonObject cbObj = cbDoc.object();
+      QJsonObject cbResults = cbObj["result"].toObject();
+      QJsonValue Height_jv = cbResults.value("height");
+
+      rpc::blockHeight = Height_jv.toDouble();
+
+    }
+    return 0;
+}
+
 int rpc::fetchScData()       /// Get SC variables
 {
     CURL *curlFetch;        /// Set up cUrl
@@ -63,9 +109,7 @@ int rpc::fetchScData()       /// Get SC variables
     const char *postthis = addThis.c_str();
 
     string dStr = rpc::daemonAddress.toStdString();
-    const char *fdCh = dStr.c_str ();
-
-    const char *loginCh = rpc::rpcLogin.c_str ();
+    const char *fdCh = dStr.c_str();
 
     curlFetch = curl_easy_init();
 
@@ -80,7 +124,7 @@ int rpc::fetchScData()       /// Get SC variables
       curl_easy_setopt(curlFetch, CURLOPT_URL, fdCh);
       curl_easy_setopt(curlFetch, CURLOPT_VERBOSE, 1L);
       curl_easy_setopt(curlFetch, CURLOPT_ERRORBUFFER, error);
-      curl_easy_setopt(curlFetch, CURLOPT_USERPWD, loginCh);
+      /// curl_easy_setopt(curlFetch, CURLOPT_SSL_VERIFYPEER, 0);   *Remove comment for windows SSL disable*
       curl_easy_setopt(curlFetch, CURLOPT_POSTFIELDS, postthis);
       curl_easy_setopt(curlFetch, CURLOPT_POSTFIELDSIZE, (long)strlen(postthis));
       curl_easy_setopt(curlFetch, CURLOPT_WRITEFUNCTION, WriteCallback);
@@ -111,6 +155,8 @@ int rpc::fetchScData()       /// Get SC variables
       QJsonValue Wager_jv = cbStringKeys.value("Wager:");
       QJsonValue Raised_jv = cbStringKeys.value("Raised:");
       QJsonValue Bet_jv = cbStringKeys.value("Bet");
+      QJsonValue Full_jv = cbStringKeys.value("Full");
+      QJsonValue Open_jv = cbStringKeys.value("Open");
 
       QJsonValue IV_jv = cbStringKeys.value("IV");
       QJsonValue P1Fold_jv = cbStringKeys.value("0F");
@@ -192,6 +238,8 @@ int rpc::fetchScData()       /// Get SC variables
       rpc::p4Out = P4Out_jv.toInt();
       rpc::p5Out = P5Out_jv.toInt();
       rpc::p6Out = P6Out_jv.toInt();
+      rpc::full = Full_jv.toInt();
+      rpc::open = Open_jv.toInt();
 
       rpc::hashOneone = onecard1_jv.toString();
       rpc::hashOnetwo = onecard2_jv.toString();
@@ -245,7 +293,6 @@ int rpc::fetchScData()       /// Get SC variables
       rpc::hashFive = card5.toString();
 
       rpc::inGame = true;
-
 
     }
     return 0;

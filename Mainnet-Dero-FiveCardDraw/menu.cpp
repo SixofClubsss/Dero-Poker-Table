@@ -5,14 +5,14 @@
 #include "ui_menu.h"
 #include "rpc/rpc.h"
 
-QThread Worker::unlockThread;
+
 QString Menu::userInfo;
 QString Menu::passInfo;
 QString Menu::contractAddress;
 QString Menu::listingAddress;
 QString Menu::donationAddress;
 bool Menu::mainnet;
-bool Menu::afPayout;
+bool Menu::autoPayout;
 
 
 Menu::Menu(QWidget *parent) :
@@ -29,7 +29,7 @@ Menu::Menu(QWidget *parent) :
     rpc::IdHash = "null";
     Menu::listingAddress = "cc747db82060d99076689646e188986cc239d046c6bcbbb312a53df7f849e5d1";
     Menu::donationAddress = "dero1qyr8yjnu6cl2c5yqkls0hmxe6rry77kn24nmc5fje6hm9jltyvdd5qq4hn5pn";
-    ui->autoFoldPayRButton->setEnabled(false);
+    ui->autoPayRButton->setEnabled(false);
     ui->listTableButton->setEnabled(false);
     ui->delistTableButton->setEnabled(false);
     ui->ownerGroupBox->setEnabled(false);
@@ -44,8 +44,8 @@ Menu::Menu(QWidget *parent) :
     ui->userInput->backspace();
     ui->passwordInput->setText(Menu::passInfo);
 
-    if(Menu::afPayout == true){
-        ui->autoFoldPayRButton->setChecked(true);
+    if(Menu::autoPayout == true){
+        ui->autoPayRButton->setChecked(true);
     }
 
     connect(ui->daemonRPCinput, SIGNAL(textChanged(QString)),
@@ -69,7 +69,6 @@ Menu::Menu(QWidget *parent) :
     checkContract();
     checkIfListed();
     setFonts();
-
 }
 
 
@@ -118,16 +117,37 @@ void Menu::setFonts()
     macondoRegular.setPointSize(17);
     macondoRegular.setBold(true);
     ui->menuTextBrowser->setFont(macondoRegular);
-    ui->menuTextBrowser->setText("Welcome to dReam Tables Five Card Poker\nTable v1.0.2");
+    ui->menuTextBrowser->setText("Welcome to dReam Tables Five Card Poker\nTable v1.1.0");
 
     int fontId2 = QFontDatabase::addApplicationFont(":/fonts/Ubuntu-R.ttf");
     QString fontFamily2 = QFontDatabase::applicationFontFamilies(fontId2).at(0);
     QFont ubuntuRegular(fontFamily2);
     ubuntuRegular.setPointSize(10);
     ui->playerGroupBox->setFont(ubuntuRegular);
-    ui->ownerGroupBox->setFont(ubuntuRegular);
+    ui->userInput->setFont(ubuntuRegular);
+    ui->passwordInput->setFont(ubuntuRegular);
+    ui->daemonRPCinput->setFont(ubuntuRegular);
+    ui->daemonConnectedBox->setFont(ubuntuRegular);
+    ui->daemonRPCbutton->setFont(ubuntuRegular);
+    ui->walletRPCinput->setFont(ubuntuRegular);
+    ui->walletConnectedBox->setFont(ubuntuRegular);
+    ui->walletRPCbutton->setFont(ubuntuRegular);
+    ui->contractLineEdit->setFont(ubuntuRegular);
+    ui->contractCheckBox->setFont(ubuntuRegular);
+    ui->contractButton->setFont(ubuntuRegular);
     ui->findTablesButton->setFont(ubuntuRegular);
     ui->getTableButton->setFont(ubuntuRegular);
+    ui->buttonBox->setFont(ubuntuRegular);
+    ui->ownerGroupBox->setFont(ubuntuRegular);
+    ui->playersComboBox->setFont(ubuntuRegular);
+    ui->anteSpinBox->setFont(ubuntuRegular);
+    ui->setTableButton->setFont(ubuntuRegular);
+    ui->cleanTableButton->setFont(ubuntuRegular);
+    ui->delistTableButton->setFont(ubuntuRegular);
+    ui->listTableButton->setFont(ubuntuRegular);
+    ui->newTableButton->setFont(ubuntuRegular);
+    ui->newTableButton->setFont(ubuntuRegular);
+    ui->autoPayRButton->setFont(ubuntuRegular);
     ui->buttonBox->setFont(ubuntuRegular);
 }
 
@@ -213,13 +233,14 @@ void Menu::confirmationBox()
 }
 
 
-void Menu::on_autoFoldPayRButton_clicked()
+void Menu::on_autoPayRButton_clicked()
 {
-    if(ui->autoFoldPayRButton->isChecked()){
-        Menu::afPayout = true;
+    if(ui->autoPayRButton->isChecked()){
+        Menu::autoPayout = true;
     }else {
-        Menu::afPayout = false;
+        Menu::autoPayout = false;
     }
+
 }
 
 
@@ -263,3 +284,4 @@ void Menu::on_findTablesButton_clicked()
     ui->menuTextBrowser->setText("Public Tables:\n");
     fetchListingScData();
 }
+
