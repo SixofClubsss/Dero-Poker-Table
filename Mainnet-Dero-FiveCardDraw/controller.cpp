@@ -130,7 +130,7 @@ void MainWindow::controller()       /// Ui control
     potEmpty(rpc::pot);
     setMinBet(rpc::wager, rpc::raised);
     atTable();
-    ownerAtTable(rpc::p1Out, rpc::IdHash);
+    ownerAtTable(rpc::p1Out, rpc::oneId);
     isTableFull(rpc::seats, rpc::pot, rpc::turn);
     localPlayerControl(rpc::bet, rpc::draw, rpc::wager, rpc::ante, rpc::raised);
     storedEnd(rpc::end, rpc::oneId);
