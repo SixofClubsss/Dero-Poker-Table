@@ -30,13 +30,12 @@ class rpc
 public:
     static bool inGame;
     static bool paidOut;
+    static int revealBool;
     static double blockHeight;
     static double clickedHeight;
     static std::string rpcLogin;
-    static QString salt;
     static QString playerAddress;
     static QString daemonAddress;
-    static QString IdAddress;
     static QString IdHash;
     static int seats;
     static double ante;
@@ -56,6 +55,7 @@ public:
     static double raised;
     static int bet;
     static int IV;
+    static int OBF;
     static int p1Fold;
     static int p2Fold;
     static int p3Fold;
@@ -71,6 +71,7 @@ public:
     static int checkPlayerId;
     static int full;
     static int open;
+    static int salt;
 
     static QString hashOneone;
     static QString hashOnetwo;
@@ -114,6 +115,16 @@ public:
     static QString hashFour;
     static QString hashFive;
 
+    static QString contractSeed;
+    static QString clientKey;
+
+    static QString key1;
+    static QString key2;
+    static QString key3;
+    static QString key4;
+    static QString key5;
+    static QString key6;
+
     int getBalance();
     int getHeight();
     int fetchScData();
@@ -133,6 +144,7 @@ public:
     static bool foldFour;
     static bool foldFive;
     static bool foldSix;
+        static bool keyIsPub;
 
 };
 

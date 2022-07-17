@@ -12,7 +12,7 @@ int MainWindow::playerEntry()      /// Player registry (sit down at table)
     string playerEntryReadBuffer;
     char error[CURL_ERROR_SIZE];
 
-    QString parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"scinvoke\",\"params\":{\"scid\":\""+Menu::contractAddress+"\", \"ringsize\":2 , \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"PlayerEntry\"}, {\"name\":\"address\",\"datatype\":\"S\",\"value\":\""+rpc::IdAddress+"\" }] }}";
+    QString parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"scinvoke\",\"params\":{\"scid\":\""+Menu::contractAddress+"\", \"ringsize\":2 , \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"PlayerEntry\"}, {\"name\":\"address\",\"datatype\":\"H\",\"value\":\""+rpc::IdHash+"\" }] }}";
     string addThis = parts.toStdString();
     const char *postthis = addThis.c_str();
 
@@ -127,16 +127,25 @@ int MainWindow::playerLeave()      /// Player leave table
     return 0;
 }
 
+void MainWindow::generateKey()    /// Generates player client key
+{
+    srand(time(0));
+    QString key = QString::number(rand() % 999999999999);
+    rpc::clientKey = QString(QCryptographicHash::hash((key.toUtf8()),QCryptographicHash::Sha256).toHex());
+    ui->txLogTextBrowser->append("Round Key: "+rpc::clientKey+"\n");
+}
+
 
 int MainWindow::dealFiveCardHand()      /// Ante and deals player a hand
 {
+    generateKey();
     CURL *curlDealFiveCards;
     CURLcode res;
     string dealReadBuffer;
     char error[CURL_ERROR_SIZE];
 
     QString anteAmount = QString::number(ui->anteIsDSB->value()*100000);
-    QString parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"transfer\",\"params\":{\"transfers\":[{\"amount\":500 , \"destination\":\"dero1qyr8yjnu6cl2c5yqkls0hmxe6rry77kn24nmc5fje6hm9jltyvdd5qq4hn5pn\", \"burn\":"+anteAmount+"}] , \"fees\":500 , \"scid\":\""+Menu::contractAddress+"\", \"ringsize\":2 , \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"DealFiveCardHand\"}] }}";
+    QString parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"transfer\",\"params\":{\"transfers\":[{\"amount\":500 , \"destination\":\"dero1qyr8yjnu6cl2c5yqkls0hmxe6rry77kn24nmc5fje6hm9jltyvdd5qq4hn5pn\", \"burn\":"+anteAmount+"}] , \"fees\":500 , \"scid\":\""+Menu::contractAddress+"\", \"ringsize\":2 , \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"DealFiveCardHand\"} , {\"name\":\"pcSeed\",\"datatype\":\"H\",\"value\":\""+rpc::clientKey+"\"}] }}";
     string addThis = parts.toStdString();
     const char *postthis = addThis.c_str();
 
@@ -176,6 +185,7 @@ int MainWindow::dealFiveCardHand()      /// Ante and deals player a hand
       if(dealTxid.isString()){
           ui->logTextBrowser->setText("Deal Five Cards TXID: "+dealTxid.toString());
           ui->txLogTextBrowser->append("TXID: "+dealTxid.toString()+"\n");
+          Hand::keyIsPub = false;
       }else {
 
           ui->logTextBrowser->setText("Error No Deal Five Cards TXID");
@@ -312,8 +322,28 @@ int MainWindow::drawCards() /// Get new cards at draw
     string drawReadBuffer;
     char error[CURL_ERROR_SIZE];
 
-    QString whichCards = QString::number(ui->drawComboBox->currentIndex());
-    QString parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"transfer\",\"params\":{\"transfers\":[{\"amount\":100 , \"destination\":\"dero1qyr8yjnu6cl2c5yqkls0hmxe6rry77kn24nmc5fje6hm9jltyvdd5qq4hn5pn\"}] , \"fees\":300 ,\"scid\":\""+Menu::contractAddress+"\", \"ringsize\":2, \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"DrawCards\"},{\"name\":\"whichCard\",\"datatype\":\"U\",\"value\":"+whichCards+" }] }}";
+    int whichCards = ui->drawComboBox->currentIndex();
+    QString parts = "null";
+
+    switch (whichCards){
+    case 0: parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"transfer\",\"params\":{\"transfers\":[{\"amount\":100 , \"destination\":\"dero1qyr8yjnu6cl2c5yqkls0hmxe6rry77kn24nmc5fje6hm9jltyvdd5qq4hn5pn\"}] , \"fees\":350 ,\"scid\":\""+Menu::contractAddress+"\", \"ringsize\":2, \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"DrawCards\"} , {\"name\":\"inOne\",\"datatype\":\"S\",\"value\":\"0\" } , {\"name\":\"inTwo\",\"datatype\":\"S\",\"value\":\"0\" } , {\"name\":\"pcSeed\",\"datatype\":\"S\",\"value\":\"null\"}] }}"; break;
+    case 1: parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"transfer\",\"params\":{\"transfers\":[{\"amount\":100 , \"destination\":\"dero1qyr8yjnu6cl2c5yqkls0hmxe6rry77kn24nmc5fje6hm9jltyvdd5qq4hn5pn\"}] , \"fees\":350 ,\"scid\":\""+Menu::contractAddress+"\", \"ringsize\":2, \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"DrawCards\"} , {\"name\":\"inOne\",\"datatype\":\"S\",\"value\":\"card1\" } , {\"name\":\"inTwo\",\"datatype\":\"S\",\"value\":\"0\" } , {\"name\":\"pcSeed\",\"datatype\":\"H\",\"value\":\""+rpc::clientKey+"\"}] }}"; break;
+    case 2: parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"transfer\",\"params\":{\"transfers\":[{\"amount\":100 , \"destination\":\"dero1qyr8yjnu6cl2c5yqkls0hmxe6rry77kn24nmc5fje6hm9jltyvdd5qq4hn5pn\"}] , \"fees\":350 ,\"scid\":\""+Menu::contractAddress+"\", \"ringsize\":2, \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"DrawCards\"} , {\"name\":\"inOne\",\"datatype\":\"S\",\"value\":\"card2\" } , {\"name\":\"inTwo\",\"datatype\":\"S\",\"value\":\"0\" } , {\"name\":\"pcSeed\",\"datatype\":\"H\",\"value\":\""+rpc::clientKey+"\"}] }}"; break;
+    case 3: parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"transfer\",\"params\":{\"transfers\":[{\"amount\":100 , \"destination\":\"dero1qyr8yjnu6cl2c5yqkls0hmxe6rry77kn24nmc5fje6hm9jltyvdd5qq4hn5pn\"}] , \"fees\":350 ,\"scid\":\""+Menu::contractAddress+"\", \"ringsize\":2, \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"DrawCards\"} , {\"name\":\"inOne\",\"datatype\":\"S\",\"value\":\"card3\" } , {\"name\":\"inTwo\",\"datatype\":\"S\",\"value\":\"0\" } , {\"name\":\"pcSeed\",\"datatype\":\"H\",\"value\":\""+rpc::clientKey+"\"}] }}"; break;
+    case 4: parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"transfer\",\"params\":{\"transfers\":[{\"amount\":100 , \"destination\":\"dero1qyr8yjnu6cl2c5yqkls0hmxe6rry77kn24nmc5fje6hm9jltyvdd5qq4hn5pn\"}] , \"fees\":350 ,\"scid\":\""+Menu::contractAddress+"\", \"ringsize\":2, \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"DrawCards\"} , {\"name\":\"inOne\",\"datatype\":\"S\",\"value\":\"card4\" } , {\"name\":\"inTwo\",\"datatype\":\"S\",\"value\":\"0\" } , {\"name\":\"pcSeed\",\"datatype\":\"H\",\"value\":\""+rpc::clientKey+"\"}] }}"; break;
+    case 5: parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"transfer\",\"params\":{\"transfers\":[{\"amount\":100 , \"destination\":\"dero1qyr8yjnu6cl2c5yqkls0hmxe6rry77kn24nmc5fje6hm9jltyvdd5qq4hn5pn\"}] , \"fees\":350 ,\"scid\":\""+Menu::contractAddress+"\", \"ringsize\":2, \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"DrawCards\"} , {\"name\":\"inOne\",\"datatype\":\"S\",\"value\":\"card5\" } , {\"name\":\"inTwo\",\"datatype\":\"S\",\"value\":\"0\" } , {\"name\":\"pcSeed\",\"datatype\":\"H\",\"value\":\""+rpc::clientKey+"\"}] }}"; break;
+    case 6: parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"transfer\",\"params\":{\"transfers\":[{\"amount\":100 , \"destination\":\"dero1qyr8yjnu6cl2c5yqkls0hmxe6rry77kn24nmc5fje6hm9jltyvdd5qq4hn5pn\"}] , \"fees\":350 ,\"scid\":\""+Menu::contractAddress+"\", \"ringsize\":2, \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"DrawCards\"} , {\"name\":\"inOne\",\"datatype\":\"S\",\"value\":\"card1\" } , {\"name\":\"inTwo\",\"datatype\":\"S\",\"value\":\"card2\" } , {\"name\":\"pcSeed\",\"datatype\":\"H\",\"value\":\""+rpc::clientKey+"\"}] }}"; break;
+    case 7: parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"transfer\",\"params\":{\"transfers\":[{\"amount\":100 , \"destination\":\"dero1qyr8yjnu6cl2c5yqkls0hmxe6rry77kn24nmc5fje6hm9jltyvdd5qq4hn5pn\"}] , \"fees\":350 ,\"scid\":\""+Menu::contractAddress+"\", \"ringsize\":2, \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"DrawCards\"} , {\"name\":\"inOne\",\"datatype\":\"S\",\"value\":\"card1\" } , {\"name\":\"inTwo\",\"datatype\":\"S\",\"value\":\"card3\" } , {\"name\":\"pcSeed\",\"datatype\":\"H\",\"value\":\""+rpc::clientKey+"\"}] }}"; break;
+    case 8: parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"transfer\",\"params\":{\"transfers\":[{\"amount\":100 , \"destination\":\"dero1qyr8yjnu6cl2c5yqkls0hmxe6rry77kn24nmc5fje6hm9jltyvdd5qq4hn5pn\"}] , \"fees\":350 ,\"scid\":\""+Menu::contractAddress+"\", \"ringsize\":2, \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"DrawCards\"} , {\"name\":\"inOne\",\"datatype\":\"S\",\"value\":\"card1\" } , {\"name\":\"inTwo\",\"datatype\":\"S\",\"value\":\"card4\" } , {\"name\":\"pcSeed\",\"datatype\":\"H\",\"value\":\""+rpc::clientKey+"\"}] }}"; break;
+    case 9: parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"transfer\",\"params\":{\"transfers\":[{\"amount\":100 , \"destination\":\"dero1qyr8yjnu6cl2c5yqkls0hmxe6rry77kn24nmc5fje6hm9jltyvdd5qq4hn5pn\"}] , \"fees\":350 ,\"scid\":\""+Menu::contractAddress+"\", \"ringsize\":2, \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"DrawCards\"} , {\"name\":\"inOne\",\"datatype\":\"S\",\"value\":\"card1\" } , {\"name\":\"inTwo\",\"datatype\":\"S\",\"value\":\"card5\" } , {\"name\":\"pcSeed\",\"datatype\":\"H\",\"value\":\""+rpc::clientKey+"\"}] }}"; break;
+    case 10: parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"transfer\",\"params\":{\"transfers\":[{\"amount\":100 , \"destination\":\"dero1qyr8yjnu6cl2c5yqkls0hmxe6rry77kn24nmc5fje6hm9jltyvdd5qq4hn5pn\"}] , \"fees\":350 ,\"scid\":\""+Menu::contractAddress+"\", \"ringsize\":2, \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"DrawCards\"} , {\"name\":\"inOne\",\"datatype\":\"S\",\"value\":\"card2\" } , {\"name\":\"inTwo\",\"datatype\":\"S\",\"value\":\"card3\"} , {\"name\":\"pcSeed\",\"datatype\":\"H\",\"value\":\""+rpc::clientKey+"\"}] }}"; break;
+    case 11: parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"transfer\",\"params\":{\"transfers\":[{\"amount\":100 , \"destination\":\"dero1qyr8yjnu6cl2c5yqkls0hmxe6rry77kn24nmc5fje6hm9jltyvdd5qq4hn5pn\"}] , \"fees\":350 ,\"scid\":\""+Menu::contractAddress+"\", \"ringsize\":2, \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"DrawCards\"} , {\"name\":\"inOne\",\"datatype\":\"S\",\"value\":\"card2\" } , {\"name\":\"inTwo\",\"datatype\":\"S\",\"value\":\"card4\" } , {\"name\":\"pcSeed\",\"datatype\":\"H\",\"value\":\""+rpc::clientKey+"\"}] }}"; break;
+    case 12: parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"transfer\",\"params\":{\"transfers\":[{\"amount\":100 , \"destination\":\"dero1qyr8yjnu6cl2c5yqkls0hmxe6rry77kn24nmc5fje6hm9jltyvdd5qq4hn5pn\"}] , \"fees\":350 ,\"scid\":\""+Menu::contractAddress+"\", \"ringsize\":2, \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"DrawCards\"} , {\"name\":\"inOne\",\"datatype\":\"S\",\"value\":\"card2\" } , {\"name\":\"inTwo\",\"datatype\":\"S\",\"value\":\"card5\" } , {\"name\":\"pcSeed\",\"datatype\":\"H\",\"value\":\""+rpc::clientKey+"\"}] }}"; break;
+    case 13: parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"transfer\",\"params\":{\"transfers\":[{\"amount\":100 , \"destination\":\"dero1qyr8yjnu6cl2c5yqkls0hmxe6rry77kn24nmc5fje6hm9jltyvdd5qq4hn5pn\"}] , \"fees\":350 ,\"scid\":\""+Menu::contractAddress+"\", \"ringsize\":2, \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"DrawCards\"} , {\"name\":\"inOne\",\"datatype\":\"S\",\"value\":\"card3\" } , {\"name\":\"inTwo\",\"datatype\":\"S\",\"value\":\"card4\" } , {\"name\":\"pcSeed\",\"datatype\":\"H\",\"value\":\""+rpc::clientKey+"\"}] }}"; break;
+    case 14: parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"transfer\",\"params\":{\"transfers\":[{\"amount\":100 , \"destination\":\"dero1qyr8yjnu6cl2c5yqkls0hmxe6rry77kn24nmc5fje6hm9jltyvdd5qq4hn5pn\"}] , \"fees\":350 ,\"scid\":\""+Menu::contractAddress+"\", \"ringsize\":2, \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"DrawCards\"} , {\"name\":\"inOne\",\"datatype\":\"S\",\"value\":\"card3\" } , {\"name\":\"inTwo\",\"datatype\":\"S\",\"value\":\"card5\" } , {\"name\":\"pcSeed\",\"datatype\":\"H\",\"value\":\""+rpc::clientKey+"\"}] }}"; break;
+    case 15: parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"transfer\",\"params\":{\"transfers\":[{\"amount\":100 , \"destination\":\"dero1qyr8yjnu6cl2c5yqkls0hmxe6rry77kn24nmc5fje6hm9jltyvdd5qq4hn5pn\"}] , \"fees\":350 ,\"scid\":\""+Menu::contractAddress+"\", \"ringsize\":2, \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"DrawCards\"} , {\"name\":\"inOne\",\"datatype\":\"S\",\"value\":\"card4\" } , {\"name\":\"inTwo\",\"datatype\":\"S\",\"value\":\"card5\" } , {\"name\":\"pcSeed\",\"datatype\":\"H\",\"value\":\""+rpc::clientKey+"\"}] }}"; break;
+    }
+
     string addThis = parts.toStdString();
     const char *postthis = addThis.c_str();
 
@@ -418,6 +448,15 @@ int MainWindow::winner()     /// Owner sends payout to winner
             ui->logTextBrowser->setText("Winner TXID: "+txid.toString());
             ui->txLogTextBrowser->append("TXID: "+txid.toString()+"\n");
             blankDisplay();
+
+            if(rpc::end == 1){
+                rpc::hashOne ="null";
+                rpc::hashTwo = "null";
+                rpc::hashThree = "null";
+                rpc::hashFour = "null";
+                rpc::hashFive = "null";
+            }
+
         }else {
 
             ui->logTextBrowser->setText("Error No Winner TXID");
@@ -429,7 +468,7 @@ int MainWindow::winner()     /// Owner sends payout to winner
 }
 
 
-int MainWindow::autopayWinner(QString whoWon)     /// Owner sends payout to winner
+int MainWindow::autopayWinner(QString whoWon)     /// Autopay to winner
 {
     CURL *curlAutopayWinner;
     CURLcode res;
@@ -476,11 +515,79 @@ int MainWindow::autopayWinner(QString whoWon)     /// Owner sends payout to winn
         if(txid.isString()){
             ui->logTextBrowser->setText("Winner TXID: "+txid.toString());
             ui->txLogTextBrowser->append("TXID: "+txid.toString()+"\n");
+
+            if(rpc::end == 1){
+                rpc::hashOne ="null";
+                rpc::hashTwo = "null";
+                rpc::hashThree = "null";
+                rpc::hashFour = "null";
+                rpc::hashFive = "null";
+            }
+
         }else {
 
             ui->logTextBrowser->setText("Error Couldn't Pay Winner");
             MainWindow::skipCount = 5;
         }
+
+    }
+    return 0;
+}
+
+
+int MainWindow::revealKey()      /// Stores client key on db for other players to see cards
+{
+    CURL *curlReveal;
+    CURLcode res;
+    string dealReadBuffer;
+    char error[CURL_ERROR_SIZE];
+
+    QString parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"scinvoke\",\"params\":{\"scid\":\""+Menu::contractAddress+"\", \"ringsize\":2 , \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"RevealKey\"},{\"name\":\"pcSeed\",\"datatype\":\"H\",\"value\":\""+rpc::clientKey+"\"}] }}";
+    string addThis = parts.toStdString();
+    const char *postthis = addThis.c_str();
+
+    string pStr = rpc::playerAddress.toStdString();
+    const char *revCh = pStr.c_str();
+
+    const char *loginCh = rpc::rpcLogin.c_str();
+
+    curlReveal = curl_easy_init();
+
+    if(curlReveal) {
+      struct curl_slist *headers = NULL;
+      /// Add request headers
+      headers = curl_slist_append(headers, "Accept: application/json");
+      headers = curl_slist_append(headers, "Content-Type: application/json");
+      headers = curl_slist_append(headers, "charset: utf-8");
+      /// cUrl options
+      curl_easy_setopt(curlReveal, CURLOPT_HTTPHEADER, headers);
+      curl_easy_setopt(curlReveal, CURLOPT_URL, revCh);
+      curl_easy_setopt(curlReveal, CURLOPT_VERBOSE, 1L);
+      curl_easy_setopt(curlReveal, CURLOPT_ERRORBUFFER, error);
+      curl_easy_setopt(curlReveal, CURLOPT_USERPWD, loginCh);
+      curl_easy_setopt(curlReveal, CURLOPT_POSTFIELDS, postthis);
+      curl_easy_setopt(curlReveal, CURLOPT_POSTFIELDSIZE, (long)strlen(postthis));
+      curl_easy_setopt(curlReveal, CURLOPT_WRITEFUNCTION, WriteCallback);
+      curl_easy_setopt(curlReveal, CURLOPT_WRITEDATA, &dealReadBuffer);
+
+      res = curl_easy_perform(curlReveal);
+      curl_easy_cleanup(curlReveal);
+
+      QByteArray br = dealReadBuffer.c_str();
+      QJsonDocument cbDoc = QJsonDocument::fromJson(br);
+      QJsonObject cbObj = cbDoc.object();
+      QJsonObject cbResults = cbObj["result"].toObject();
+      QJsonValue keyTxid = cbResults.value("txid");
+
+      if(keyTxid.isString()){
+          ui->logTextBrowser->setText("Reveal TXID: "+keyTxid.toString());
+          ui->txLogTextBrowser->append("TXID: "+keyTxid.toString()+"\n");
+          Hand::keyIsPub = true;
+      }else {
+
+          ui->logTextBrowser->setText("Error No Reveal TXID");
+          MainWindow::skipCount = 5;
+      }
 
     }
     return 0;

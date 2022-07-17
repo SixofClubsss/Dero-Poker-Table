@@ -20,6 +20,7 @@ public:
     void newTableText();
     void listTableText();
     void delistTableText();
+    void forceStartText();
 
 private slots:
     void on_buttonBox_accepted();

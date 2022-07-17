@@ -42,6 +42,7 @@ public:
     int checkIfListed();
     int listTable();
     int delistTable();
+    int forceStart();
 
 
 private slots:
@@ -74,6 +75,8 @@ private slots:
     void on_findTablesButton_clicked();
 
     void on_autoPayRButton_clicked();
+
+    void on_forceButton_clicked();
 
 private:
     Ui::Menu *ui;

@@ -40,9 +40,7 @@ Menu::Menu(QWidget *parent) :
       ui->daemonRPCinput->backspace();
       ui->walletRPCinput->backspace();
     }
-    ui->userInput->setText(Menu::userInfo);
-    ui->userInput->backspace();
-    ui->passwordInput->setText(Menu::passInfo);
+    ui->userpassInput->setText(Menu::userInfo);
 
     if(Menu::autoPayout == true){
         ui->autoPayRButton->setChecked(true);
@@ -54,10 +52,7 @@ Menu::Menu(QWidget *parent) :
     connect(ui->walletRPCinput, SIGNAL(textChanged(QString)),
           this, SLOT(walletToggle()));
 
-    connect(ui->userInput, SIGNAL(textChanged(QString)),
-          this, SLOT(walletToggle()));
-
-    connect(ui->passwordInput, SIGNAL(textChanged(QString)),
+    connect(ui->userpassInput, SIGNAL(textChanged(QString)),
           this, SLOT(walletToggle()));
 
     connect(ui->contractLineEdit, SIGNAL(textChanged(QString)),
@@ -69,6 +64,7 @@ Menu::Menu(QWidget *parent) :
     checkContract();
     checkIfListed();
     setFonts();
+    unlockTable();
 }
 
 
@@ -117,15 +113,14 @@ void Menu::setFonts()
     macondoRegular.setPointSize(17);
     macondoRegular.setBold(true);
     ui->menuTextBrowser->setFont(macondoRegular);
-    ui->menuTextBrowser->setText("Welcome to dReam Tables Five Card Poker\nTable v1.1.0");
+    ui->menuTextBrowser->setText("Welcome to dReam Tables Five Card Poker\nTable v1.2.0");
 
     int fontId2 = QFontDatabase::addApplicationFont(":/fonts/Ubuntu-R.ttf");
     QString fontFamily2 = QFontDatabase::applicationFontFamilies(fontId2).at(0);
     QFont ubuntuRegular(fontFamily2);
     ubuntuRegular.setPointSize(10);
     ui->playerGroupBox->setFont(ubuntuRegular);
-    ui->userInput->setFont(ubuntuRegular);
-    ui->passwordInput->setFont(ubuntuRegular);
+    ui->userpassInput->setFont(ubuntuRegular);
     ui->daemonRPCinput->setFont(ubuntuRegular);
     ui->daemonConnectedBox->setFont(ubuntuRegular);
     ui->daemonRPCbutton->setFont(ubuntuRegular);
@@ -148,6 +143,7 @@ void Menu::setFonts()
     ui->newTableButton->setFont(ubuntuRegular);
     ui->newTableButton->setFont(ubuntuRegular);
     ui->autoPayRButton->setFont(ubuntuRegular);
+    ui->forceButton->setFont(ubuntuRegular);
     ui->buttonBox->setFont(ubuntuRegular);
 }
 
@@ -244,37 +240,37 @@ void Menu::on_autoPayRButton_clicked()
 }
 
 
-void Menu::on_listTableButton_clicked()
+void Menu::on_listTableButton_clicked() /// Listing disabled for contract migration
 {
-    Confirm::whichText = 3;
-    confirmationBox();
+//    Confirm::whichText = 3;
+//    confirmationBox();
 
-    if(Confirm::actionConfirmed == true){
-        listTable();
-        Confirm::actionConfirmed = false;
-        ui->listTableButton->setEnabled(false);
-        ui->delistTableButton->setEnabled(true);
-    }else {
+//    if(Confirm::actionConfirmed == true){
+//        listTable();
+//        Confirm::actionConfirmed = false;
+//        ui->listTableButton->setEnabled(false);
+//        ui->delistTableButton->setEnabled(true);
+//    }else {
 
-        Confirm::actionConfirmed = false;
-    }
+//        Confirm::actionConfirmed = false;
+//    }
 
 }
 
 
 void Menu::on_delistTableButton_clicked()
 {
-    Confirm::whichText = 4;
-    confirmationBox();
+//    Confirm::whichText = 4;
+//    confirmationBox();
 
-    if(Confirm::actionConfirmed == true){
-        delistTable();
-        ui->delistTableButton->setEnabled(false);
-        ui->listTableButton->setEnabled(true);
-    }else {
+//    if(Confirm::actionConfirmed == true){
+//        delistTable();
+//        ui->delistTableButton->setEnabled(false);
+//        ui->listTableButton->setEnabled(true);
+//    }else {
 
-        Confirm::actionConfirmed = false;
-    }
+//        Confirm::actionConfirmed = false;
+//    }
 
 }
 
@@ -282,6 +278,20 @@ void Menu::on_delistTableButton_clicked()
 void Menu::on_findTablesButton_clicked()
 {
     ui->menuTextBrowser->setText("Public Tables:\n");
-    fetchListingScData();
+    ///fetchListingScData();
 }
 
+
+void Menu::on_forceButton_clicked()
+{
+    Confirm::whichText = 5;
+    confirmationBox();
+
+    if(Confirm::actionConfirmed == true){
+        forceStart();
+    }else {
+
+        Confirm::actionConfirmed = false;
+    }
+
+}

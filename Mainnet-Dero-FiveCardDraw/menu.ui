@@ -326,34 +326,6 @@ QGroupBox::indicator {
         </property>
        </widget>
       </item>
-      <item row="0" column="2">
-       <widget class="QLineEdit" name="passwordInput">
-        <property name="minimumSize">
-         <size>
-          <width>308</width>
-          <height>24</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>308</width>
-          <height>24</height>
-         </size>
-        </property>
-        <property name="styleSheet">
-         <string notr="true"/>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="echoMode">
-         <enum>QLineEdit::Password</enum>
-        </property>
-        <property name="placeholderText">
-         <string>Password:</string>
-        </property>
-       </widget>
-      </item>
       <item row="3" column="3">
        <widget class="QPushButton" name="contractButton">
         <property name="minimumSize">
@@ -402,16 +374,16 @@ QGroupBox::indicator {
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QLineEdit" name="userInput">
+       <widget class="QLineEdit" name="userpassInput">
         <property name="minimumSize">
          <size>
-          <width>300</width>
+          <width>615</width>
           <height>24</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>300</width>
+          <width>615</width>
           <height>24</height>
          </size>
         </property>
@@ -421,11 +393,14 @@ QGroupBox::indicator {
         <property name="text">
          <string/>
         </property>
+        <property name="echoMode">
+         <enum>QLineEdit::Password</enum>
+        </property>
         <property name="readOnly">
          <bool>false</bool>
         </property>
         <property name="placeholderText">
-         <string>User:</string>
+         <string>user:pass</string>
         </property>
        </widget>
       </item>
@@ -444,7 +419,7 @@ QGroupBox::indicator {
          </size>
         </property>
         <property name="text">
-         <string/>
+         <string>89a2e5102561c72fa60441733b081c7f546cfa8b4037e71a3f1d9ca11a2f1b88</string>
         </property>
         <property name="placeholderText">
          <string>Table Contract Address:</string>
@@ -466,7 +441,7 @@ QGroupBox::indicator {
          </size>
         </property>
         <property name="text">
-         <string/>
+         <string>127.0.0.1:30000</string>
         </property>
         <property name="placeholderText">
          <string>Enter Wallet RPC Address</string>
@@ -529,7 +504,7 @@ QGroupBox::indicator {
          </size>
         </property>
         <property name="text">
-         <string/>
+         <string>127.0.0.1:20000</string>
         </property>
         <property name="placeholderText">
          <string>Enter Daemon RPC Address</string>
@@ -557,7 +532,30 @@ QGroupBox::indicator {
       <enum>Qt::StrongFocus</enum>
      </property>
      <property name="styleSheet">
-      <string notr="true"/>
+      <string notr="true">QPushButton:enabled{
+	color: rgb(255, 255, 255);
+	background-color: rgba(0, 0, 0, 120);
+    border: 2px solid #8f8f91;
+    border-radius: 6px;
+    min-width: 80px;
+}
+
+QPushButton:hover {
+	background-color: rgba(79, 186, 196, 150);
+}
+
+QPushButton:pressed {
+	background-color: rgb(56, 47, 165);
+}
+
+QPushButton:!enabled{
+    border: 2px solid;
+	border-color: rgba(143, 143, 145, 90);
+    border-radius: 6px;
+	color: rgba(0, 0, 0, 0);
+    border-radius: 6px;
+    min-width: 80px;
+}</string>
      </property>
      <property name="text">
       <string>Unlock</string>
@@ -579,7 +577,30 @@ QGroupBox::indicator {
       </size>
      </property>
      <property name="styleSheet">
-      <string notr="true"/>
+      <string notr="true">QPushButton:enabled{
+	color: rgb(255, 255, 255);
+	background-color: rgba(0, 0, 0, 120);
+    border: 2px solid #8f8f91;
+    border-radius: 6px;
+    min-width: 80px;
+}
+
+QPushButton:hover {
+	background-color: rgba(79, 186, 196, 150);
+}
+
+QPushButton:pressed {
+	background-color: rgb(56, 47, 165);
+}
+
+QPushButton:!enabled{
+    border: 2px solid;
+	border-color: rgba(143, 143, 145, 90);
+    border-radius: 6px;
+	color: rgba(0, 0, 0, 0);
+    border-radius: 6px;
+    min-width: 80px;
+}</string>
      </property>
      <property name="text">
       <string>Search Tables</string>
@@ -809,7 +830,7 @@ QGroupBox::indicator {
      <widget class="QPushButton" name="cleanTableButton">
       <property name="geometry">
        <rect>
-        <x>434</x>
+        <x>428</x>
         <y>81</y>
         <width>84</width>
         <height>20</height>
@@ -848,6 +869,31 @@ QGroupBox::indicator {
       </property>
       <property name="text">
        <string>Remove List</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="forceButton">
+      <property name="geometry">
+       <rect>
+        <x>560</x>
+        <y>81</y>
+        <width>84</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>84</width>
+        <height>20</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>84</width>
+        <height>20</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>Force Start</string>
       </property>
      </widget>
     </widget>

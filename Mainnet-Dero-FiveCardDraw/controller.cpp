@@ -17,6 +17,7 @@ bool Hand::foldThree;
 bool Hand::foldFour;
 bool Hand::foldFive;
 bool Hand::foldSix;
+bool Hand::keyIsPub;
 
 string rpc::rpcLogin;
 bool rpc::inGame;
@@ -27,6 +28,7 @@ int rpc::draw;
 int rpc::end;
 int rpc::bet;
 int rpc::IV;
+int rpc::OBF;
 int rpc::p1Fold;
 int rpc::p2Fold;
 int rpc::p3Fold;
@@ -41,6 +43,8 @@ int rpc::p5Out;
 int rpc::p6Out;
 int rpc::full;
 int rpc::open;
+int rpc::salt;
+int rpc::revealBool;
 
 double rpc::blockHeight;
 double rpc::clickedHeight;
@@ -60,9 +64,9 @@ QString rpc::threeId;
 QString rpc::fourId;
 QString rpc::fiveId;
 QString rpc::sixId;
-QString rpc::salt;
-QString rpc::IdAddress;
 QString rpc::IdHash;
+QString rpc::contractSeed;
+QString rpc::clientKey;
 
 QString rpc::hashOne;
 QString rpc::hashTwo;
@@ -105,6 +109,13 @@ QString rpc::hashSixtwo;
 QString rpc::hashSixthree;
 QString rpc::hashSixfour;
 QString rpc::hashSixfive;
+
+QString rpc::key1;
+QString rpc::key2;
+QString rpc::key3;
+QString rpc::key4;
+QString rpc::key5;
+QString rpc::key6;
 
 
 void MainWindow::payoutDelay(int seconds)            /// Delay for payout button to allow time to see end results
@@ -361,6 +372,7 @@ void MainWindow::potEmpty(double pot)       ///  Blank display when hand is paye
         ui->payoutPushButton->setEnabled(false);
         ui->winnerComboBox->setEnabled(false);
         rpc::paidOut = false;
+        Hand::keyIsPub = false;
     }
 }
 
@@ -368,14 +380,24 @@ void MainWindow::potEmpty(double pot)       ///  Blank display when hand is paye
 void MainWindow::setMinBet(double wager, double raised)     /// Sets minimum bet to wager or raised depending on local bet bool
 {
     if(Hand::hasBet == true){
-        ui->betSpinBox->setMinimum(raised/100000);
-        ui->betSpinBox->setMaximum(raised/100000);
+        if(raised > 0){
+            ui->betSpinBox->setMinimum(raised/100000);
+            ui->betSpinBox->setMaximum(raised/100000);
+        }else {
+            if(wager > 0){
+                ui->betSpinBox->setMinimum(wager/100000);
+                ui->betSpinBox->setMaximum(100000000);
+            }else{
+                ui->betSpinBox->setMinimum(rpc::ante/100000);
+            }
+        }
+
     }else {
         ui->betSpinBox->setMinimum(wager/100000);
 
-         if(raised > 0){
-             ui->betSpinBox->setMaximum(wager/100000);
-         }
+        if(raised > 0){
+            ui->betSpinBox->setMaximum(wager/100000);
+        }
     }
 }
 
@@ -492,6 +514,10 @@ void MainWindow::localPlayerControl(int bet, int draw, double wager, double ante
             ui->turnReadOut->insertPlainText("Bet is "+w);
         }
 
+        if(rpc::revealBool == 1 && Hand::keyIsPub == false){
+            revealKey();
+        }
+
     }else {
         ui->dealHandPushButton->setEnabled(false);            /// Not your turn controls
         ui->checkButton->setEnabled(false);
@@ -560,6 +586,15 @@ void MainWindow::disableButtons()   /// Buttons not in play
         ui->winnerComboBox->setEnabled(false);
         blankDisplay();
 
+    }
+
+    if(rpc::revealBool == 1){
+        ui->betButton->setEnabled(false);
+        ui->checkButton->setEnabled(false);
+        ui->drawPushButton->setEnabled(false);
+        ui->drawComboBox->setEnabled(false);
+        ui->dealHandPushButton->setEnabled(false);
+        ui->leaveButton->setEnabled(false);
     }
 
 }
@@ -764,17 +799,50 @@ void MainWindow::displayLocalHand(QString hashOne, QString hashTwo, QString hash
 }
 
 
-int MainWindow::card(QString hash, QString salt)  /// Gets card numbers for display from hash values
+int MainWindow::card(QString hash, int salt)  /// Gets local player card numbers for display from hash values
 {
     for (int i = 1; i < 53; i++) {
-         QString finder = QString::number(i);
-         QString salted = salt+finder;
-         QByteArray hashByte = salted.toUtf8();
-         QString naked = QString(QCryptographicHash::hash((hashByte),QCryptographicHash::Sha256).toHex());
+
+         int salted = salt+i;
+         QString finder = QString::number(salted);
+         QString pcSeed = rpc::clientKey;
+         QString scSeed = rpc::contractSeed;
+         QString add = rpc::clientKey+finder+scSeed;
+         QString naked = QString(QCryptographicHash::hash((add.toUtf8()),QCryptographicHash::Sha256).toHex());
+         salted++;
 
          if(naked == hash){
              return i;
-             break;
+         }
+
+    }
+    return 0;
+
+}
+
+
+int MainWindow::keyCard(QString hash, int salt, int who)  /// After keys are revealed we get other player card numbers for display from hash values
+{
+    QString keyCheck;
+    switch (who){
+    case 1: keyCheck = rpc::key1; break;
+    case 2: keyCheck = rpc::key2; break;
+    case 3: keyCheck = rpc::key3; break;
+    case 4: keyCheck = rpc::key4; break;
+    case 5: keyCheck = rpc::key5; break;
+    case 6: keyCheck = rpc::key6; break;
+    }
+
+    for (int i = 1; i < 53; i++) {
+
+         int salted = salt+i;
+         QString finder = QString::number(salted);
+         QString scSeed = rpc::contractSeed;
+         QString add = keyCheck+finder+scSeed;
+         QString card = QString(QCryptographicHash::hash((add.toUtf8()),QCryptographicHash::Sha256).toHex());
+
+         if(card == hash){
+             return i;
          }
 
     }
@@ -791,7 +859,7 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
     ui->logTextBrowser->setFontPointSize(30);
 
     ///Player 1 Decode hand result, sort and split into value and suits
-    int player1HandRaw[] = { card(rpc::hashOneone, rpc::salt), card(rpc::hashOnetwo, rpc::salt), card(rpc::hashOnethree, rpc::salt), card(rpc::hashOnefour, rpc::salt), card(rpc::hashOnefive, rpc::salt) };
+    int player1HandRaw[] = { keyCard(rpc::hashOneone, rpc::salt, 1), keyCard(rpc::hashOnetwo, rpc::salt, 1), keyCard(rpc::hashOnethree, rpc::salt, 1), keyCard(rpc::hashOnefour, rpc::salt, 1), keyCard(rpc::hashOnefive, rpc::salt, 1) };
 
     if(seats >= 2 && rpc::p1Fold != 1){
         p1Rank = 100;
@@ -858,7 +926,7 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
 
 
     ///Player 2 Decode hand result, sort and split into value and suits
-    int player2HandRaw[] = { card(rpc::hashTwoone, rpc::salt), card(rpc::hashTwotwo, rpc::salt), card(rpc::hashTwothree, rpc::salt), card(rpc::hashTwofour, rpc::salt), card(rpc::hashTwofive, rpc::salt) };
+    int player2HandRaw[] = { keyCard(rpc::hashTwoone, rpc::salt, 2), keyCard(rpc::hashTwotwo, rpc::salt, 2), keyCard(rpc::hashTwothree, rpc::salt, 2), keyCard(rpc::hashTwofour, rpc::salt, 2), keyCard(rpc::hashTwofive, rpc::salt, 2) };
 
     if(seats >= 2 && rpc::p2Fold != 1){
         p2Rank = 100;
@@ -925,7 +993,7 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
 
 
     ///Player 3 Decode hand result, sort and split into value and suits
-    int player3HandRaw[] = { card(rpc::hashThreeone, rpc::salt), card(rpc::hashThreetwo, rpc::salt), card(rpc::hashThreethree, rpc::salt), card(rpc::hashThreefour, rpc::salt), card(rpc::hashThreefive, rpc::salt) };
+    int player3HandRaw[] = { keyCard(rpc::hashThreeone, rpc::salt, 3), keyCard(rpc::hashThreetwo, rpc::salt, 3), keyCard(rpc::hashThreethree, rpc::salt, 3), keyCard(rpc::hashThreefour, rpc::salt, 3), keyCard(rpc::hashThreefive, rpc::salt, 3) };
 
     if(seats >= 3 && rpc::p3Fold != 1){
         p3Rank = 100;
@@ -991,7 +1059,7 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
 
 
     ///Player 4 Deode hand result, sort and split into value and suits
-    int player4HandRaw[] = { card(rpc::hashFourone, rpc::salt), card(rpc::hashFourtwo, rpc::salt), card(rpc::hashFourthree, rpc::salt), card(rpc::hashFourfour, rpc::salt), card(rpc::hashFourfive, rpc::salt) };
+    int player4HandRaw[] = { keyCard(rpc::hashFourone, rpc::salt, 4), keyCard(rpc::hashFourtwo, rpc::salt, 4), keyCard(rpc::hashFourthree, rpc::salt, 4), keyCard(rpc::hashFourfour, rpc::salt, 4), keyCard(rpc::hashFourfive, rpc::salt, 4) };
 
     if(seats >= 4 && rpc::p4Fold != 1){
         p4Rank = 100;
@@ -1056,7 +1124,7 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
     }
 
     ///Player 5 Deode hand result, sort and split into value and suits
-    int player5HandRaw[] = { card(rpc::hashFiveone, rpc::salt), card(rpc::hashFivetwo, rpc::salt), card(rpc::hashFivethree, rpc::salt), card(rpc::hashFivefour, rpc::salt), card(rpc::hashFivefive, rpc::salt) };
+    int player5HandRaw[] = { keyCard(rpc::hashFiveone, rpc::salt, 5), keyCard(rpc::hashFivetwo, rpc::salt, 5), keyCard(rpc::hashFivethree, rpc::salt, 5), keyCard(rpc::hashFivefour, rpc::salt, 5), keyCard(rpc::hashFivefive, rpc::salt, 5) };
 
     if(seats >= 5 && rpc::p5Fold != 1){
         p5Rank = 100;
@@ -1121,7 +1189,7 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
     }
 
     ///Player 6 Deode hand result, sort and split into value and suits
-    int player6HandRaw[] = { card(rpc::hashSixone, rpc::salt), card(rpc::hashSixtwo, rpc::salt), card(rpc::hashSixthree, rpc::salt), card(rpc::hashSixfour, rpc::salt), card(rpc::hashSixfive, rpc::salt) };
+    int player6HandRaw[] = { keyCard(rpc::hashSixone, rpc::salt, 6), keyCard(rpc::hashSixtwo, rpc::salt, 6), keyCard(rpc::hashSixthree, rpc::salt, 6), keyCard(rpc::hashSixfour, rpc::salt, 6), keyCard(rpc::hashSixfive, rpc::salt, 6) };
 
     if(seats == 6 && rpc::p6Fold != 1){
         p6Rank = 100;
@@ -1280,7 +1348,7 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
         }
         break;
 
-        }
+    }
 
     int winningRank[] = {p1Rank, p2Rank, p3Rank, p4Rank, p5Rank, p6Rank};
     std::sort(winningRank, winningRank + 6);
@@ -1290,10 +1358,10 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
         if(rpc::oneId == rpc::IdHash){
 
             if(Menu::autoPayout == true && rpc::paidOut == false && rpc::pot != 0){
-                  rpc::paidOut = true;
-                  QString whoWon = "Player1";
-                  payoutDelay(30);
-                  autopayWinner(whoWon);
+                rpc::paidOut = true;
+                QString whoWon = "Player1";
+                payoutDelay(30);
+                autopayWinner(whoWon);
             }
 
         }
@@ -1302,10 +1370,10 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
         if(rpc::oneId == rpc::IdHash){
 
             if(Menu::autoPayout == true && rpc::paidOut == false && rpc::pot != 0){
-                  rpc::paidOut = true;
-                  QString whoWon = "Player2";
-                  payoutDelay(30);
-                  autopayWinner(whoWon);
+                rpc::paidOut = true;
+                QString whoWon = "Player2";
+                payoutDelay(30);
+                autopayWinner(whoWon);
             }
 
         }
@@ -1314,10 +1382,10 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
         if(rpc::oneId == rpc::IdHash){
 
             if(Menu::autoPayout == true && rpc::paidOut == false && rpc::pot != 0){
-                  rpc::paidOut = true;
-                  QString whoWon = "Player3";
-                  payoutDelay(30);
-                  autopayWinner(whoWon);
+                rpc::paidOut = true;
+                QString whoWon = "Player3";
+                payoutDelay(30);
+                autopayWinner(whoWon);
             }
 
         }
@@ -1326,10 +1394,10 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
         if(rpc::oneId == rpc::IdHash){
 
             if(Menu::autoPayout == true && rpc::paidOut == false && rpc::pot != 0){
-                  rpc::paidOut = true;
-                  QString whoWon = "Player4";
-                  payoutDelay(30);
-                  autopayWinner(whoWon);
+                rpc::paidOut = true;
+                QString whoWon = "Player4";
+                payoutDelay(30);
+                autopayWinner(whoWon);
             }
 
         }
@@ -1338,10 +1406,10 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
         if(rpc::oneId == rpc::IdHash){
 
             if(Menu::autoPayout == true && rpc::paidOut == false && rpc::pot != 0){
-                  rpc::paidOut = true;
-                  QString whoWon = "Player5";
-                  payoutDelay(30);
-                  autopayWinner(whoWon);
+                rpc::paidOut = true;
+                QString whoWon = "Player5";
+                payoutDelay(30);
+                autopayWinner(whoWon);
             }
 
         }
@@ -1350,10 +1418,10 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
         if(rpc::oneId == rpc::IdHash){
 
             if(Menu::autoPayout == true && rpc::paidOut == false && rpc::pot != 0){
-                  rpc::paidOut = true;
-                  QString whoWon = "Player6";
-                  payoutDelay(30);
-                  autopayWinner(whoWon);
+                rpc::paidOut = true;
+                QString whoWon = "Player6";
+                payoutDelay(30);
+                autopayWinner(whoWon);
             }
 
         }
@@ -1410,8 +1478,8 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
             }
 
             if(p1HighCardArr[4] > p4HighCardArr[4]){
-            compare1_5();
-            compare5_1();
+                compare1_5();
+                compare5_1();
             }else if(p2HighCardArr[4] > p4HighCardArr[4]){
                 compare2_5();
                 compare5_2();
@@ -1443,56 +1511,56 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
 
         if(p1HighPair > p2HighPair && p1HighPair > p3HighPair && p1HighPair > p4HighPair && p1HighPair > p5HighPair && p1HighPair > p6HighPair){  /// If player has highest pairing
             if(p1Rank == winningRank[0]){
-            ui->turnReadOut->setText("Hand Over, Player 1 Wins");
+                ui->turnReadOut->setText("Hand Over, Player 1 Wins");
                 if(rpc::oneId == rpc::IdHash){
 
                     if(Menu::autoPayout == true && rpc::paidOut == false && rpc::pot != 0){
-                          rpc::paidOut = true;
-                          QString whoWon = "Player1";
-                          payoutDelay(30);
-                          autopayWinner(whoWon);
+                        rpc::paidOut = true;
+                        QString whoWon = "Player1";
+                        payoutDelay(30);
+                        autopayWinner(whoWon);
                     }
 
                 }
             }
         }else if(p2HighPair > p1HighPair && p2HighPair > p3HighPair && p2HighPair > p4HighPair && p2HighPair > p5HighPair && p2HighPair > p6HighPair){
             if(p2Rank == winningRank[0]){
-            ui->turnReadOut->setText("Hand Over, Player 2 Wins");
+                ui->turnReadOut->setText("Hand Over, Player 2 Wins");
                 if(rpc::oneId == rpc::IdHash){
 
                     if(Menu::autoPayout == true && rpc::paidOut == false && rpc::pot != 0){
-                          rpc::paidOut = true;
-                          QString whoWon = "Player2";
-                          payoutDelay(30);
-                          autopayWinner(whoWon);
+                        rpc::paidOut = true;
+                        QString whoWon = "Player2";
+                        payoutDelay(30);
+                        autopayWinner(whoWon);
                     }
 
                 }
             }
         }else if(p3HighPair > p1HighPair && p3HighPair > p2HighPair && p3HighPair > p4HighPair && p3HighPair > p5HighPair && p3HighPair > p6HighPair){
             if(p3Rank == winningRank[0]){
-            ui->turnReadOut->setText("Hand Over, Player 3 Wins");
+                ui->turnReadOut->setText("Hand Over, Player 3 Wins");
                 if(rpc::oneId == rpc::IdHash){
 
                     if(Menu::autoPayout == true && rpc::paidOut == false && rpc::pot != 0){
-                          rpc::paidOut = true;
-                          QString whoWon = "Player3";
-                          payoutDelay(30);
-                          autopayWinner(whoWon);
+                        rpc::paidOut = true;
+                        QString whoWon = "Player3";
+                        payoutDelay(30);
+                        autopayWinner(whoWon);
                     }
 
                 }
             }
         }else if(p4HighPair > p1HighPair && p4HighPair > p2HighPair && p4HighPair > p3HighPair && p4HighPair > p5HighPair && p4HighPair > p6HighPair){
             if(p4Rank == winningRank[0]){
-            ui->turnReadOut->setText("Hand Over, Player 4 Wins");
+                ui->turnReadOut->setText("Hand Over, Player 4 Wins");
                 if(rpc::oneId == rpc::IdHash){
 
                     if(Menu::autoPayout == true && rpc::paidOut == false && rpc::pot != 0){
-                          rpc::paidOut = true;
-                          QString whoWon = "Player4";
-                          payoutDelay(30);
-                          autopayWinner(whoWon);
+                        rpc::paidOut = true;
+                        QString whoWon = "Player4";
+                        payoutDelay(30);
+                        autopayWinner(whoWon);
 
                     }
 
@@ -1500,14 +1568,14 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
             }
         }else if(p5HighPair > p1HighPair && p5HighPair > p2HighPair && p5HighPair > p3HighPair && p5HighPair > p4HighPair && p5HighPair > p6HighPair){
             if(p5Rank == winningRank[0]){
-            ui->turnReadOut->setText("Hand Over, Player 5 Wins");
+                ui->turnReadOut->setText("Hand Over, Player 5 Wins");
                 if(rpc::oneId == rpc::IdHash){
 
                     if(Menu::autoPayout == true && rpc::paidOut == false && rpc::pot != 0){
-                          rpc::paidOut = true;
-                          QString whoWon = "Player5";
-                          payoutDelay(30);
-                          autopayWinner(whoWon);
+                        rpc::paidOut = true;
+                        QString whoWon = "Player5";
+                        payoutDelay(30);
+                        autopayWinner(whoWon);
 
                     }
 
@@ -1515,14 +1583,14 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
             }
         }else if(p6HighPair > p1HighPair && p6HighPair > p2HighPair && p6HighPair > p3HighPair && p6HighPair > p4HighPair && p6HighPair > p5HighPair){
             if(p6Rank == winningRank[0]){
-            ui->turnReadOut->setText("Hand Over, Player 6 Wins");
+                ui->turnReadOut->setText("Hand Over, Player 6 Wins");
                 if(rpc::oneId == rpc::IdHash){
 
                     if(Menu::autoPayout == true && rpc::paidOut == false && rpc::pot != 0){
-                          rpc::paidOut = true;
-                          QString whoWon = "Player6";
-                          payoutDelay(30);
-                          autopayWinner(whoWon);
+                        rpc::paidOut = true;
+                        QString whoWon = "Player6";
+                        payoutDelay(30);
+                        autopayWinner(whoWon);
 
                     }
 
@@ -1530,33 +1598,33 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
             }       /// Comapres all left over hands
         }else if((p1HighCardArr[4] > p2HighCardArr[4] && p1HighCardArr[4] > p3HighCardArr[4] && p1HighCardArr[4] > p4HighCardArr[4] && p1HighCardArr[4] > p5HighCardArr[4] && p1HighCardArr[4] > p6HighCardArr[4]) ||
 
-             (p1HighCardArr[4] >= p2HighCardArr[4] && p1HighCardArr[4] >= p3HighCardArr[4] && p1HighCardArr[4] >= p4HighCardArr[4] && p1HighCardArr[4] >= p5HighCardArr[4] && p1HighCardArr[4] >= p6HighCardArr[4] &&
-              p1HighCardArr[3] > p2HighCardArr[3] && p1HighCardArr[3] > p3HighCardArr[3] && p1HighCardArr[3] > p4HighCardArr[3] && p1HighCardArr[3] > p5HighCardArr[3] && p1HighCardArr[3] > p6HighCardArr[3]) ||
+                 (p1HighCardArr[4] >= p2HighCardArr[4] && p1HighCardArr[4] >= p3HighCardArr[4] && p1HighCardArr[4] >= p4HighCardArr[4] && p1HighCardArr[4] >= p5HighCardArr[4] && p1HighCardArr[4] >= p6HighCardArr[4] &&
+                  p1HighCardArr[3] > p2HighCardArr[3] && p1HighCardArr[3] > p3HighCardArr[3] && p1HighCardArr[3] > p4HighCardArr[3] && p1HighCardArr[3] > p5HighCardArr[3] && p1HighCardArr[3] > p6HighCardArr[3]) ||
 
-             (p1HighCardArr[4] >= p2HighCardArr[4] && p1HighCardArr[4] >= p3HighCardArr[4] && p1HighCardArr[4] >= p4HighCardArr[4] && p1HighCardArr[4] >= p5HighCardArr[4] && p1HighCardArr[4] >= p6HighCardArr[4] &&
-              p1HighCardArr[3] >= p2HighCardArr[3] && p1HighCardArr[3] >= p3HighCardArr[3] && p1HighCardArr[3] >= p4HighCardArr[3] && p1HighCardArr[3] >= p5HighCardArr[3] && p1HighCardArr[3] >= p6HighCardArr[3] &&
-              p1HighCardArr[2] > p2HighCardArr[2] && p1HighCardArr[2] > p3HighCardArr[2] && p1HighCardArr[2] > p4HighCardArr[2] && p1HighCardArr[2] > p5HighCardArr[2] && p1HighCardArr[2] > p6HighCardArr[2]) ||
+                 (p1HighCardArr[4] >= p2HighCardArr[4] && p1HighCardArr[4] >= p3HighCardArr[4] && p1HighCardArr[4] >= p4HighCardArr[4] && p1HighCardArr[4] >= p5HighCardArr[4] && p1HighCardArr[4] >= p6HighCardArr[4] &&
+                  p1HighCardArr[3] >= p2HighCardArr[3] && p1HighCardArr[3] >= p3HighCardArr[3] && p1HighCardArr[3] >= p4HighCardArr[3] && p1HighCardArr[3] >= p5HighCardArr[3] && p1HighCardArr[3] >= p6HighCardArr[3] &&
+                  p1HighCardArr[2] > p2HighCardArr[2] && p1HighCardArr[2] > p3HighCardArr[2] && p1HighCardArr[2] > p4HighCardArr[2] && p1HighCardArr[2] > p5HighCardArr[2] && p1HighCardArr[2] > p6HighCardArr[2]) ||
 
-             (p1HighCardArr[4] >= p2HighCardArr[4] && p1HighCardArr[4] >= p3HighCardArr[4] && p1HighCardArr[4] >= p4HighCardArr[4] && p1HighCardArr[4] >= p5HighCardArr[4] && p1HighCardArr[4] >= p6HighCardArr[4] &&
-              p1HighCardArr[3] >= p2HighCardArr[3] && p1HighCardArr[3] >= p3HighCardArr[3] && p1HighCardArr[3] >= p4HighCardArr[3] && p1HighCardArr[3] >= p5HighCardArr[3] && p1HighCardArr[3] >= p6HighCardArr[3] &&
-              p1HighCardArr[2] >= p2HighCardArr[2] && p1HighCardArr[2] >= p3HighCardArr[2] && p1HighCardArr[2] >= p4HighCardArr[2] && p1HighCardArr[2] >= p5HighCardArr[2] && p1HighCardArr[2] >= p6HighCardArr[2] &&
-              p1HighCardArr[1] > p2HighCardArr[1] && p1HighCardArr[1] > p3HighCardArr[1] && p1HighCardArr[1] > p4HighCardArr[1] && p1HighCardArr[1] > p5HighCardArr[1] && p1HighCardArr[1] > p6HighCardArr[1]) ||
+                 (p1HighCardArr[4] >= p2HighCardArr[4] && p1HighCardArr[4] >= p3HighCardArr[4] && p1HighCardArr[4] >= p4HighCardArr[4] && p1HighCardArr[4] >= p5HighCardArr[4] && p1HighCardArr[4] >= p6HighCardArr[4] &&
+                  p1HighCardArr[3] >= p2HighCardArr[3] && p1HighCardArr[3] >= p3HighCardArr[3] && p1HighCardArr[3] >= p4HighCardArr[3] && p1HighCardArr[3] >= p5HighCardArr[3] && p1HighCardArr[3] >= p6HighCardArr[3] &&
+                  p1HighCardArr[2] >= p2HighCardArr[2] && p1HighCardArr[2] >= p3HighCardArr[2] && p1HighCardArr[2] >= p4HighCardArr[2] && p1HighCardArr[2] >= p5HighCardArr[2] && p1HighCardArr[2] >= p6HighCardArr[2] &&
+                  p1HighCardArr[1] > p2HighCardArr[1] && p1HighCardArr[1] > p3HighCardArr[1] && p1HighCardArr[1] > p4HighCardArr[1] && p1HighCardArr[1] > p5HighCardArr[1] && p1HighCardArr[1] > p6HighCardArr[1]) ||
 
-             (p1HighCardArr[4] >= p2HighCardArr[4] && p1HighCardArr[4] >= p3HighCardArr[4] && p1HighCardArr[4] >= p4HighCardArr[4] && p1HighCardArr[4] >= p5HighCardArr[4] && p1HighCardArr[4] >= p6HighCardArr[4] &&
-              p1HighCardArr[3] >= p2HighCardArr[3] && p1HighCardArr[3] >= p3HighCardArr[3] && p1HighCardArr[3] >= p4HighCardArr[3] && p1HighCardArr[3] >= p5HighCardArr[3] && p1HighCardArr[3] >= p6HighCardArr[3] &&
-              p1HighCardArr[2] >= p2HighCardArr[2] && p1HighCardArr[2] >= p3HighCardArr[2] && p1HighCardArr[2] >= p4HighCardArr[2] && p1HighCardArr[2] >= p5HighCardArr[2] && p1HighCardArr[2] >= p6HighCardArr[2] &&
-              p1HighCardArr[1] >= p2HighCardArr[1] && p1HighCardArr[1] >= p3HighCardArr[1] && p1HighCardArr[1] >= p4HighCardArr[1] && p1HighCardArr[1] >= p5HighCardArr[1] && p1HighCardArr[1] >= p6HighCardArr[1] &&
-              p1HighCardArr[0] > p2HighCardArr[0] && p1HighCardArr[0] > p3HighCardArr[0] && p1HighCardArr[0] > p4HighCardArr[0] && p1HighCardArr[0] > p5HighCardArr[0] && p1HighCardArr[0] > p6HighCardArr[0])){
+                 (p1HighCardArr[4] >= p2HighCardArr[4] && p1HighCardArr[4] >= p3HighCardArr[4] && p1HighCardArr[4] >= p4HighCardArr[4] && p1HighCardArr[4] >= p5HighCardArr[4] && p1HighCardArr[4] >= p6HighCardArr[4] &&
+                  p1HighCardArr[3] >= p2HighCardArr[3] && p1HighCardArr[3] >= p3HighCardArr[3] && p1HighCardArr[3] >= p4HighCardArr[3] && p1HighCardArr[3] >= p5HighCardArr[3] && p1HighCardArr[3] >= p6HighCardArr[3] &&
+                  p1HighCardArr[2] >= p2HighCardArr[2] && p1HighCardArr[2] >= p3HighCardArr[2] && p1HighCardArr[2] >= p4HighCardArr[2] && p1HighCardArr[2] >= p5HighCardArr[2] && p1HighCardArr[2] >= p6HighCardArr[2] &&
+                  p1HighCardArr[1] >= p2HighCardArr[1] && p1HighCardArr[1] >= p3HighCardArr[1] && p1HighCardArr[1] >= p4HighCardArr[1] && p1HighCardArr[1] >= p5HighCardArr[1] && p1HighCardArr[1] >= p6HighCardArr[1] &&
+                  p1HighCardArr[0] > p2HighCardArr[0] && p1HighCardArr[0] > p3HighCardArr[0] && p1HighCardArr[0] > p4HighCardArr[0] && p1HighCardArr[0] > p5HighCardArr[0] && p1HighCardArr[0] > p6HighCardArr[0])){
 
             if(p1Rank == winningRank[0]){
                 ui->turnReadOut->setText("Hand Over, Player 1 Wins");
                 if(rpc::oneId == rpc::IdHash){
 
                     if(Menu::autoPayout == true && rpc::paidOut == false && rpc::pot != 0){
-                          rpc::paidOut = true;
-                          QString whoWon = "Player1";
-                          payoutDelay(30);
-                          autopayWinner(whoWon);
+                        rpc::paidOut = true;
+                        QString whoWon = "Player1";
+                        payoutDelay(30);
+                        autopayWinner(whoWon);
 
                     }
 
@@ -1588,10 +1656,10 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
                 if(rpc::oneId == rpc::IdHash){
 
                     if(Menu::autoPayout == true && rpc::paidOut == false && rpc::pot != 0){
-                          rpc::paidOut = true;
-                          QString whoWon = "Player2";
-                          payoutDelay(30);
-                          autopayWinner(whoWon);
+                        rpc::paidOut = true;
+                        QString whoWon = "Player2";
+                        payoutDelay(30);
+                        autopayWinner(whoWon);
 
                     }
 
@@ -1601,32 +1669,32 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
         }else if((p3HighCardArr[4] > p1HighCardArr[4] && p3HighCardArr[4] > p2HighCardArr[4] && p3HighCardArr[4] > p4HighCardArr[4] && p3HighCardArr[4] > p5HighCardArr[4] && p3HighCardArr[4] > p6HighCardArr[4]) ||
 
                  (p3HighCardArr[4] >= p1HighCardArr[4] && p3HighCardArr[4] >= p2HighCardArr[4] && p3HighCardArr[4] >= p4HighCardArr[4] && p3HighCardArr[4] >= p5HighCardArr[4] && p3HighCardArr[4] >= p6HighCardArr[4] &&
-                   p3HighCardArr[3] > p1HighCardArr[3] && p3HighCardArr[3] > p2HighCardArr[3] && p3HighCardArr[3] > p4HighCardArr[3] && p3HighCardArr[3] > p5HighCardArr[3] && p3HighCardArr[3] > p6HighCardArr[3]) ||
+                  p3HighCardArr[3] > p1HighCardArr[3] && p3HighCardArr[3] > p2HighCardArr[3] && p3HighCardArr[3] > p4HighCardArr[3] && p3HighCardArr[3] > p5HighCardArr[3] && p3HighCardArr[3] > p6HighCardArr[3]) ||
 
-                  (p3HighCardArr[4] >= p1HighCardArr[4] && p3HighCardArr[4] >= p2HighCardArr[4] && p3HighCardArr[4] >= p4HighCardArr[4] && p3HighCardArr[4] >= p5HighCardArr[4] && p3HighCardArr[4] >= p6HighCardArr[4] &&
-                   p3HighCardArr[3] >= p1HighCardArr[3] && p3HighCardArr[3] >= p2HighCardArr[3] && p3HighCardArr[3] >= p4HighCardArr[3] && p3HighCardArr[3] >= p5HighCardArr[3] && p3HighCardArr[3] >= p6HighCardArr[3] &&
-                   p3HighCardArr[2] > p1HighCardArr[2] && p3HighCardArr[2] > p2HighCardArr[2] && p3HighCardArr[2] > p4HighCardArr[2] && p3HighCardArr[2] > p5HighCardArr[2] && p3HighCardArr[2] > p6HighCardArr[2]) ||
+                 (p3HighCardArr[4] >= p1HighCardArr[4] && p3HighCardArr[4] >= p2HighCardArr[4] && p3HighCardArr[4] >= p4HighCardArr[4] && p3HighCardArr[4] >= p5HighCardArr[4] && p3HighCardArr[4] >= p6HighCardArr[4] &&
+                  p3HighCardArr[3] >= p1HighCardArr[3] && p3HighCardArr[3] >= p2HighCardArr[3] && p3HighCardArr[3] >= p4HighCardArr[3] && p3HighCardArr[3] >= p5HighCardArr[3] && p3HighCardArr[3] >= p6HighCardArr[3] &&
+                  p3HighCardArr[2] > p1HighCardArr[2] && p3HighCardArr[2] > p2HighCardArr[2] && p3HighCardArr[2] > p4HighCardArr[2] && p3HighCardArr[2] > p5HighCardArr[2] && p3HighCardArr[2] > p6HighCardArr[2]) ||
 
-                  (p3HighCardArr[4] >= p1HighCardArr[4] && p3HighCardArr[4] >= p2HighCardArr[4] && p3HighCardArr[4] >= p4HighCardArr[4] && p3HighCardArr[4] >= p5HighCardArr[4] && p3HighCardArr[4] >= p6HighCardArr[4] &&
-                   p3HighCardArr[3] >= p1HighCardArr[3] && p3HighCardArr[3] >= p2HighCardArr[3] && p3HighCardArr[3] >= p4HighCardArr[3] && p3HighCardArr[3] >= p5HighCardArr[3] && p3HighCardArr[3] >= p6HighCardArr[3] &&
-                   p3HighCardArr[2] >= p1HighCardArr[2] && p3HighCardArr[2] >= p2HighCardArr[2] && p3HighCardArr[2] >= p4HighCardArr[2] && p3HighCardArr[2] >= p5HighCardArr[2] && p3HighCardArr[2] >= p6HighCardArr[2] &&
-                   p3HighCardArr[1] > p1HighCardArr[1] && p3HighCardArr[1] > p2HighCardArr[1] && p3HighCardArr[1] > p4HighCardArr[1] && p3HighCardArr[1] > p5HighCardArr[1] && p3HighCardArr[1] > p6HighCardArr[1]) ||
+                 (p3HighCardArr[4] >= p1HighCardArr[4] && p3HighCardArr[4] >= p2HighCardArr[4] && p3HighCardArr[4] >= p4HighCardArr[4] && p3HighCardArr[4] >= p5HighCardArr[4] && p3HighCardArr[4] >= p6HighCardArr[4] &&
+                  p3HighCardArr[3] >= p1HighCardArr[3] && p3HighCardArr[3] >= p2HighCardArr[3] && p3HighCardArr[3] >= p4HighCardArr[3] && p3HighCardArr[3] >= p5HighCardArr[3] && p3HighCardArr[3] >= p6HighCardArr[3] &&
+                  p3HighCardArr[2] >= p1HighCardArr[2] && p3HighCardArr[2] >= p2HighCardArr[2] && p3HighCardArr[2] >= p4HighCardArr[2] && p3HighCardArr[2] >= p5HighCardArr[2] && p3HighCardArr[2] >= p6HighCardArr[2] &&
+                  p3HighCardArr[1] > p1HighCardArr[1] && p3HighCardArr[1] > p2HighCardArr[1] && p3HighCardArr[1] > p4HighCardArr[1] && p3HighCardArr[1] > p5HighCardArr[1] && p3HighCardArr[1] > p6HighCardArr[1]) ||
 
-                  (p3HighCardArr[4] >= p1HighCardArr[4] && p3HighCardArr[4] >= p2HighCardArr[4] && p3HighCardArr[4] >= p4HighCardArr[4] && p3HighCardArr[4] >= p5HighCardArr[4] && p3HighCardArr[4] >= p6HighCardArr[4] &&
-                   p3HighCardArr[3] >= p1HighCardArr[3] && p3HighCardArr[3] >= p2HighCardArr[3] && p3HighCardArr[3] >= p4HighCardArr[3] && p3HighCardArr[3] >= p5HighCardArr[3] && p3HighCardArr[3] >= p6HighCardArr[3] &&
-                   p3HighCardArr[2] >= p1HighCardArr[2] && p3HighCardArr[2] >= p2HighCardArr[2] && p3HighCardArr[2] >= p4HighCardArr[2] && p3HighCardArr[2] >= p5HighCardArr[2] && p3HighCardArr[2] >= p6HighCardArr[2] &&
-                   p3HighCardArr[1] >= p1HighCardArr[1] && p3HighCardArr[1] >= p2HighCardArr[1] && p3HighCardArr[1] >= p4HighCardArr[1] && p3HighCardArr[1] >= p5HighCardArr[1] && p3HighCardArr[1] >= p6HighCardArr[1] &&
-                   p3HighCardArr[0] > p1HighCardArr[0] && p3HighCardArr[0] > p2HighCardArr[0] && p3HighCardArr[0] > p4HighCardArr[0] && p3HighCardArr[0] > p5HighCardArr[0] && p3HighCardArr[0] > p6HighCardArr[0])){
+                 (p3HighCardArr[4] >= p1HighCardArr[4] && p3HighCardArr[4] >= p2HighCardArr[4] && p3HighCardArr[4] >= p4HighCardArr[4] && p3HighCardArr[4] >= p5HighCardArr[4] && p3HighCardArr[4] >= p6HighCardArr[4] &&
+                  p3HighCardArr[3] >= p1HighCardArr[3] && p3HighCardArr[3] >= p2HighCardArr[3] && p3HighCardArr[3] >= p4HighCardArr[3] && p3HighCardArr[3] >= p5HighCardArr[3] && p3HighCardArr[3] >= p6HighCardArr[3] &&
+                  p3HighCardArr[2] >= p1HighCardArr[2] && p3HighCardArr[2] >= p2HighCardArr[2] && p3HighCardArr[2] >= p4HighCardArr[2] && p3HighCardArr[2] >= p5HighCardArr[2] && p3HighCardArr[2] >= p6HighCardArr[2] &&
+                  p3HighCardArr[1] >= p1HighCardArr[1] && p3HighCardArr[1] >= p2HighCardArr[1] && p3HighCardArr[1] >= p4HighCardArr[1] && p3HighCardArr[1] >= p5HighCardArr[1] && p3HighCardArr[1] >= p6HighCardArr[1] &&
+                  p3HighCardArr[0] > p1HighCardArr[0] && p3HighCardArr[0] > p2HighCardArr[0] && p3HighCardArr[0] > p4HighCardArr[0] && p3HighCardArr[0] > p5HighCardArr[0] && p3HighCardArr[0] > p6HighCardArr[0])){
 
             if(p3Rank == winningRank[0]){
                 ui->turnReadOut->setText("Hand Over, Player 3 Wins");
                 if(rpc::oneId == rpc::IdHash){
 
                     if(Menu::autoPayout == true && rpc::paidOut == false && rpc::pot != 0){
-                          rpc::paidOut = true;
-                          QString whoWon = "Player3";
-                          payoutDelay(30);
-                          autopayWinner(whoWon);
+                        rpc::paidOut = true;
+                        QString whoWon = "Player3";
+                        payoutDelay(30);
+                        autopayWinner(whoWon);
 
                     }
 
@@ -1636,32 +1704,32 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
         }else if((p4HighCardArr[4] > p1HighCardArr[4] && p4HighCardArr[4] > p2HighCardArr[4] && p4HighCardArr[4] > p3HighCardArr[4] && p4HighCardArr[4] > p5HighCardArr[4] && p4HighCardArr[4] > p6HighCardArr[4]) ||
 
                  (p4HighCardArr[4] >= p1HighCardArr[4] && p4HighCardArr[4] >= p2HighCardArr[4] && p4HighCardArr[4] >= p3HighCardArr[4] && p4HighCardArr[4] >= p5HighCardArr[4] && p4HighCardArr[4] >= p6HighCardArr[4] &&
-                   p4HighCardArr[3] > p1HighCardArr[3] && p4HighCardArr[3] > p2HighCardArr[3] && p4HighCardArr[3] > p3HighCardArr[3] && p4HighCardArr[3] > p5HighCardArr[3] && p4HighCardArr[3] > p6HighCardArr[3]) ||
+                  p4HighCardArr[3] > p1HighCardArr[3] && p4HighCardArr[3] > p2HighCardArr[3] && p4HighCardArr[3] > p3HighCardArr[3] && p4HighCardArr[3] > p5HighCardArr[3] && p4HighCardArr[3] > p6HighCardArr[3]) ||
 
-                  (p4HighCardArr[4] >= p1HighCardArr[4] && p4HighCardArr[4] >= p2HighCardArr[4] && p4HighCardArr[4] >= p3HighCardArr[4] && p4HighCardArr[4] >= p5HighCardArr[4] && p4HighCardArr[4] >= p6HighCardArr[4] &&
-                   p4HighCardArr[3] >= p1HighCardArr[3] && p4HighCardArr[3] >= p2HighCardArr[3] && p4HighCardArr[3] >= p3HighCardArr[3] && p4HighCardArr[3] >= p5HighCardArr[3] && p4HighCardArr[3] >= p6HighCardArr[3] &&
-                   p4HighCardArr[2] > p1HighCardArr[2] && p4HighCardArr[2] > p2HighCardArr[2] && p4HighCardArr[2] > p3HighCardArr[2] && p4HighCardArr[2] > p5HighCardArr[2] && p4HighCardArr[2] > p6HighCardArr[2]) ||
+                 (p4HighCardArr[4] >= p1HighCardArr[4] && p4HighCardArr[4] >= p2HighCardArr[4] && p4HighCardArr[4] >= p3HighCardArr[4] && p4HighCardArr[4] >= p5HighCardArr[4] && p4HighCardArr[4] >= p6HighCardArr[4] &&
+                  p4HighCardArr[3] >= p1HighCardArr[3] && p4HighCardArr[3] >= p2HighCardArr[3] && p4HighCardArr[3] >= p3HighCardArr[3] && p4HighCardArr[3] >= p5HighCardArr[3] && p4HighCardArr[3] >= p6HighCardArr[3] &&
+                  p4HighCardArr[2] > p1HighCardArr[2] && p4HighCardArr[2] > p2HighCardArr[2] && p4HighCardArr[2] > p3HighCardArr[2] && p4HighCardArr[2] > p5HighCardArr[2] && p4HighCardArr[2] > p6HighCardArr[2]) ||
 
-                  (p4HighCardArr[4] >= p1HighCardArr[4] && p4HighCardArr[4] >= p2HighCardArr[4] && p4HighCardArr[4] >= p3HighCardArr[4] && p4HighCardArr[4] >= p5HighCardArr[4] && p4HighCardArr[4] >= p6HighCardArr[4] &&
-                   p4HighCardArr[3] >= p1HighCardArr[3] && p4HighCardArr[3] >= p2HighCardArr[3] && p4HighCardArr[3] >= p3HighCardArr[3] && p4HighCardArr[3] >= p5HighCardArr[3] && p4HighCardArr[3] >= p6HighCardArr[3] &&
-                   p4HighCardArr[2] >= p1HighCardArr[2] && p4HighCardArr[2] >= p2HighCardArr[2] && p4HighCardArr[2] >= p3HighCardArr[2] && p4HighCardArr[2] >= p5HighCardArr[2] && p4HighCardArr[2] >= p6HighCardArr[2] &&
-                   p4HighCardArr[1] > p1HighCardArr[1] && p4HighCardArr[1] > p2HighCardArr[1] && p4HighCardArr[1] > p3HighCardArr[1] && p4HighCardArr[1] > p5HighCardArr[1] && p4HighCardArr[1] > p6HighCardArr[1]) ||
+                 (p4HighCardArr[4] >= p1HighCardArr[4] && p4HighCardArr[4] >= p2HighCardArr[4] && p4HighCardArr[4] >= p3HighCardArr[4] && p4HighCardArr[4] >= p5HighCardArr[4] && p4HighCardArr[4] >= p6HighCardArr[4] &&
+                  p4HighCardArr[3] >= p1HighCardArr[3] && p4HighCardArr[3] >= p2HighCardArr[3] && p4HighCardArr[3] >= p3HighCardArr[3] && p4HighCardArr[3] >= p5HighCardArr[3] && p4HighCardArr[3] >= p6HighCardArr[3] &&
+                  p4HighCardArr[2] >= p1HighCardArr[2] && p4HighCardArr[2] >= p2HighCardArr[2] && p4HighCardArr[2] >= p3HighCardArr[2] && p4HighCardArr[2] >= p5HighCardArr[2] && p4HighCardArr[2] >= p6HighCardArr[2] &&
+                  p4HighCardArr[1] > p1HighCardArr[1] && p4HighCardArr[1] > p2HighCardArr[1] && p4HighCardArr[1] > p3HighCardArr[1] && p4HighCardArr[1] > p5HighCardArr[1] && p4HighCardArr[1] > p6HighCardArr[1]) ||
 
-                  (p4HighCardArr[4] >= p1HighCardArr[4] && p4HighCardArr[4] >= p2HighCardArr[4] && p4HighCardArr[4] >= p3HighCardArr[4] && p4HighCardArr[4] >= p5HighCardArr[4] && p4HighCardArr[4] >= p6HighCardArr[4] &&
-                   p4HighCardArr[3] >= p1HighCardArr[3] && p4HighCardArr[3] >= p2HighCardArr[3] && p4HighCardArr[3] >= p3HighCardArr[3] && p4HighCardArr[3] >= p5HighCardArr[3] && p4HighCardArr[3] >= p6HighCardArr[3] &&
-                   p4HighCardArr[2] >= p1HighCardArr[2] && p4HighCardArr[2] >= p2HighCardArr[2] && p4HighCardArr[2] >= p3HighCardArr[2] && p4HighCardArr[2] >= p5HighCardArr[2] && p4HighCardArr[2] >= p6HighCardArr[2] &&
-                   p4HighCardArr[1] >= p1HighCardArr[1] && p4HighCardArr[1] >= p2HighCardArr[1] && p4HighCardArr[1] >= p3HighCardArr[1] && p4HighCardArr[1] >= p5HighCardArr[1] && p4HighCardArr[1] >= p6HighCardArr[1] &&
-                   p4HighCardArr[0] > p1HighCardArr[0] && p4HighCardArr[0] > p2HighCardArr[0] && p4HighCardArr[0] > p3HighCardArr[0] && p4HighCardArr[0] > p5HighCardArr[0] && p4HighCardArr[0] > p6HighCardArr[0])){
+                 (p4HighCardArr[4] >= p1HighCardArr[4] && p4HighCardArr[4] >= p2HighCardArr[4] && p4HighCardArr[4] >= p3HighCardArr[4] && p4HighCardArr[4] >= p5HighCardArr[4] && p4HighCardArr[4] >= p6HighCardArr[4] &&
+                  p4HighCardArr[3] >= p1HighCardArr[3] && p4HighCardArr[3] >= p2HighCardArr[3] && p4HighCardArr[3] >= p3HighCardArr[3] && p4HighCardArr[3] >= p5HighCardArr[3] && p4HighCardArr[3] >= p6HighCardArr[3] &&
+                  p4HighCardArr[2] >= p1HighCardArr[2] && p4HighCardArr[2] >= p2HighCardArr[2] && p4HighCardArr[2] >= p3HighCardArr[2] && p4HighCardArr[2] >= p5HighCardArr[2] && p4HighCardArr[2] >= p6HighCardArr[2] &&
+                  p4HighCardArr[1] >= p1HighCardArr[1] && p4HighCardArr[1] >= p2HighCardArr[1] && p4HighCardArr[1] >= p3HighCardArr[1] && p4HighCardArr[1] >= p5HighCardArr[1] && p4HighCardArr[1] >= p6HighCardArr[1] &&
+                  p4HighCardArr[0] > p1HighCardArr[0] && p4HighCardArr[0] > p2HighCardArr[0] && p4HighCardArr[0] > p3HighCardArr[0] && p4HighCardArr[0] > p5HighCardArr[0] && p4HighCardArr[0] > p6HighCardArr[0])){
 
             if(p4Rank == winningRank[0]){
                 ui->turnReadOut->setText("Hand Over, Player 4 Wins");
                 if(rpc::oneId == rpc::IdHash){
 
                     if(Menu::autoPayout == true && rpc::paidOut == false && rpc::pot != 0){
-                          rpc::paidOut = true;
-                          QString whoWon = "Player4";
-                          payoutDelay(30);
-                          autopayWinner(whoWon);
+                        rpc::paidOut = true;
+                        QString whoWon = "Player4";
+                        payoutDelay(30);
+                        autopayWinner(whoWon);
 
                     }
 
@@ -1671,32 +1739,32 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
         }else if((p5HighCardArr[4] > p1HighCardArr[4] && p5HighCardArr[4] > p2HighCardArr[4] && p5HighCardArr[4] > p3HighCardArr[4] && p5HighCardArr[4] > p4HighCardArr[4] && p5HighCardArr[4] > p6HighCardArr[4]) ||
 
                  (p5HighCardArr[4] >= p1HighCardArr[4] && p5HighCardArr[4] >= p2HighCardArr[4] && p5HighCardArr[4] >= p3HighCardArr[4] && p5HighCardArr[4] >= p4HighCardArr[4] && p5HighCardArr[4] >= p6HighCardArr[4] &&
-                   p5HighCardArr[3] > p1HighCardArr[3] && p5HighCardArr[3] > p2HighCardArr[3] && p5HighCardArr[3] > p3HighCardArr[3] && p5HighCardArr[3] > p4HighCardArr[3] && p5HighCardArr[3] > p6HighCardArr[3]) ||
+                  p5HighCardArr[3] > p1HighCardArr[3] && p5HighCardArr[3] > p2HighCardArr[3] && p5HighCardArr[3] > p3HighCardArr[3] && p5HighCardArr[3] > p4HighCardArr[3] && p5HighCardArr[3] > p6HighCardArr[3]) ||
 
-                  (p5HighCardArr[4] >= p1HighCardArr[4] && p5HighCardArr[4] >= p2HighCardArr[4] && p5HighCardArr[4] >= p3HighCardArr[4] && p5HighCardArr[4] >= p4HighCardArr[4] && p5HighCardArr[4] >= p6HighCardArr[4] &&
-                   p5HighCardArr[3] >= p1HighCardArr[3] && p5HighCardArr[3] >= p2HighCardArr[3] && p5HighCardArr[3] >= p3HighCardArr[3] && p5HighCardArr[3] >= p4HighCardArr[3] && p5HighCardArr[3] >= p6HighCardArr[3] &&
-                   p5HighCardArr[2] > p1HighCardArr[2] && p5HighCardArr[2] > p2HighCardArr[2] && p5HighCardArr[2] > p3HighCardArr[2] && p5HighCardArr[2] > p4HighCardArr[2] && p5HighCardArr[2] > p6HighCardArr[2]) ||
+                 (p5HighCardArr[4] >= p1HighCardArr[4] && p5HighCardArr[4] >= p2HighCardArr[4] && p5HighCardArr[4] >= p3HighCardArr[4] && p5HighCardArr[4] >= p4HighCardArr[4] && p5HighCardArr[4] >= p6HighCardArr[4] &&
+                  p5HighCardArr[3] >= p1HighCardArr[3] && p5HighCardArr[3] >= p2HighCardArr[3] && p5HighCardArr[3] >= p3HighCardArr[3] && p5HighCardArr[3] >= p4HighCardArr[3] && p5HighCardArr[3] >= p6HighCardArr[3] &&
+                  p5HighCardArr[2] > p1HighCardArr[2] && p5HighCardArr[2] > p2HighCardArr[2] && p5HighCardArr[2] > p3HighCardArr[2] && p5HighCardArr[2] > p4HighCardArr[2] && p5HighCardArr[2] > p6HighCardArr[2]) ||
 
-                  (p5HighCardArr[4] >= p1HighCardArr[4] && p5HighCardArr[4] >= p2HighCardArr[4] && p5HighCardArr[4] >= p3HighCardArr[4] && p5HighCardArr[4] >= p4HighCardArr[4] && p5HighCardArr[4] >= p6HighCardArr[4] &&
-                   p5HighCardArr[3] >= p1HighCardArr[3] && p5HighCardArr[3] >= p2HighCardArr[3] && p5HighCardArr[3] >= p3HighCardArr[3] && p5HighCardArr[3] >= p4HighCardArr[3] && p5HighCardArr[3] >= p6HighCardArr[3] &&
-                   p5HighCardArr[2] >= p1HighCardArr[2] && p5HighCardArr[2] >= p2HighCardArr[2] && p5HighCardArr[2] >= p3HighCardArr[2] && p5HighCardArr[2] >= p4HighCardArr[2] && p5HighCardArr[2] >= p6HighCardArr[2] &&
-                   p5HighCardArr[1] > p1HighCardArr[1] && p5HighCardArr[1] > p2HighCardArr[1] && p5HighCardArr[1] > p3HighCardArr[1] && p5HighCardArr[1] > p4HighCardArr[1] && p5HighCardArr[1] > p6HighCardArr[1]) ||
+                 (p5HighCardArr[4] >= p1HighCardArr[4] && p5HighCardArr[4] >= p2HighCardArr[4] && p5HighCardArr[4] >= p3HighCardArr[4] && p5HighCardArr[4] >= p4HighCardArr[4] && p5HighCardArr[4] >= p6HighCardArr[4] &&
+                  p5HighCardArr[3] >= p1HighCardArr[3] && p5HighCardArr[3] >= p2HighCardArr[3] && p5HighCardArr[3] >= p3HighCardArr[3] && p5HighCardArr[3] >= p4HighCardArr[3] && p5HighCardArr[3] >= p6HighCardArr[3] &&
+                  p5HighCardArr[2] >= p1HighCardArr[2] && p5HighCardArr[2] >= p2HighCardArr[2] && p5HighCardArr[2] >= p3HighCardArr[2] && p5HighCardArr[2] >= p4HighCardArr[2] && p5HighCardArr[2] >= p6HighCardArr[2] &&
+                  p5HighCardArr[1] > p1HighCardArr[1] && p5HighCardArr[1] > p2HighCardArr[1] && p5HighCardArr[1] > p3HighCardArr[1] && p5HighCardArr[1] > p4HighCardArr[1] && p5HighCardArr[1] > p6HighCardArr[1]) ||
 
-                  (p5HighCardArr[4] >= p1HighCardArr[4] && p5HighCardArr[4] >= p2HighCardArr[4] && p5HighCardArr[4] >= p3HighCardArr[4] && p5HighCardArr[4] >= p4HighCardArr[4] && p5HighCardArr[4] >= p6HighCardArr[4] &&
-                   p5HighCardArr[3] >= p1HighCardArr[3] && p5HighCardArr[3] >= p2HighCardArr[3] && p5HighCardArr[3] >= p3HighCardArr[3] && p5HighCardArr[3] >= p4HighCardArr[3] && p5HighCardArr[3] >= p6HighCardArr[3] &&
-                   p5HighCardArr[2] >= p1HighCardArr[2] && p5HighCardArr[2] >= p2HighCardArr[2] && p5HighCardArr[2] >= p3HighCardArr[2] && p5HighCardArr[2] >= p4HighCardArr[2] && p5HighCardArr[2] >= p6HighCardArr[2] &&
-                   p5HighCardArr[1] >= p1HighCardArr[1] && p5HighCardArr[1] >= p2HighCardArr[1] && p5HighCardArr[1] >= p3HighCardArr[1] && p5HighCardArr[1] >= p4HighCardArr[1] && p5HighCardArr[1] >= p6HighCardArr[1] &&
-                   p5HighCardArr[0] > p1HighCardArr[0] && p5HighCardArr[0] > p2HighCardArr[0] && p5HighCardArr[0] > p3HighCardArr[0] && p5HighCardArr[0] > p4HighCardArr[0] && p5HighCardArr[0] > p6HighCardArr[0])){
+                 (p5HighCardArr[4] >= p1HighCardArr[4] && p5HighCardArr[4] >= p2HighCardArr[4] && p5HighCardArr[4] >= p3HighCardArr[4] && p5HighCardArr[4] >= p4HighCardArr[4] && p5HighCardArr[4] >= p6HighCardArr[4] &&
+                  p5HighCardArr[3] >= p1HighCardArr[3] && p5HighCardArr[3] >= p2HighCardArr[3] && p5HighCardArr[3] >= p3HighCardArr[3] && p5HighCardArr[3] >= p4HighCardArr[3] && p5HighCardArr[3] >= p6HighCardArr[3] &&
+                  p5HighCardArr[2] >= p1HighCardArr[2] && p5HighCardArr[2] >= p2HighCardArr[2] && p5HighCardArr[2] >= p3HighCardArr[2] && p5HighCardArr[2] >= p4HighCardArr[2] && p5HighCardArr[2] >= p6HighCardArr[2] &&
+                  p5HighCardArr[1] >= p1HighCardArr[1] && p5HighCardArr[1] >= p2HighCardArr[1] && p5HighCardArr[1] >= p3HighCardArr[1] && p5HighCardArr[1] >= p4HighCardArr[1] && p5HighCardArr[1] >= p6HighCardArr[1] &&
+                  p5HighCardArr[0] > p1HighCardArr[0] && p5HighCardArr[0] > p2HighCardArr[0] && p5HighCardArr[0] > p3HighCardArr[0] && p5HighCardArr[0] > p4HighCardArr[0] && p5HighCardArr[0] > p6HighCardArr[0])){
 
             if(p5Rank == winningRank[0]){
                 ui->turnReadOut->setText("Hand Over, Player 5 Wins");
                 if(rpc::oneId == rpc::IdHash){
 
                     if(Menu::autoPayout == true && rpc::paidOut == false && rpc::pot != 0){
-                          rpc::paidOut = true;
-                          QString whoWon = "Player5";
-                          payoutDelay(30);
-                          autopayWinner(whoWon);
+                        rpc::paidOut = true;
+                        QString whoWon = "Player5";
+                        payoutDelay(30);
+                        autopayWinner(whoWon);
 
                     }
 
@@ -1706,32 +1774,32 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
         }else if((p6HighCardArr[4] > p1HighCardArr[4] && p6HighCardArr[4] > p2HighCardArr[4] && p6HighCardArr[4] > p3HighCardArr[4] && p6HighCardArr[4] > p4HighCardArr[4] && p6HighCardArr[4] > p5HighCardArr[4]) ||
 
                  (p6HighCardArr[4] >= p1HighCardArr[4] && p6HighCardArr[4] >= p2HighCardArr[4] && p6HighCardArr[4] >= p3HighCardArr[4] && p6HighCardArr[4] >= p4HighCardArr[4] && p6HighCardArr[4] >= p5HighCardArr[4] &&
-                   p6HighCardArr[3] > p1HighCardArr[3] && p6HighCardArr[3] > p2HighCardArr[3] && p6HighCardArr[3] > p3HighCardArr[3] && p6HighCardArr[3] > p4HighCardArr[3] && p6HighCardArr[3] > p5HighCardArr[3]) ||
+                  p6HighCardArr[3] > p1HighCardArr[3] && p6HighCardArr[3] > p2HighCardArr[3] && p6HighCardArr[3] > p3HighCardArr[3] && p6HighCardArr[3] > p4HighCardArr[3] && p6HighCardArr[3] > p5HighCardArr[3]) ||
 
-                  (p6HighCardArr[4] >= p1HighCardArr[4] && p6HighCardArr[4] >= p2HighCardArr[4] && p6HighCardArr[4] >= p3HighCardArr[4] && p6HighCardArr[4] >= p4HighCardArr[4] && p6HighCardArr[4] >= p5HighCardArr[4] &&
-                   p6HighCardArr[3] >= p1HighCardArr[3] && p6HighCardArr[3] >= p2HighCardArr[3] && p6HighCardArr[3] >= p3HighCardArr[3] && p6HighCardArr[3] >= p4HighCardArr[3] && p6HighCardArr[3] >= p5HighCardArr[3] &&
-                   p6HighCardArr[2] > p1HighCardArr[2] && p6HighCardArr[2] > p2HighCardArr[2] && p6HighCardArr[2] > p3HighCardArr[2] && p6HighCardArr[2] > p4HighCardArr[2] && p6HighCardArr[2] > p5HighCardArr[2]) ||
+                 (p6HighCardArr[4] >= p1HighCardArr[4] && p6HighCardArr[4] >= p2HighCardArr[4] && p6HighCardArr[4] >= p3HighCardArr[4] && p6HighCardArr[4] >= p4HighCardArr[4] && p6HighCardArr[4] >= p5HighCardArr[4] &&
+                  p6HighCardArr[3] >= p1HighCardArr[3] && p6HighCardArr[3] >= p2HighCardArr[3] && p6HighCardArr[3] >= p3HighCardArr[3] && p6HighCardArr[3] >= p4HighCardArr[3] && p6HighCardArr[3] >= p5HighCardArr[3] &&
+                  p6HighCardArr[2] > p1HighCardArr[2] && p6HighCardArr[2] > p2HighCardArr[2] && p6HighCardArr[2] > p3HighCardArr[2] && p6HighCardArr[2] > p4HighCardArr[2] && p6HighCardArr[2] > p5HighCardArr[2]) ||
 
-                  (p6HighCardArr[4] >= p1HighCardArr[4] && p6HighCardArr[4] >= p2HighCardArr[4] && p6HighCardArr[4] >= p3HighCardArr[4] && p6HighCardArr[4] >= p4HighCardArr[4] && p6HighCardArr[4] >= p5HighCardArr[4] &&
-                   p6HighCardArr[3] >= p1HighCardArr[3] && p6HighCardArr[3] >= p2HighCardArr[3] && p6HighCardArr[3] >= p3HighCardArr[3] && p6HighCardArr[3] >= p4HighCardArr[3] && p6HighCardArr[3] >= p5HighCardArr[3] &&
-                   p6HighCardArr[2] >= p1HighCardArr[2] && p6HighCardArr[2] >= p2HighCardArr[2] && p6HighCardArr[2] >= p3HighCardArr[2] && p6HighCardArr[2] >= p4HighCardArr[2] && p6HighCardArr[2] >= p5HighCardArr[2] &&
-                   p6HighCardArr[1] > p1HighCardArr[1] && p6HighCardArr[1] > p2HighCardArr[1] && p6HighCardArr[1] > p3HighCardArr[1] && p6HighCardArr[1] > p4HighCardArr[1] && p6HighCardArr[1] > p5HighCardArr[1]) ||
+                 (p6HighCardArr[4] >= p1HighCardArr[4] && p6HighCardArr[4] >= p2HighCardArr[4] && p6HighCardArr[4] >= p3HighCardArr[4] && p6HighCardArr[4] >= p4HighCardArr[4] && p6HighCardArr[4] >= p5HighCardArr[4] &&
+                  p6HighCardArr[3] >= p1HighCardArr[3] && p6HighCardArr[3] >= p2HighCardArr[3] && p6HighCardArr[3] >= p3HighCardArr[3] && p6HighCardArr[3] >= p4HighCardArr[3] && p6HighCardArr[3] >= p5HighCardArr[3] &&
+                  p6HighCardArr[2] >= p1HighCardArr[2] && p6HighCardArr[2] >= p2HighCardArr[2] && p6HighCardArr[2] >= p3HighCardArr[2] && p6HighCardArr[2] >= p4HighCardArr[2] && p6HighCardArr[2] >= p5HighCardArr[2] &&
+                  p6HighCardArr[1] > p1HighCardArr[1] && p6HighCardArr[1] > p2HighCardArr[1] && p6HighCardArr[1] > p3HighCardArr[1] && p6HighCardArr[1] > p4HighCardArr[1] && p6HighCardArr[1] > p5HighCardArr[1]) ||
 
-                  (p6HighCardArr[4] >= p1HighCardArr[4] && p6HighCardArr[4] >= p2HighCardArr[4] && p6HighCardArr[4] >= p3HighCardArr[4] && p6HighCardArr[4] >= p4HighCardArr[4] && p6HighCardArr[4] >= p5HighCardArr[4] &&
-                   p6HighCardArr[3] >= p1HighCardArr[3] && p6HighCardArr[3] >= p2HighCardArr[3] && p6HighCardArr[3] >= p3HighCardArr[3] && p6HighCardArr[3] >= p4HighCardArr[3] && p6HighCardArr[3] >= p5HighCardArr[3] &&
-                   p6HighCardArr[2] >= p1HighCardArr[2] && p6HighCardArr[2] >= p2HighCardArr[2] && p6HighCardArr[2] >= p3HighCardArr[2] && p6HighCardArr[2] >= p4HighCardArr[2] && p6HighCardArr[2] >= p5HighCardArr[2] &&
-                   p6HighCardArr[1] >= p1HighCardArr[1] && p6HighCardArr[1] >= p2HighCardArr[1] && p6HighCardArr[1] >= p3HighCardArr[1] && p6HighCardArr[1] >= p4HighCardArr[1] && p6HighCardArr[1] >= p5HighCardArr[1] &&
-                   p6HighCardArr[0] > p1HighCardArr[0] && p6HighCardArr[0] > p2HighCardArr[0] && p6HighCardArr[0] > p3HighCardArr[0] && p6HighCardArr[0] > p4HighCardArr[0] && p6HighCardArr[0] > p5HighCardArr[0])){
+                 (p6HighCardArr[4] >= p1HighCardArr[4] && p6HighCardArr[4] >= p2HighCardArr[4] && p6HighCardArr[4] >= p3HighCardArr[4] && p6HighCardArr[4] >= p4HighCardArr[4] && p6HighCardArr[4] >= p5HighCardArr[4] &&
+                  p6HighCardArr[3] >= p1HighCardArr[3] && p6HighCardArr[3] >= p2HighCardArr[3] && p6HighCardArr[3] >= p3HighCardArr[3] && p6HighCardArr[3] >= p4HighCardArr[3] && p6HighCardArr[3] >= p5HighCardArr[3] &&
+                  p6HighCardArr[2] >= p1HighCardArr[2] && p6HighCardArr[2] >= p2HighCardArr[2] && p6HighCardArr[2] >= p3HighCardArr[2] && p6HighCardArr[2] >= p4HighCardArr[2] && p6HighCardArr[2] >= p5HighCardArr[2] &&
+                  p6HighCardArr[1] >= p1HighCardArr[1] && p6HighCardArr[1] >= p2HighCardArr[1] && p6HighCardArr[1] >= p3HighCardArr[1] && p6HighCardArr[1] >= p4HighCardArr[1] && p6HighCardArr[1] >= p5HighCardArr[1] &&
+                  p6HighCardArr[0] > p1HighCardArr[0] && p6HighCardArr[0] > p2HighCardArr[0] && p6HighCardArr[0] > p3HighCardArr[0] && p6HighCardArr[0] > p4HighCardArr[0] && p6HighCardArr[0] > p5HighCardArr[0])){
 
             if(p6Rank == winningRank[0]){
                 ui->turnReadOut->setText("Hand Over, Player 6 Wins");
                 if(rpc::oneId == rpc::IdHash){
 
                     if(Menu::autoPayout == true && rpc::paidOut == false && rpc::pot != 0){
-                          rpc::paidOut = true;
-                          QString whoWon = "Player6";
-                          payoutDelay(30);
-                          autopayWinner(whoWon);
+                        rpc::paidOut = true;
+                        QString whoWon = "Player6";
+                        payoutDelay(30);
+                        autopayWinner(whoWon);
 
                     }
 
@@ -1743,22 +1811,23 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
             if(rpc::oneId == rpc::IdHash){
 
                 if(Menu::autoPayout == true && rpc::paidOut == false && rpc::pot != 0){     /// Contract not set up for split pot situation, owner will split
-                      rpc::paidOut = true;
-                      QString whoWon = "Player1";
-                      payoutDelay(30);
-                      autopayWinner(whoWon);
+                    rpc::paidOut = true;
+                    QString whoWon = "Player1";
+                    payoutDelay(30);
+                    autopayWinner(whoWon);
                 }
 
             }
         }
 
-     }
+    }
 
   }
 
    ui->logTextBrowser->setFontPointSize(23);
 
 }
+
 
 void MainWindow::blankDisplay()  /// Shows null cards when not playing
 {

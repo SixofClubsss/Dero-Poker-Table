@@ -12,11 +12,9 @@ bool Menu::dReams;
 
 void Menu::loginInfo()   /// Used to get wallet login info for wallet functions
 {
-    Menu::userInfo = ui->userInput->text()+":";
-    Menu::passInfo = ui->passwordInput->text();
-    string userStr = Menu::userInfo.toStdString();
-    string passStr = Menu::passInfo.toStdString();
-    rpc::rpcLogin = userStr+passStr;
+    Menu::userInfo = ui->userpassInput->text();
+    string userpassStr = Menu::userInfo.toStdString();
+    rpc::rpcLogin = userpassStr;
 }
 
 
@@ -290,7 +288,7 @@ int Menu::checkAddress()  /// Gets player wallet address and hashes to get playe
       std::cout << checkAddressReadBuffer << std::endl;
 
       if(address.isString()){                   /// Stores address hash to verify player Id
-          rpc::IdAddress = address.toString();
+          ///rpc::IdAddress = address.toString();
           rpc::IdHash = QString(QCryptographicHash::hash((address.toString().toUtf8()),QCryptographicHash::Sha256).toHex());
           ui->menuTextBrowser->setText("Your Player ID is: "+rpc::IdHash);
       }
@@ -309,7 +307,7 @@ int Menu::setTable()      /// Owner set table player limit and ante
 
     QString playerLimit = QString::number(ui->playersComboBox->currentIndex());
     QString anteAmount = QString::number(ui->anteSpinBox->value()*100000);
-    QString parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"transfer\",\"params\":{\"transfers\":[{\"destination\":\"dero1qyr8yjnu6cl2c5yqkls0hmxe6rry77kn24nmc5fje6hm9jltyvdd5qq4hn5pn\"}] , \"fees\":500 , \"scid\":\""+Menu::contractAddress+"\", \"ringsize\":2 , \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"SetTable\"},{\"name\":\"seats\",\"datatype\":\"U\",\"value\":"+playerLimit+" },{\"name\":\"ante\",\"datatype\":\"U\",\"value\":"+anteAmount+" }, {\"name\":\"address\",\"datatype\":\"S\",\"value\":\""+rpc::IdAddress+"\" }] }}";
+    QString parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"transfer\",\"params\":{\"transfers\":[{\"destination\":\"dero1qyr8yjnu6cl2c5yqkls0hmxe6rry77kn24nmc5fje6hm9jltyvdd5qq4hn5pn\"}] , \"fees\":500 , \"scid\":\""+Menu::contractAddress+"\", \"ringsize\":2 , \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"SetTable\"},{\"name\":\"seats\",\"datatype\":\"U\",\"value\":"+playerLimit+" },{\"name\":\"ante\",\"datatype\":\"U\",\"value\":"+anteAmount+" }, {\"name\":\"address\",\"datatype\":\"H\",\"value\":\""+rpc::IdHash+"\" }] }}";
     string addThis = parts.toStdString();
     const char *postthis = addThis.c_str();
 
@@ -426,7 +424,7 @@ int Menu::getDreams()      /// Gets dReams Tokens
     string getDreamsReadBuffer;
     char error[CURL_ERROR_SIZE];
 
-    QString parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"transfer\",\"params\":{\"transfers\":[{\"amount\":90000,\"destination\":\"dero1qyr8yjnu6cl2c5yqkls0hmxe6rry77kn24nmc5fje6hm9jltyvdd5qq4hn5pn\",\"burn\":10000}],\"scid\":\"eb0bfd7205a8753282ebf62a103451cdb30f161db301db742b50dc1b9f2a5c88\", \"ringsize\":2 , \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"IssueChips\"}] }}";
+    QString parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"transfer\",\"params\":{\"transfers\":[{\"amount\":90000,\"destination\":\"dero1qyr8yjnu6cl2c5yqkls0hmxe6rry77kn24nmc5fje6hm9jltyvdd5qq4hn5pn\",\"burn\":10000}],\"scid\":\"8289c6109f41cbe1f6d5f27a419db537bf3bf30a25eff285241a36e1ae3e48a4\", \"ringsize\":2 , \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"IssueChips\"}] }}";
     string addThis = parts.toStdString();
     const char *postthis = addThis.c_str();
 
@@ -811,6 +809,63 @@ int Menu::fetchListingScData()       /// Fetch Public table listings and display
             ui->menuTextBrowser->append(table.toString()+"\n");
         }
 
+      }
+
+    }
+    return 0;
+}
+
+
+int Menu::forceStart()      /// Owner can start the game with empty seats
+{
+    CURL *curlforceStart;
+    CURLcode res;
+    string forceReadBuffer;
+    char error[CURL_ERROR_SIZE];
+
+    QString parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"scinvoke\",\"params\":{\"scid\":\""+Menu::contractAddress+"\" , \"ringsize\":2, \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"ForceStart\"}] }}";
+    string addThis = parts.toStdString();
+    const char *postthis = addThis.c_str();
+
+    string pStr = rpc::playerAddress.toStdString();
+    const char *stCh = pStr.c_str();
+
+    const char *loginCh = rpc::rpcLogin.c_str();
+
+    curlforceStart = curl_easy_init();
+
+    if(curlforceStart) {
+      struct curl_slist *headers = NULL;
+      /// Add request headers
+      headers = curl_slist_append(headers, "Accept: application/json");
+      headers = curl_slist_append(headers, "Content-Type: application/json");
+      headers = curl_slist_append(headers, "charset: utf-8");
+      /// cUrl options
+      curl_easy_setopt(curlforceStart, CURLOPT_HTTPHEADER, headers);
+      curl_easy_setopt(curlforceStart, CURLOPT_URL, stCh);
+      curl_easy_setopt(curlforceStart, CURLOPT_VERBOSE, 1L);
+      curl_easy_setopt(curlforceStart, CURLOPT_ERRORBUFFER, error);
+      curl_easy_setopt(curlforceStart, CURLOPT_USERPWD, loginCh);
+      curl_easy_setopt(curlforceStart, CURLOPT_POSTFIELDS, postthis);
+      curl_easy_setopt(curlforceStart, CURLOPT_POSTFIELDSIZE, (long)strlen(postthis));
+      curl_easy_setopt(curlforceStart, CURLOPT_WRITEFUNCTION, WriteCallback);
+      curl_easy_setopt(curlforceStart, CURLOPT_WRITEDATA, &forceReadBuffer);
+
+      res = curl_easy_perform(curlforceStart);
+      curl_easy_cleanup(curlforceStart);
+
+      QByteArray br = forceReadBuffer.c_str();
+      QJsonDocument cbDoc = QJsonDocument::fromJson(br);
+      QJsonObject cbObj = cbDoc.object();
+      QJsonObject cbResults = cbObj["result"].toObject();
+      QJsonValue forceStartTxid = cbResults.value("txid");
+
+      std::cout << forceReadBuffer << std::endl;
+
+      if(forceStartTxid.isString()){
+          ui->menuTextBrowser->setText("Game Start TXID: "+forceStartTxid.toString());
+      }else {
+          ui->menuTextBrowser->setText("Error No Start Table TXID");
       }
 
     }

@@ -26,6 +26,9 @@ Confirm::Confirm(QWidget *parent) :
 
     }else if(Confirm::whichText == 4){
         delistTableText();
+
+    }else if(Confirm::whichText == 5){
+        forceStartText();
     }
 
 }
@@ -84,3 +87,10 @@ void Confirm::delistTableText()   /// Read out for remove listing
 {
     ui->confirmTextBrowser->setText("Remove your table listing.\n\n\nClick Ok to confirm");
 }
+
+
+void Confirm::forceStartText()   /// Read out for remove listing
+{
+    ui->confirmTextBrowser->setText("Start game with empty seats?\n\n\nClick Ok to confirm");
+}
+

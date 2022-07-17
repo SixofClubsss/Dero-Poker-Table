@@ -159,6 +159,7 @@ int rpc::fetchScData()       /// Get SC variables
       QJsonValue Open_jv = cbStringKeys.value("Open");
 
       QJsonValue IV_jv = cbStringKeys.value("IV");
+      QJsonValue OBF_jv = cbStringKeys.value("OBF");
       QJsonValue P1Fold_jv = cbStringKeys.value("0F");
       QJsonValue P2Fold_jv = cbStringKeys.value("1F");
       QJsonValue P3Fold_jv = cbStringKeys.value("2F");
@@ -171,6 +172,9 @@ int rpc::fetchScData()       /// Get SC variables
       QJsonValue P4Out_jv = cbStringKeys.value("3SO");
       QJsonValue P5Out_jv = cbStringKeys.value("4SO");
       QJsonValue P6Out_jv = cbStringKeys.value("5SO");
+
+      QJsonValue ContractSeed_jv = cbStringKeys.value("HandSeed");
+      QJsonValue RevealBool_jv = cbStringKeys.value("Reveal");
 
       QJsonValue onecard1_jv = cbStringKeys.value("Player1card1");
       QJsonValue onecard2_jv = cbStringKeys.value("Player1card2");
@@ -208,6 +212,13 @@ int rpc::fetchScData()       /// Get SC variables
       QJsonValue sixcard4_jv = cbStringKeys.value("Player6card4");
       QJsonValue sixcard5_jv = cbStringKeys.value("Player6card5");
 
+      QJsonValue Key1_jv = cbStringKeys.value("Player1Key");
+      QJsonValue Key2_jv = cbStringKeys.value("Player2Key");
+      QJsonValue Key3_jv = cbStringKeys.value("Player3Key");
+      QJsonValue Key4_jv = cbStringKeys.value("Player4Key");
+      QJsonValue Key5_jv = cbStringKeys.value("Player5Key");
+      QJsonValue Key6_jv = cbStringKeys.value("Player6Key");
+
       rpc::seats = Seats_jv.toInt();
       rpc::ante = Ante_jv.toDouble();
       rpc::turn = Turn_jv.toDouble();
@@ -226,6 +237,7 @@ int rpc::fetchScData()       /// Get SC variables
       rpc::bet = Bet_jv.toInt();
 
       rpc::IV = IV_jv.toInt();
+      rpc::OBF = OBF_jv.toInt();
       rpc::p1Fold = P1Fold_jv.toInt();
       rpc::p2Fold = P2Fold_jv.toInt();
       rpc::p3Fold = P3Fold_jv.toInt();
@@ -240,6 +252,9 @@ int rpc::fetchScData()       /// Get SC variables
       rpc::p6Out = P6Out_jv.toInt();
       rpc::full = Full_jv.toInt();
       rpc::open = Open_jv.toInt();
+
+      rpc::contractSeed = ContractSeed_jv.toString();
+      rpc::revealBool = RevealBool_jv.toInt();
 
       rpc::hashOneone = onecard1_jv.toString();
       rpc::hashOnetwo = onecard2_jv.toString();
@@ -277,7 +292,7 @@ int rpc::fetchScData()       /// Get SC variables
       rpc::hashSixfour = sixcard4_jv.toString();
       rpc::hashSixfive = sixcard5_jv.toString();
 
-      rpc::salt = QString::number(rpc::IV);
+      rpc::salt = rpc::OBF;
       QString handId = QString::number(rpc::checkPlayerId);
 
       QJsonValue card1 = cbStringKeys.value("Player"+handId.toUtf8()+"card1");
@@ -291,6 +306,13 @@ int rpc::fetchScData()       /// Get SC variables
       rpc::hashThree = card3.toString();
       rpc::hashFour = card4.toString();
       rpc::hashFive = card5.toString();
+
+      rpc::key1 = Key1_jv.toString();
+      rpc::key2 = Key2_jv.toString();
+      rpc::key3 = Key3_jv.toString();
+      rpc::key4 = Key4_jv.toString();
+      rpc::key5 = Key5_jv.toString();
+      rpc::key6 = Key6_jv.toString();
 
       rpc::inGame = true;
 

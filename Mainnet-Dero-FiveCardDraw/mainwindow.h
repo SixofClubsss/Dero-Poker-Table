@@ -34,11 +34,13 @@ public:
     void endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p4Fold, int p5Fold, int p6Fold);
     int playerEntry();
     int playerLeave();
+    void generateKey();
     int dealFiveCardHand();
     int check();
     int bet();
     int drawCards();
-    int card(QString hash, QString salt);
+    int card(QString hash, int salt);
+    int keyCard(QString hash, int salt, int who);
     QString findCards(int);
     void displayCardOne(int);
     void displayCardTwo(int);
@@ -67,6 +69,7 @@ public:
     void hasLeft(int p1Out, int p2Out, int p3Out, int p4Out, int p5Out, int p6Out);
     void clearFoldedDisplay(int p1Fold, int p2Fold, int p3Fold, int p4Fold, int p5Fold, int p6Fold);
     void localEnd(QString oneId, int seats, int p1Fold, int p2Fold, int p3Fold, int p4Fold, int p5Fold, int p6Fold);
+    int revealKey();
 
 
 private slots:
