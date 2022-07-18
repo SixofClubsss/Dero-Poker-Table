@@ -64,7 +64,6 @@ Menu::Menu(QWidget *parent) :
     checkContract();
     checkIfListed();
     setFonts();
-    unlockTable();
 }
 
 
