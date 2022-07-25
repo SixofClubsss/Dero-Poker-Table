@@ -339,26 +339,24 @@ void MainWindow::setPlayerId(QString oneId, QString twoId, QString threeId, QStr
 {
     if(oneId == rpc::IdHash){
        ui->playerId->setValue(1);
-    }
 
-    if(twoId == rpc::IdHash){
+    }else if(twoId == rpc::IdHash){
        ui->playerId->setValue(2);
-    }
 
-    if(threeId == rpc::IdHash){
+    }else if(threeId == rpc::IdHash){
        ui->playerId->setValue(3);
-    }
 
-    if(fourId == rpc::IdHash){
+    }else if(fourId == rpc::IdHash){
        ui->playerId->setValue(4);
-    }
 
-    if(fiveId == rpc::IdHash){
+    }else if(fiveId == rpc::IdHash){
        ui->playerId->setValue(5);
-    }
 
-    if(sixId == rpc::IdHash){
+    }else if(sixId == rpc::IdHash){
        ui->playerId->setValue(6);
+
+    }else {
+        ui->playerId->setValue(0);
     }
 }
 
@@ -515,7 +513,9 @@ void MainWindow::localPlayerControl(int bet, int draw, double wager, double ante
         }
 
         if(rpc::revealBool == 1 && Hand::keyIsPub == false){
-            revealKey();
+            if(Hand::endSignal == false){
+                revealKey();
+            }
         }
 
     }else {

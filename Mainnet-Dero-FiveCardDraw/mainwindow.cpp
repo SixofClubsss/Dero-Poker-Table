@@ -25,7 +25,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->p5CheckBox->setFocusPolicy(Qt::NoFocus);
     ui->p6CheckBox->setAttribute(Qt::WA_TransparentForMouseEvents);
     ui->p6CheckBox->setFocusPolicy(Qt::NoFocus);
-    ui->logTextBrowser->setText("dReam Tables, Built on Dero\n\nTable v1.2.0");
+    ui->logTextBrowser->setText("dReam Tables, Built on Dero\n\nTable v1.2.1");
     MainWindow::skipCount = 0;
     ui->entryPushButton->setEnabled(false);
     ui->dealHandPushButton->setEnabled(false);
