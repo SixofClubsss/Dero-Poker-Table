@@ -54,3 +54,10 @@ make
 To build testnet version `cd Dero-Poker-Table/Testnet-FiveCardDraw` then `qmake` & `make`
 
 ---
+
+### Licensing
+
+dReam Tables Dero Poker Tables are free open source games.     
+The source code is published under the [GNU GPL V3 License.](https://github.com/SixofClubsss/Dero-Poker-Table/blob/main/Licenses/LICENSE)
+Copyright 2022 dReam Tables       
+Refer to the [copywrite.md](https://github.com/SixofClubsss/Dero-Poker-Table/blob/main/Licenses/copyright.md) file for artwork licensing.
