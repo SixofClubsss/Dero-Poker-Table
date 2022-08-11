@@ -30,6 +30,7 @@ https://dreamtables.net
 
 bool MainWindow::clicked;
 bool MainWindow::startUpSkip;
+bool MainWindow::displayedRes;
 int MainWindow::skipCount;
 int MainWindow::whichDeck;
 
@@ -407,6 +408,7 @@ void MainWindow::potEmpty(double pot)       ///  Blank display when hand is paye
         ui->winnerComboBox->setEnabled(false);
         rpc::paidOut = false;
         Hand::keyIsPub = false;
+        MainWindow::displayedRes = false;
     }
 }
 
@@ -807,8 +809,13 @@ void MainWindow::localEnd(QString oneId, int seats, int p1Fold, int p2Fold, int 
 
 void MainWindow::displayLocalHand(QString hashOne, QString hashTwo) /// Displays players hole cards
 {
-    ui->holeCard1Label->setPixmap(QPixmap::fromImage(displayCard(card(hashOne, rpc::salt))));
-    ui->holeCard2Label->setPixmap(QPixmap::fromImage(displayCard(card(hashTwo, rpc::salt))));
+    if(ui->deckComboBox->currentIndex() > 1){
+        ui->holeCard1Label->setPixmap(QPixmap::fromImage(displayCustom(card(hashOne, rpc::salt))));
+        ui->holeCard2Label->setPixmap(QPixmap::fromImage(displayCustom(card(hashTwo, rpc::salt))));
+    }else {
+        ui->holeCard1Label->setPixmap(QPixmap(displayStandard(card(hashOne, rpc::salt))));
+        ui->holeCard2Label->setPixmap(QPixmap(displayStandard(card(hashTwo, rpc::salt))));
+    }
 }
 
 
@@ -863,7 +870,7 @@ int MainWindow::keyCard(QString hash, QString salt, int who)  /// Gets other pla
 void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p4Fold, int p5Fold, int p6Fold)      /// Show all player cards and end results
 {
 
-    if(Hand::endSignal == false && ui->playerId->value() > 0 && rpc::inGame == true){
+    if(Hand::endSignal == false && ui->playerId->value() > 0 && rpc::inGame == true && MainWindow::displayedRes == false){
 
         ui->logTextBrowser->setFontPointSize(30);
 
@@ -1434,7 +1441,7 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
         }
 
     }
-
+    MainWindow::displayedRes = true;
     ui->logTextBrowser->setFontPointSize(23);
 
 }
@@ -1473,13 +1480,23 @@ QString MainWindow::deckSelect(int d)   /// Gets deck path prefix for card image
 
 void MainWindow::blankDisplay()  /// Shows null cards when not playing
 {
-    ui->flopCard1Label->setPixmap(QPixmap::fromImage(displayCard(0)));
-    ui->flopCard2Label->setPixmap(QPixmap::fromImage(displayCard(0)));
-    ui->flopCard3Label->setPixmap(QPixmap::fromImage(displayCard(0)));
-    ui->turnCardLabel->setPixmap(QPixmap::fromImage(displayCard(0)));
-    ui->riverCardLabel->setPixmap(QPixmap::fromImage(displayCard(0)));
-    ui->holeCard1Label->setPixmap(QPixmap::fromImage(displayCard(0)));
-    ui->holeCard2Label->setPixmap(QPixmap::fromImage(displayCard(0)));
+    if(ui->deckComboBox->currentIndex() > 1){
+        ui->flopCard1Label->setPixmap(QPixmap::fromImage(displayCustom(0)));
+        ui->flopCard2Label->setPixmap(QPixmap::fromImage(displayCustom(0)));
+        ui->flopCard3Label->setPixmap(QPixmap::fromImage(displayCustom(0)));
+        ui->turnCardLabel->setPixmap(QPixmap::fromImage(displayCustom(0)));
+        ui->riverCardLabel->setPixmap(QPixmap::fromImage(displayCustom(0)));
+        ui->holeCard1Label->setPixmap(QPixmap::fromImage(displayCustom(0)));
+        ui->holeCard2Label->setPixmap(QPixmap::fromImage(displayCustom(0)));
+    }else {
+        ui->flopCard1Label->setPixmap(QPixmap(displayStandard(0)));
+        ui->flopCard2Label->setPixmap(QPixmap(displayStandard(0)));
+        ui->flopCard3Label->setPixmap(QPixmap(displayStandard(0)));
+        ui->turnCardLabel->setPixmap(QPixmap(displayStandard(0)));
+        ui->riverCardLabel->setPixmap(QPixmap(displayStandard(0)));
+        ui->holeCard1Label->setPixmap(QPixmap(displayStandard(0)));
+        ui->holeCard2Label->setPixmap(QPixmap(displayStandard(0)));
+    }
 }
 
 
@@ -1606,7 +1623,7 @@ QString MainWindow::findCards(int card)     /// To show all hand results at end
 }
 
 
-QImage MainWindow::displayCard(int card)   /// Gets suffix for card image display
+QImage MainWindow::displayCustom(int card)   /// Gets suffix for custom card image display
 {
     QString suffix;
     switch (card){
@@ -1667,27 +1684,118 @@ QImage MainWindow::displayCard(int card)   /// Gets suffix for card image displa
        }
 
     QImageReader reader(deckSelect(ui->deckComboBox->currentIndex())+suffix);
-    QImage card = reader.read();
+    QImage path = reader.read();
 
-    return card;
+    return path;
+}
+
+
+QString MainWindow::displayStandard(int card)   /// Gets suffix for custom card image display
+{
+    QString pre;
+    QString suffix;
+    QString path;
+
+    if(ui->deckComboBox->currentIndex() == 1){
+        pre = ":/images/cards/standard/dark/";
+
+    }else {
+        pre = ":/images/cards/standard/light/";
+    }
+
+    switch (card){
+       case 0: suffix = "card53.png" ; break;
+       case 1: suffix = "card1.png"; break;
+       case 2: suffix = "card2.png"; break;
+       case 3: suffix = "card3.png"; break;
+       case 4: suffix = "card4.png"; break;
+       case 5: suffix = "card5.png"; break;
+       case 6: suffix = "card6.png"; break;
+       case 7: suffix = "card7.png"; break;
+       case 8: suffix = "card8.png"; break;
+       case 9: suffix = "card9.png"; break;
+       case 10: suffix = "card10.png" ; break;
+       case 11: suffix = "card11.png" ; break;
+       case 12: suffix = "card12.png" ; break;
+       case 13: suffix = "card13.png" ; break;
+       case 14: suffix = "card14.png" ; break;
+       case 15: suffix = "card15.png" ; break;
+       case 16: suffix = "card16.png" ; break;
+       case 17: suffix = "card17.png" ; break;
+       case 18: suffix = "card18.png" ; break;
+       case 19: suffix = "card19.png" ; break;
+       case 20: suffix = "card20.png" ; break;
+       case 21: suffix = "card21.png" ; break;
+       case 22: suffix = "card22.png" ; break;
+       case 23: suffix = "card23.png" ; break;
+       case 24: suffix = "card24.png" ; break;
+       case 25: suffix = "card25.png" ; break;
+       case 26: suffix = "card26.png" ; break;
+       case 27: suffix = "card27.png" ; break;
+       case 28: suffix = "card28.png" ; break;
+       case 29: suffix = "card29.png" ; break;
+       case 30: suffix = "card30.png" ; break;
+       case 31: suffix = "card31.png" ; break;
+       case 32: suffix = "card32.png" ; break;
+       case 33: suffix = "card33.png" ; break;
+       case 34: suffix = "card34.png" ; break;
+       case 35: suffix = "card35.png" ; break;
+       case 36: suffix = "card36.png" ; break;
+       case 37: suffix = "card37.png" ; break;
+       case 38: suffix = "card38.png" ; break;
+       case 39: suffix = "card39.png" ; break;
+       case 40: suffix = "card40.png" ; break;
+       case 41: suffix = "card41.png" ; break;
+       case 42: suffix = "card42.png" ; break;
+       case 43: suffix = "card43.png" ; break;
+       case 44: suffix = "card44.png" ; break;
+       case 45: suffix = "card45.png" ; break;
+       case 46: suffix = "card46.png" ; break;
+       case 47: suffix = "card47.png" ; break;
+       case 48: suffix = "card48.png" ; break;
+       case 49: suffix = "card49.png" ; break;
+       case 50: suffix = "card50.png" ; break;
+       case 51: suffix = "card51.png" ; break;
+       case 52: suffix = "card52.png" ; break;
+       case 53: suffix = "card53.png" ; break;
+       }
+
+    path = pre+suffix;
+
+    return path;
 }
 
 
 void MainWindow::displayFlop(int flop1, int flop2, int flop3)   /// Displays 3 flop cards
 {
-    ui->flopCard1Label->setPixmap(QPixmap::fromImage(displayCard(flop1)));
-    ui->flopCard2Label->setPixmap(QPixmap::fromImage(displayCard(flop2)));
-    ui->flopCard3Label->setPixmap(QPixmap::fromImage(displayCard(flop3)));
+    if(ui->deckComboBox->currentIndex() > 1){
+    ui->flopCard1Label->setPixmap(QPixmap::fromImage(displayCustom(flop1)));
+    ui->flopCard2Label->setPixmap(QPixmap::fromImage(displayCustom(flop2)));
+    ui->flopCard3Label->setPixmap(QPixmap::fromImage(displayCustom(flop3)));
+    }else {
+        ui->flopCard1Label->setPixmap(QPixmap(displayStandard(flop1)));
+        ui->flopCard2Label->setPixmap(QPixmap(displayStandard(flop2)));
+        ui->flopCard3Label->setPixmap(QPixmap(displayStandard(flop3)));
+    }
+
 }
 
 
 void MainWindow::displayTurnCard(int card)   ///  Displays turn card
 {
-    ui->turnCardLabel->setPixmap(QPixmap::fromImage(displayCard(card)));
+    if(ui->deckComboBox->currentIndex() > 1){
+        ui->turnCardLabel->setPixmap(QPixmap::fromImage(displayCustom(card)));
+    }else {
+        ui->turnCardLabel->setPixmap(QPixmap(displayStandard(card)));
+    }
 }
 
 
 void MainWindow::displayRiverCard(int card)   ///  Displays river card
 {
-    ui->riverCardLabel->setPixmap(QPixmap::fromImage(displayCard(card)));
+    if(ui->deckComboBox->currentIndex() > 1){
+        ui->riverCardLabel->setPixmap(QPixmap::fromImage(displayCustom(card)));
+    }else {
+        ui->riverCardLabel->setPixmap(QPixmap(displayStandard(card)));
+    }
 }

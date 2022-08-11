@@ -114,7 +114,7 @@ void Confirm::delistTableText()   /// Read out for remove listing
 }
 
 
-void Confirm::forceStartText()   /// Read out for remove listing
+void Confirm::forceStartText()   /// Read out when force start
 {
     ui->confirmTextBrowser->setText("Start game with empty seats?\n\n\nClick Ok to confirm");
 }

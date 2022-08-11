@@ -45,6 +45,7 @@ public:
     ~MainWindow();
     static bool clicked;
     static bool startUpSkip;
+    static bool displayedRes;
     static int skipCount;
     static int whichDeck;
     void offset();
@@ -68,7 +69,8 @@ public:
     QString thisHandIs(int);
     QString findCards(int);
     QString deckSelect(int);
-    QImage displayCard(int);
+    QImage displayCustom(int);
+    QString displayStandard(int);
     void displayFlop(int, int, int);
     void displayTurnCard(int);
     void displayRiverCard(int);

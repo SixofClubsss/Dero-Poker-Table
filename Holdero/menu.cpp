@@ -182,7 +182,7 @@ void Menu::on_contractButton_clicked()
 {
     Menu::contractAddress = ui->contractLineEdit->text();
     checkContract();
-    checkIfListed();
+    ///checkIfListed();
 }
 
 

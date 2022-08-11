@@ -851,6 +851,7 @@ int Menu::fetchListingScData()       /// Fetch Public table listings and display
     return 0;
 }
 
+
 int Menu::forceStart()      /// Owner can start the game with empty seats
 {
     CURL *curlforceStart;

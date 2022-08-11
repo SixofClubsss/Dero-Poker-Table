@@ -557,6 +557,7 @@ int MainWindow::compareThese()   /// Search thorugh all hand combinations to fin
     return fRank;
 }
 
+
 int MainWindow::makeHand(int h[5], int s[5])    /// Makes hand rank from hand input
 {
    int nakedHand[5] = {h[0], h[1], h[2], h[3], h[4],};
