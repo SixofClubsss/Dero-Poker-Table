@@ -645,8 +645,17 @@ void MainWindow::findBest(int r, int fR[5], int h[5])     /// Finds best combina
         }else if (hole[0] == swap[4]+1) {
             int temp[5] = {swap[1], swap[2], swap[3], swap[4], hole[0]};
             std::copy(temp, temp + 5, swap);
-        } else if (hole[1] == swap[4]+1) {
+        }else if (hole[1] == swap[4]+1) {
             int temp[5] = {swap[1], swap[2], swap[3], swap[4], hole[1]};
+            std::copy(temp, temp + 5, swap);
+        }else if (swap[0] == 2 && swap[1] == 3 && swap[2] == 4 && swap[3] == 5 && swap[4] == 14 && hole[0] == 6 && hole[1] == 7){
+            int temp[5] = {swap[1], swap[2], swap[3], hole[0], hole[1]};
+            std::copy(temp, temp + 5, swap);
+        }else if (swap[0] == 2 && swap[1] == 3 && swap[2] == 4 && swap[3] == 5 && swap[4] == 14 && hole[0] == 6){
+            int temp[5] = {swap[0], swap[1], swap[2], swap[3], hole[0]};
+            std::copy(temp, temp + 5, swap);
+        }else if (swap[0] == 2 && swap[1] == 3 && swap[2] == 4 && swap[3] == 5 && swap[4] == 14 && hole[1] == 6){
+            int temp[5] = {swap[0], swap[1], swap[2], hole[3], hole[1]};
             std::copy(temp, temp + 5, swap);
         }
 
