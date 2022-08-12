@@ -36,7 +36,7 @@ int MainWindow::playerEntry()      /// Player registry (sit down at table)
     string playerEntryReadBuffer;
     char error[CURL_ERROR_SIZE];
 
-    QString parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"scinvoke\",\"params\":{\"scid\":\""+Menu::contractAddress+"\", \"ringsize\":2 , \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"PlayerEntry\"}, {\"name\":\"address\",\"datatype\":\"S\",\"value\":\""+rpc::IdHash+"\" }] }}";
+    QString parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"scinvoke\",\"params\":{\"scid\":\""+Menu::contractAddress+"\", \"ringsize\":2 , \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"PlayerEntry\"}, {\"name\":\"address\",\"datatype\":\"S\",\"value\":\""+rpc::IdHash+"\"}] }}";
     string addThis = parts.toStdString();
     const char *postthis = addThis.c_str();
 
@@ -57,7 +57,7 @@ int MainWindow::playerEntry()      /// Player registry (sit down at table)
       curl_easy_setopt(curlPlayerEntry, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlPlayerEntry, CURLOPT_URL, dealCh);
       curl_easy_setopt(curlPlayerEntry, CURLOPT_VERBOSE, 1L);
-      curl_easy_setopt(curlPlayerEntry, CURLOPT_CONNECTTIMEOUT, 9L);
+      curl_easy_setopt(curlPlayerEntry, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlPlayerEntry, CURLOPT_ERRORBUFFER, error);
       curl_easy_setopt(curlPlayerEntry, CURLOPT_USERPWD, loginCh);
       curl_easy_setopt(curlPlayerEntry, CURLOPT_POSTFIELDS, postthis);
@@ -99,7 +99,7 @@ int MainWindow::playerLeave()      /// Player leave table
     char error[CURL_ERROR_SIZE];
 
     QString checkOutId = QString::number(ui->playerId->value());
-    QString parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"scinvoke\",\"params\":{\"scid\":\""+Menu::contractAddress+"\", \"ringsize\":2 , \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"PlayerLeave\"}, {\"name\":\"id\",\"datatype\":\"U\",\"value\":"+checkOutId+" }] }}";
+    QString parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"scinvoke\",\"params\":{\"scid\":\""+Menu::contractAddress+"\", \"ringsize\":2 , \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"PlayerLeave\"}, {\"name\":\"id\",\"datatype\":\"U\",\"value\":"+checkOutId+"}] }}";
     string addThis = parts.toStdString();
     const char *postthis = addThis.c_str();
 
@@ -120,7 +120,7 @@ int MainWindow::playerLeave()      /// Player leave table
       curl_easy_setopt(curlplayerLeave, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlplayerLeave, CURLOPT_URL, dealCh);
       curl_easy_setopt(curlplayerLeave, CURLOPT_VERBOSE, 1L);
-      curl_easy_setopt(curlplayerLeave, CURLOPT_CONNECTTIMEOUT, 9L);
+      curl_easy_setopt(curlplayerLeave, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlplayerLeave, CURLOPT_ERRORBUFFER, error);
       curl_easy_setopt(curlplayerLeave, CURLOPT_USERPWD, loginCh);
       curl_easy_setopt(curlplayerLeave, CURLOPT_POSTFIELDS, postthis);
@@ -180,22 +180,19 @@ int MainWindow::dealHand()      /// Ante and deals player a hand
     string dealReadBuffer;
     char error[CURL_ERROR_SIZE];
 
-    QString whichBlind = "0";
     QString anteAmount;
 
     if(rpc::pot == 0){
         anteAmount = QString::number(rpc::ante+rpc::smallBlind);
-        whichBlind = QString::number(1);
 
     }else if (rpc::pot == rpc::smallBlind || rpc::pot == rpc::ante+rpc::smallBlind){
         anteAmount = QString::number(ui->anteIsDSB->value()*100000+rpc::bigBlind);
-        whichBlind = whichBlind = QString::number(2);
 
     }else {
         anteAmount = QString::number(ui->anteIsDSB->value()*100000);
     }
 
-    QString parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"transfer\",\"params\":{\"transfers\":[{\"amount\":500 , \"destination\":\"dero1qyr8yjnu6cl2c5yqkls0hmxe6rry77kn24nmc5fje6hm9jltyvdd5qq4hn5pn\", \"burn\":"+anteAmount+"}] , \"fees\":600 , \"scid\":\""+Menu::contractAddress+"\", \"ringsize\":2 , \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"DealHand\"}, {\"name\":\"pcSeed\",\"datatype\":\"H\",\"value\":\""+rpc::clientKey+"\"}, {\"name\":\"blinds\",\"datatype\":\"U\",\"value\":"+whichBlind+"}] }}";
+    QString parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"transfer\",\"params\":{\"transfers\":[{\"amount\":500 , \"destination\":\"dero1qyr8yjnu6cl2c5yqkls0hmxe6rry77kn24nmc5fje6hm9jltyvdd5qq4hn5pn\", \"burn\":"+anteAmount+"}] , \"fees\":600 , \"scid\":\""+Menu::contractAddress+"\", \"ringsize\":2 , \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"DealHand\"}, {\"name\":\"pcSeed\",\"datatype\":\"H\",\"value\":\""+rpc::clientKey+"\"}] }}";
     string addThis = parts.toStdString();
     const char *postthis = addThis.c_str();
 
@@ -216,7 +213,7 @@ int MainWindow::dealHand()      /// Ante and deals player a hand
       curl_easy_setopt(curlDealHand, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlDealHand, CURLOPT_URL, dealCh);
       curl_easy_setopt(curlDealHand, CURLOPT_VERBOSE, 1L);
-      curl_easy_setopt(curlDealHand, CURLOPT_CONNECTTIMEOUT, 9L);
+      curl_easy_setopt(curlDealHand, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlDealHand, CURLOPT_ERRORBUFFER, error);
       curl_easy_setopt(curlDealHand, CURLOPT_USERPWD, loginCh);
       curl_easy_setopt(curlDealHand, CURLOPT_POSTFIELDS, postthis);
@@ -277,7 +274,7 @@ int MainWindow::bet()      /// Place bet also for call and raise
       curl_easy_setopt(curlBet, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlBet, CURLOPT_URL, bCh);
       curl_easy_setopt(curlBet, CURLOPT_VERBOSE, 1L);
-      curl_easy_setopt(curlBet, CURLOPT_CONNECTTIMEOUT, 9L);
+      curl_easy_setopt(curlBet, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlBet, CURLOPT_ERRORBUFFER, error);
       curl_easy_setopt(curlBet, CURLOPT_USERPWD, loginCh);
       curl_easy_setopt(curlBet, CURLOPT_POSTFIELDS, postthis);
@@ -337,7 +334,7 @@ int MainWindow::check()      /// Check also used to fold on bet
       curl_easy_setopt(curlCheck, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlCheck, CURLOPT_URL, cfCh);
       curl_easy_setopt(curlCheck, CURLOPT_VERBOSE, 1L);
-      curl_easy_setopt(curlCheck, CURLOPT_CONNECTTIMEOUT, 9L);
+      curl_easy_setopt(curlCheck, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlCheck, CURLOPT_ERRORBUFFER, error);
       curl_easy_setopt(curlCheck, CURLOPT_USERPWD, loginCh);
       curl_easy_setopt(curlCheck, CURLOPT_POSTFIELDS, postthis);
@@ -397,7 +394,7 @@ int MainWindow::winner()     /// Owner sends payout to winner
       curl_easy_setopt(curlWinner, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlWinner, CURLOPT_URL, pCh);
       curl_easy_setopt(curlWinner, CURLOPT_VERBOSE, 1L);
-      curl_easy_setopt(curlWinner, CURLOPT_CONNECTTIMEOUT, 9L);
+      curl_easy_setopt(curlWinner, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlWinner, CURLOPT_ERRORBUFFER, error);
       curl_easy_setopt(curlWinner, CURLOPT_USERPWD, loginCh);
       curl_easy_setopt(curlWinner, CURLOPT_POSTFIELDS, postthis);
@@ -457,7 +454,7 @@ int MainWindow::autopayWinner(QString whoWon)     /// Owner sends payout to winn
       curl_easy_setopt(curlAutopayWinner, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlAutopayWinner, CURLOPT_URL, pCh);
       curl_easy_setopt(curlAutopayWinner, CURLOPT_VERBOSE, 1L);
-      curl_easy_setopt(curlAutopayWinner, CURLOPT_CONNECTTIMEOUT, 9L);
+      curl_easy_setopt(curlAutopayWinner, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlAutopayWinner, CURLOPT_ERRORBUFFER, error);
       curl_easy_setopt(curlAutopayWinner, CURLOPT_USERPWD, loginCh);
       curl_easy_setopt(curlAutopayWinner, CURLOPT_POSTFIELDS, postthis);
@@ -477,6 +474,7 @@ int MainWindow::autopayWinner(QString whoWon)     /// Owner sends payout to winn
         if(txid.isString()){
             ui->logTextBrowser->setText("Winner TXID: "+txid.toString());
             ui->txLogTextBrowser->append("TXID: "+txid.toString()+"\n");
+            MainWindow::displayedRes = false;
         }else {
 
             ui->logTextBrowser->setText("Error Couldn't Pay Winner");
@@ -554,7 +552,7 @@ int MainWindow::splitWinner()     /// Owner sends split payout to winners
       curl_easy_setopt(curlSplit, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlSplit, CURLOPT_URL, pCh);
       curl_easy_setopt(curlSplit, CURLOPT_VERBOSE, 1L);
-      curl_easy_setopt(curlSplit, CURLOPT_CONNECTTIMEOUT, 9L);
+      curl_easy_setopt(curlSplit, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlSplit, CURLOPT_ERRORBUFFER, error);
       curl_easy_setopt(curlSplit, CURLOPT_USERPWD, loginCh);
       curl_easy_setopt(curlSplit, CURLOPT_POSTFIELDS, postthis);
@@ -580,6 +578,7 @@ int MainWindow::splitWinner()     /// Owner sends split payout to winners
                 rpc::hashOne ="null";
                 rpc::hashTwo = "null";
             }
+            MainWindow::displayedRes = false;
 
         }else {
 
@@ -620,7 +619,7 @@ int MainWindow::revealKey()      /// Stores client key on chain for other player
       curl_easy_setopt(curlReveal, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlReveal, CURLOPT_URL, revCh);
       curl_easy_setopt(curlReveal, CURLOPT_VERBOSE, 1L);
-      curl_easy_setopt(curlReveal, CURLOPT_CONNECTTIMEOUT, 9L);
+      curl_easy_setopt(curlReveal, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlReveal, CURLOPT_ERRORBUFFER, error);
       curl_easy_setopt(curlReveal, CURLOPT_USERPWD, loginCh);
       curl_easy_setopt(curlReveal, CURLOPT_POSTFIELDS, postthis);

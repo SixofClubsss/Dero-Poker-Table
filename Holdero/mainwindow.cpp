@@ -252,7 +252,7 @@ void MainWindow::buttonDelay()  /// When any button has been pressed disabled al
 
     ui->payoutPushButton->setEnabled(false);
     ui->winnerComboBox->setEnabled(false);
-    ui->turnReadOut->setStyleSheet( "QTextBrowser{border-color: rgb(128, 128, 128); border-style: inset; border-width: 2px; border-radius: 6px; padding: 3px; background-color: rgb(85, 88, 93, 90); color: rgb(255, 255, 255);};" );
+    ui->turnReadOut->setStyleSheet( "QTextBrowser{border-color: rgb(128, 128, 128); border-style: inset; border-width: 2px; border-radius: 6px; padding: 3px; background-color: rgba(85, 88, 93, 90); color: rgb(255, 255, 255);};" );
     ui->groupBoxP1->setStyleSheet( "QGroupBox{ border: 2px solid gray; border-radius: 5px; };" );
     ui->turnReadOut->setText("Wait For Block");
 }

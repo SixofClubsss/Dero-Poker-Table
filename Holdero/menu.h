@@ -102,7 +102,7 @@ private slots:
 
     void on_forceButton_clicked();
 
-    void on_blindSpinBox_valueChanged(double arg1);
+    void on_blindSpinBox_valueChanged();
 
 private:
     Ui::Menu *ui;

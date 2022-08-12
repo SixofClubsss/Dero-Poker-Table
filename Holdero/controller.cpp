@@ -172,7 +172,7 @@ void MainWindow::controller()       /// Ui control
     atTable();
     ownerAtTable(rpc::p1Out, rpc::oneId);
     isTableFull(rpc::seats, rpc::pot, rpc::turn);
-    localPlayerControl(rpc::bet, rpc::draw, rpc::wager, rpc::ante, rpc::raised);
+    localPlayerControl(rpc::bet, rpc::wager, rpc::ante, rpc::raised);
     storedEnd(rpc::end, rpc::oneId);
     localEndSignal(rpc::oneId);
     disableButtons();
@@ -193,7 +193,7 @@ void MainWindow::checkBalance(double balance)   /// Gets players Dero balance
 
 void MainWindow::setOpenClosed(int seats, double ante, double dealer)       /// Sets display for seats open or closed, set dealer display, sets minium bet == ante
 {
-    ui->turnReadOut->setStyleSheet( "QTextBrowser{border-color: rgb(128, 128, 128); border-style: inset; border-width: 2px; border-radius: 6px; padding: 3px; background-color: rgb(85, 88, 93, 90); color: rgb(255, 255, 255);};" );
+    ui->turnReadOut->setStyleSheet( "QTextBrowser{border-color: rgb(128, 128, 128); border-style: inset; border-width: 2px; border-radius: 6px; padding: 3px; background-color: rgba(85, 88, 93, 90); color: rgb(255, 255, 255);};" );
     ui->groupBoxP1->setStyleSheet( "QGroupBox{ border: 2px solid gray; border-radius: 5px; };" );
     ui->betSpinBox->setMinimum(ante/100000);
     ui->anteIsDSB->setValue(ante/100000);
@@ -331,12 +331,12 @@ void MainWindow::setPlayerStatus(int p1Out, QString oneId, QString twoId, QStrin
 
 void MainWindow::highlightWhosTurn(int turn, int seats)     /// Highlight player indicator when player turn
 {
-    ui->p1CheckBox->setStyleSheet( "QCheckBox{ color: rgb(0, 0, 0); background-color: rgb(255, 255, 255, 180); border: 2px solid gray; border-radius: 5px; border-style: inset; };" );
-    ui->p2CheckBox->setStyleSheet( "QCheckBox{ color: rgb(0, 0, 0); background-color: rgb(255, 255, 255, 180); border: 2px solid gray; border-radius: 5px; border-style: inset; };" );
-    ui->p3CheckBox->setStyleSheet( "QCheckBox{ color: rgb(0, 0, 0); background-color: rgb(255, 255, 255, 180); border: 2px solid gray; border-radius: 5px; border-style: inset; };" );
-    ui->p4CheckBox->setStyleSheet( "QCheckBox{ color: rgb(0, 0, 0); background-color: rgb(255, 255, 255, 180); border: 2px solid gray; border-radius: 5px; border-style: inset; };" );
-    ui->p5CheckBox->setStyleSheet( "QCheckBox{ color: rgb(0, 0, 0); background-color: rgb(255, 255, 255, 180); border: 2px solid gray; border-radius: 5px; border-style: inset; };" );
-    ui->p6CheckBox->setStyleSheet( "QCheckBox{ color: rgb(0, 0, 0); background-color: rgb(255, 255, 255, 180); border: 2px solid gray; border-radius: 5px; border-style: inset; };" );
+    ui->p1CheckBox->setStyleSheet( "QCheckBox{ color: rgb(0, 0, 0); background-color: rgba(255, 255, 255, 180); border: 2px solid gray; border-radius: 5px; border-style: inset; };" );
+    ui->p2CheckBox->setStyleSheet( "QCheckBox{ color: rgb(0, 0, 0); background-color: rgba(255, 255, 255, 180); border: 2px solid gray; border-radius: 5px; border-style: inset; };" );
+    ui->p3CheckBox->setStyleSheet( "QCheckBox{ color: rgb(0, 0, 0); background-color: rgba(255, 255, 255, 180); border: 2px solid gray; border-radius: 5px; border-style: inset; };" );
+    ui->p4CheckBox->setStyleSheet( "QCheckBox{ color: rgb(0, 0, 0); background-color: rgba(255, 255, 255, 180); border: 2px solid gray; border-radius: 5px; border-style: inset; };" );
+    ui->p5CheckBox->setStyleSheet( "QCheckBox{ color: rgb(0, 0, 0); background-color: rgba(255, 255, 255, 180); border: 2px solid gray; border-radius: 5px; border-style: inset; };" );
+    ui->p6CheckBox->setStyleSheet( "QCheckBox{ color: rgb(0, 0, 0); background-color: rgba(255, 255, 255, 180); border: 2px solid gray; border-radius: 5px; border-style: inset; };" );
 
     if(turn != seats){
         switch(turn){
@@ -478,7 +478,7 @@ void MainWindow::isTableFull(double seats, double pot, double turn)      /// Whe
 }
 
 
-void MainWindow::localPlayerControl(int bet, int draw, double wager, double ante, double raised)        /// Is players turn
+void MainWindow::localPlayerControl(int bet, double wager, double ante, double raised)        /// Is players turn
 {
     if(ui->dsbTurn->value() == ui->playerId->value()){   /// Local players turn button control
         if(rpc::end != 1 || rpc::revealBool != 1){
@@ -517,7 +517,9 @@ void MainWindow::localPlayerControl(int bet, int draw, double wager, double ante
             ui->turnReadOut->setText("Bet is "+w);
             ui->turnReadOut->insertPlainText("Your Turn    ");
         }else {
-            ui->turnReadOut->setText("Your Turn");
+            if(Hand::keyIsPub == false){
+                ui->turnReadOut->setText("Your Turn");
+            }
             ui->turnReadOut->setStyleSheet( "QTextBrowser{border-color: rgb(128, 128, 128); border-style: inset; border-width: 2px; border-radius: 6px; padding: 3px; color: rgb(255, 255, 255); background-color: rgb(56, 47, 165); };" );
             ui->groupBoxP1->setStyleSheet( "QGroupBox{ border-color: rgb(56, 47, 165); };" );
 
@@ -545,8 +547,8 @@ void MainWindow::localPlayerControl(int bet, int draw, double wager, double ante
 
         if(rpc::revealBool == 1 && Hand::keyIsPub == false){
             if(Hand::endSignal == false){
-            ui->turnReadOut->setText("Revealing key");
-            revealKey();
+                ui->turnReadOut->setText("Revealing key");
+                revealKey();
             }
         }
 
@@ -810,16 +812,16 @@ void MainWindow::localEnd(QString oneId, int seats, int p1Fold, int p2Fold, int 
 void MainWindow::displayLocalHand(QString hashOne, QString hashTwo) /// Displays players hole cards
 {
     if(ui->deckComboBox->currentIndex() > 1){
-        ui->holeCard1Label->setPixmap(QPixmap::fromImage(displayCustom(card(hashOne, rpc::salt))));
-        ui->holeCard2Label->setPixmap(QPixmap::fromImage(displayCustom(card(hashTwo, rpc::salt))));
+        ui->holeCard1Label->setPixmap(QPixmap::fromImage(displayCustom(card(hashOne))));
+        ui->holeCard2Label->setPixmap(QPixmap::fromImage(displayCustom(card(hashTwo))));
     }else {
-        ui->holeCard1Label->setPixmap(QPixmap(displayStandard(card(hashOne, rpc::salt))));
-        ui->holeCard2Label->setPixmap(QPixmap(displayStandard(card(hashTwo, rpc::salt))));
+        ui->holeCard1Label->setPixmap(QPixmap(displayStandard(card(hashOne))));
+        ui->holeCard2Label->setPixmap(QPixmap(displayStandard(card(hashTwo))));
     }
 }
 
 
-int MainWindow::card(QString hash, QString salt)  /// Gets local cards and decrypt with local key
+int MainWindow::card(QString hash)  /// Gets local cards and decrypt with local key
 {
     for (int i = 1; i < 53; i++) {
          QString finder = QString::number(i);
@@ -838,7 +840,7 @@ int MainWindow::card(QString hash, QString salt)  /// Gets local cards and decry
 }
 
 
-int MainWindow::keyCard(QString hash, QString salt, int who)  /// Gets other player cards and decrypt with their keys after reveal
+int MainWindow::keyCard(QString hash, int who)  /// Gets other player cards and decrypt with their keys after reveal
 {
     QString keyCheck;
     switch (who){
@@ -870,7 +872,7 @@ int MainWindow::keyCard(QString hash, QString salt, int who)  /// Gets other pla
 void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p4Fold, int p5Fold, int p6Fold)      /// Show all player cards and end results
 {
 
-    if(Hand::endSignal == false && ui->playerId->value() > 0 && rpc::inGame == true && MainWindow::displayedRes == false){
+    if(Hand::endSignal == false && ui->playerId->value() > 0 && rpc::inGame == true){
 
         ui->logTextBrowser->setFontPointSize(30);
 
@@ -917,101 +919,103 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
             p6Rank = 100;
         }
 
-        switch (seats){
-        /// Display players who are in game and not folded
-        case 2:
-            ui->logTextBrowser->setText("Player 1 Has: "+findCards(keyCard(rpc::hashOneone, rpc::salt, 1))+" "+findCards(keyCard(rpc::hashOnetwo, rpc::salt, 1))+" "+handToText(p1Rank)+" "+thisHandIs(1));
-            ui->logTextBrowser->append("Player 2 Has: "+findCards(keyCard(rpc::hashTwoone, rpc::salt, 2))+" "+findCards(keyCard(rpc::hashTwotwo, rpc::salt, 2))+" "+handToText(p2Rank)+" "+thisHandIs(2));
-            break;
+        if(MainWindow::displayedRes == false){
+            switch (seats){
+            /// Display players who are in game and not folded
+            case 2:
+                ui->logTextBrowser->setText("Player 1 Has: "+findCards(keyCard(rpc::hashOneone, 1))+" "+findCards(keyCard(rpc::hashOnetwo, 1))+" "+handToText(p1Rank)+" "+thisHandIs(1));
+                ui->logTextBrowser->append("Player 2 Has: "+findCards(keyCard(rpc::hashTwoone, 2))+" "+findCards(keyCard(rpc::hashTwotwo, 2))+" "+handToText(p2Rank)+" "+thisHandIs(2));
+                break;
 
-        case 3:
-            ui->logTextBrowser->setText("");
+            case 3:
+                ui->logTextBrowser->setText("");
 
-            if(p1Fold != 1){
-                ui->logTextBrowser->append("Player 1 Has: "+findCards(keyCard(rpc::hashOneone, rpc::salt, 1))+" "+findCards(keyCard(rpc::hashOnetwo, rpc::salt, 1))+" "+handToText(p1Rank)+" "+thisHandIs(1));
+                if(p1Fold != 1){
+                    ui->logTextBrowser->append("Player 1 Has: "+findCards(keyCard(rpc::hashOneone, 1))+" "+findCards(keyCard(rpc::hashOnetwo, 1))+" "+handToText(p1Rank)+" "+thisHandIs(1));
+                }
+
+                if(p2Fold != 1){
+                    ui->logTextBrowser->append("Player 2 Has: "+findCards(keyCard(rpc::hashTwoone, 2))+" "+findCards(keyCard(rpc::hashTwotwo, 2))+" "+handToText(p2Rank)+" "+thisHandIs(2));
+                }
+
+                if(p3Fold != 1){
+                    ui->logTextBrowser->append("Player 3 Has: "+findCards(keyCard(rpc::hashThreeone, 3))+" "+findCards(keyCard(rpc::hashThreetwo, 3))+" "+handToText(p3Rank)+" "+thisHandIs(3));
+                }
+                break;
+
+            case 4:
+                ui->logTextBrowser->setText("");
+
+                if(p1Fold != 1){
+                    ui->logTextBrowser->append("Player 1 Has: "+findCards(keyCard(rpc::hashOneone, 1))+" "+findCards(keyCard(rpc::hashOnetwo, 1))+" "+handToText(p1Rank)+" "+thisHandIs(1));
+                }
+
+                if(p2Fold != 1){
+                    ui->logTextBrowser->append("Player 2 Has: "+findCards(keyCard(rpc::hashTwoone, 2))+" "+findCards(keyCard(rpc::hashTwotwo, 2))+" "+handToText(p2Rank)+" "+thisHandIs(2));
+                }
+
+                if(p3Fold != 1){
+                    ui->logTextBrowser->append("Player 3 Has: "+findCards(keyCard(rpc::hashThreeone, 3))+" "+findCards(keyCard(rpc::hashThreetwo, 3))+" "+handToText(p3Rank)+" "+thisHandIs(3));
+                }
+
+                if(p4Fold != 1){
+                    ui->logTextBrowser->append("Player 4 Has: "+findCards(keyCard(rpc::hashFourone, 4))+" "+findCards(keyCard(rpc::hashFourtwo, 4))+" "+handToText(p4Rank)+" "+thisHandIs(4));
+                }
+                break;
+
+            case 5:
+                ui->logTextBrowser->setText("");
+
+                if(p1Fold != 1){
+                    ui->logTextBrowser->append("Player 1 Has: "+findCards(keyCard(rpc::hashOneone, 1))+" "+findCards(keyCard(rpc::hashOnetwo, 1))+" "+handToText(p1Rank)+" "+thisHandIs(1));
+                }
+
+                if(p2Fold != 1){
+                    ui->logTextBrowser->append("Player 2 Has: "+findCards(keyCard(rpc::hashTwoone, 2))+" "+findCards(keyCard(rpc::hashTwotwo, 2))+" "+handToText(p2Rank)+" "+thisHandIs(2));
+                }
+
+                if(p3Fold != 1){
+                    ui->logTextBrowser->append("Player 3 Has: "+findCards(keyCard(rpc::hashThreeone, 3))+" "+findCards(keyCard(rpc::hashThreetwo, 3))+" "+handToText(p3Rank)+" "+thisHandIs(4));
+                }
+
+                if(p4Fold != 1){
+                    ui->logTextBrowser->append("Player 4 Has: "+findCards(keyCard(rpc::hashFourone, 4))+" "+findCards(keyCard(rpc::hashFourtwo, 4))+" "+handToText(p4Rank)+" "+thisHandIs(4));
+                }
+
+                if(p5Fold != 1){
+                    ui->logTextBrowser->append("Player 5 Has: "+findCards(keyCard(rpc::hashFiveone, 5))+" "+findCards(keyCard(rpc::hashFivetwo, 5))+" "+handToText(p5Rank)+" "+thisHandIs(5));
+                }
+                break;
+
+            case 6:
+                ui->logTextBrowser->setText("");
+
+                if(p1Fold != 1){
+                    ui->logTextBrowser->append("Player 1 Has: "+findCards(keyCard(rpc::hashOneone, 1))+" "+findCards(keyCard(rpc::hashOnetwo, 1))+" "+handToText(p1Rank)+" "+thisHandIs(1));
+                }
+
+                if(p2Fold != 1){
+                    ui->logTextBrowser->append("Player 2 Has: "+findCards(keyCard(rpc::hashTwoone, 2))+" "+findCards(keyCard(rpc::hashTwotwo, 2))+" "+handToText(p2Rank)+" "+thisHandIs(2));
+                }
+
+                if(p3Fold != 1){
+                    ui->logTextBrowser->append("Player 3 Has: "+findCards(keyCard(rpc::hashThreeone, 3))+" "+findCards(keyCard(rpc::hashThreetwo, 3))+" "+handToText(p3Rank)+" "+thisHandIs(3));
+                }
+
+                if(p4Fold != 1){
+                    ui->logTextBrowser->append("Player 4 Has: "+findCards(keyCard(rpc::hashFourone, 4))+" "+findCards(keyCard(rpc::hashFourtwo, 4))+" "+handToText(p4Rank)+" "+thisHandIs(4));
+                }
+
+                if(p5Fold != 1){
+                    ui->logTextBrowser->append("Player 5 Has: "+findCards(keyCard(rpc::hashFiveone, 5))+" "+findCards(keyCard(rpc::hashFivetwo, 5))+" "+handToText(p5Rank)+" "+thisHandIs(5));
+                }
+
+                if(p6Fold != 1){
+                    ui->logTextBrowser->append("Player 6 Has: "+findCards(keyCard(rpc::hashSixone, 6))+" "+findCards(keyCard(rpc::hashSixtwo, 6))+" "+handToText(p6Rank)+" "+thisHandIs(6));
+                }
+                break;
+
             }
-
-            if(p2Fold != 1){
-                ui->logTextBrowser->append("Player 2 Has: "+findCards(keyCard(rpc::hashTwoone, rpc::salt, 2))+" "+findCards(keyCard(rpc::hashTwotwo, rpc::salt, 2))+" "+handToText(p2Rank)+" "+thisHandIs(2));
-            }
-
-            if(p3Fold != 1){
-                ui->logTextBrowser->append("Player 3 Has: "+findCards(keyCard(rpc::hashThreeone, rpc::salt, 3))+" "+findCards(keyCard(rpc::hashThreetwo, rpc::salt, 3))+" "+handToText(p3Rank)+" "+thisHandIs(3));
-            }
-            break;
-
-        case 4:
-            ui->logTextBrowser->setText("");
-
-            if(p1Fold != 1){
-                ui->logTextBrowser->append("Player 1 Has: "+findCards(keyCard(rpc::hashOneone, rpc::salt, 1))+" "+findCards(keyCard(rpc::hashOnetwo, rpc::salt, 1))+" "+handToText(p1Rank)+" "+thisHandIs(1));
-            }
-
-            if(p2Fold != 1){
-                ui->logTextBrowser->append("Player 2 Has: "+findCards(keyCard(rpc::hashTwoone, rpc::salt, 2))+" "+findCards(keyCard(rpc::hashTwotwo, rpc::salt, 2))+" "+handToText(p2Rank)+" "+thisHandIs(2));
-            }
-
-            if(p3Fold != 1){
-                ui->logTextBrowser->append("Player 3 Has: "+findCards(keyCard(rpc::hashThreeone, rpc::salt, 3))+" "+findCards(keyCard(rpc::hashThreetwo, rpc::salt, 3))+" "+handToText(p3Rank)+" "+thisHandIs(3));
-            }
-
-            if(p4Fold != 1){
-                ui->logTextBrowser->append("Player 4 Has: "+findCards(keyCard(rpc::hashFourone, rpc::salt, 4))+" "+findCards(keyCard(rpc::hashFourtwo, rpc::salt, 4))+" "+handToText(p4Rank)+" "+thisHandIs(4));
-            }
-            break;
-
-        case 5:
-            ui->logTextBrowser->setText("");
-
-            if(p1Fold != 1){
-                ui->logTextBrowser->append("Player 1 Has: "+findCards(keyCard(rpc::hashOneone, rpc::salt, 1))+" "+findCards(keyCard(rpc::hashOnetwo, rpc::salt, 1))+" "+handToText(p1Rank)+" "+thisHandIs(1));
-            }
-
-            if(p2Fold != 1){
-                ui->logTextBrowser->append("Player 2 Has: "+findCards(keyCard(rpc::hashTwoone, rpc::salt, 2))+" "+findCards(keyCard(rpc::hashTwotwo, rpc::salt, 2))+" "+handToText(p2Rank)+" "+thisHandIs(2));
-            }
-
-            if(p3Fold != 1){
-                ui->logTextBrowser->append("Player 3 Has: "+findCards(keyCard(rpc::hashThreeone, rpc::salt, 3))+" "+findCards(keyCard(rpc::hashThreetwo, rpc::salt, 3))+" "+handToText(p3Rank)+" "+thisHandIs(4));
-            }
-
-            if(p4Fold != 1){
-                ui->logTextBrowser->append("Player 4 Has: "+findCards(keyCard(rpc::hashFourone, rpc::salt, 4))+" "+findCards(keyCard(rpc::hashFourtwo, rpc::salt, 4))+" "+handToText(p4Rank)+" "+thisHandIs(4));
-            }
-
-            if(p5Fold != 1){
-                ui->logTextBrowser->append("Player 5 Has: "+findCards(keyCard(rpc::hashFiveone, rpc::salt, 5))+" "+findCards(keyCard(rpc::hashFivetwo, rpc::salt, 5))+" "+handToText(p5Rank)+" "+thisHandIs(5));
-            }
-            break;
-
-        case 6:
-            ui->logTextBrowser->setText("");
-
-            if(p1Fold != 1){
-                ui->logTextBrowser->append("Player 1 Has: "+findCards(keyCard(rpc::hashOneone, rpc::salt, 1))+" "+findCards(keyCard(rpc::hashOnetwo, rpc::salt, 1))+" "+handToText(p1Rank)+" "+thisHandIs(1));
-            }
-
-            if(p2Fold != 1){
-                ui->logTextBrowser->append("Player 2 Has: "+findCards(keyCard(rpc::hashTwoone, rpc::salt, 2))+" "+findCards(keyCard(rpc::hashTwotwo, rpc::salt, 2))+" "+handToText(p2Rank)+" "+thisHandIs(2));
-            }
-
-            if(p3Fold != 1){
-                ui->logTextBrowser->append("Player 3 Has: "+findCards(keyCard(rpc::hashThreeone, rpc::salt, 3))+" "+findCards(keyCard(rpc::hashThreetwo, rpc::salt, 3))+" "+handToText(p3Rank)+" "+thisHandIs(3));
-            }
-
-            if(p4Fold != 1){
-                ui->logTextBrowser->append("Player 4 Has: "+findCards(keyCard(rpc::hashFourone, rpc::salt, 4))+" "+findCards(keyCard(rpc::hashFourtwo, rpc::salt, 4))+" "+handToText(p4Rank)+" "+thisHandIs(4));
-            }
-
-            if(p5Fold != 1){
-                ui->logTextBrowser->append("Player 5 Has: "+findCards(keyCard(rpc::hashFiveone, rpc::salt, 5))+" "+findCards(keyCard(rpc::hashFivetwo, rpc::salt, 5))+" "+handToText(p5Rank)+" "+thisHandIs(5));
-            }
-
-            if(p6Fold != 1){
-                ui->logTextBrowser->append("Player 6 Has: "+findCards(keyCard(rpc::hashSixone, rpc::salt, 6))+" "+findCards(keyCard(rpc::hashSixtwo, rpc::salt, 6))+" "+handToText(p6Rank)+" "+thisHandIs(6));
-            }
-            break;
-
         }
 
         /// Get all ranks and compare

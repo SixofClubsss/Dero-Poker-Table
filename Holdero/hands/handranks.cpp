@@ -282,7 +282,7 @@ int MainWindow::compareThese()   /// Search thorugh all hand combinations to fin
 
     }else if(nRank == fRank){
         fRank = nRank;
-        findBest(fRank, fHighCardArr, e1Hand, e1Suits);
+        findBest(fRank, fHighCardArr, e1Hand);
     }
 
     int e2Hand[5] = {cc1[0], cc2[0], suitSplit1[0], cc4[0], suitSplit2[0]};
@@ -295,7 +295,7 @@ int MainWindow::compareThese()   /// Search thorugh all hand combinations to fin
 
     }else if(nRank == fRank){
         fRank = nRank;
-        findBest(fRank, fHighCardArr, e2Hand, e2Suits);
+        findBest(fRank, fHighCardArr, e2Hand);
         // std::copy(e2Suits, e2Suits + 5, fSuitsArr);
     }
 
@@ -309,7 +309,7 @@ int MainWindow::compareThese()   /// Search thorugh all hand combinations to fin
 
     }else if(nRank == fRank){
         fRank = nRank;
-        findBest(fRank, fHighCardArr, e3Hand, e3Suits);
+        findBest(fRank, fHighCardArr, e3Hand);
         // std::copy(e3Suits, e3Suits + 5, fSuitsArr);
     }
 
@@ -323,7 +323,7 @@ int MainWindow::compareThese()   /// Search thorugh all hand combinations to fin
 
     }else if(nRank == fRank){
         fRank = nRank;
-        findBest(fRank, fHighCardArr, e4Hand, e4Suits);
+        findBest(fRank, fHighCardArr, e4Hand);
         // std::copy(e4Suits, e4Suits + 5, fSuitsArr);
     }
 
@@ -337,7 +337,7 @@ int MainWindow::compareThese()   /// Search thorugh all hand combinations to fin
 
     }else if(nRank == fRank){
         fRank = nRank;
-        findBest(fRank, fHighCardArr, e5Hand, e5Suits);
+        findBest(fRank, fHighCardArr, e5Hand);
         // std::copy(e5Suits, e5Suits + 5, fSuitsArr);
     }
 
@@ -351,7 +351,7 @@ int MainWindow::compareThese()   /// Search thorugh all hand combinations to fin
 
     }else if(nRank == fRank){
         fRank = nRank;
-        findBest(fRank, fHighCardArr, e6Hand, e6Suits);
+        findBest(fRank, fHighCardArr, e6Hand);
         // std::copy(e6Suits, e6Suits + 5, fSuitsArr);
     }
 
@@ -366,7 +366,7 @@ int MainWindow::compareThese()   /// Search thorugh all hand combinations to fin
 
     }else if(nRank == fRank){
         fRank = nRank;
-        findBest(fRank, fHighCardArr, e7Hand, e7Suits);
+        findBest(fRank, fHighCardArr, e7Hand);
         // std::copy(e7Suits, e7Suits + 5, fSuitsArr);
     }
 
@@ -380,7 +380,7 @@ int MainWindow::compareThese()   /// Search thorugh all hand combinations to fin
 
     }else if(nRank == fRank){
         fRank = nRank;
-        findBest(fRank, fHighCardArr, e8Hand, e8Suits);
+        findBest(fRank, fHighCardArr, e8Hand);
         // std::copy(e8Suits, e8Suits + 5, fSuitsArr);
     }
 
@@ -394,7 +394,7 @@ int MainWindow::compareThese()   /// Search thorugh all hand combinations to fin
 
     }else if(nRank == fRank){
         fRank = nRank;
-        findBest(fRank, fHighCardArr, e9Hand, e9Suits);
+        findBest(fRank, fHighCardArr, e9Hand);
         // std::copy(e9Suits, e9Suits + 5, fSuitsArr);
     }
 
@@ -408,7 +408,7 @@ int MainWindow::compareThese()   /// Search thorugh all hand combinations to fin
 
     }else if(nRank == fRank){
         fRank = nRank;
-        findBest(fRank, fHighCardArr, e10Hand, e10Suits);
+        findBest(fRank, fHighCardArr, e10Hand);
         // std::copy(e10Suits, e10Suits + 5, fSuitsArr);
     }
 
@@ -423,7 +423,7 @@ int MainWindow::compareThese()   /// Search thorugh all hand combinations to fin
 
     }else if(nRank == fRank){
         fRank = nRank;
-        findBest(fRank, fHighCardArr, e11Hand, e11Suits);
+        findBest(fRank, fHighCardArr, e11Hand);
         // std::copy(e11Suits, e11Suits + 5, fSuitsArr);
     }
 
@@ -437,7 +437,7 @@ int MainWindow::compareThese()   /// Search thorugh all hand combinations to fin
 
     }else if(nRank == fRank){
         fRank = nRank;
-        findBest(fRank, fHighCardArr, e12Hand, e12Suits);
+        findBest(fRank, fHighCardArr, e12Hand);
         // std::copy(e12Suits, e12Suits + 5, fSuitsArr);
     }
 
@@ -451,7 +451,7 @@ int MainWindow::compareThese()   /// Search thorugh all hand combinations to fin
 
     }else if(nRank == fRank){
         fRank = nRank;
-        findBest(fRank, fHighCardArr, e13Hand, e13Suits);
+        findBest(fRank, fHighCardArr, e13Hand);
         // std::copy(e13Suits, e13Suits + 5, fSuitsArr);
     }
 
@@ -465,7 +465,7 @@ int MainWindow::compareThese()   /// Search thorugh all hand combinations to fin
 
     }else if(nRank == fRank){
         fRank = nRank;
-        findBest(fRank, fHighCardArr, e14Hand, e14Suits);
+        findBest(fRank, fHighCardArr, e14Hand);
         // std::copy(e14Suits, e14Suits + 5, fSuitsArr);
     }
 
@@ -479,7 +479,7 @@ int MainWindow::compareThese()   /// Search thorugh all hand combinations to fin
 
     }else if(nRank == fRank){
         fRank = nRank;
-        findBest(fRank, fHighCardArr, e15Hand, e15Suits);
+        findBest(fRank, fHighCardArr, e15Hand);
         // std::copy(e15Suits, e15Suits + 5, fSuitsArr);
     }
 
@@ -494,7 +494,7 @@ int MainWindow::compareThese()   /// Search thorugh all hand combinations to fin
 
     }else if(nRank == fRank){
         fRank = nRank;
-        findBest(fRank, fHighCardArr, e16Hand, e16Suits);
+        findBest(fRank, fHighCardArr, e16Hand);
         // std::copy(e16Suits, e16Suits + 5, fSuitsArr);
 
     }
@@ -509,7 +509,7 @@ int MainWindow::compareThese()   /// Search thorugh all hand combinations to fin
 
     }else if(nRank == fRank){
         fRank = nRank;
-        findBest(fRank, fHighCardArr, e17Hand, e17Suits);
+        findBest(fRank, fHighCardArr, e17Hand);
         // std::copy(e17Suits, e17Suits + 5, fSuitsArr);
     }
 
@@ -523,7 +523,7 @@ int MainWindow::compareThese()   /// Search thorugh all hand combinations to fin
 
     }else if(nRank == fRank){
         fRank = nRank;
-        findBest(fRank, fHighCardArr, e18Hand, e18Suits);
+        findBest(fRank, fHighCardArr, e18Hand);
         // std::copy(e18Suits, e18Suits + 5, fSuitsArr);
     }
 
@@ -537,7 +537,7 @@ int MainWindow::compareThese()   /// Search thorugh all hand combinations to fin
 
     }else if(nRank == fRank){
         fRank = nRank;
-        findBest(fRank, fHighCardArr, e19Hand, e19Suits);
+        findBest(fRank, fHighCardArr, e19Hand);
         // std::copy(e19Suits, e19Suits + 5, fSuitsArr);
     }
 
@@ -551,7 +551,7 @@ int MainWindow::compareThese()   /// Search thorugh all hand combinations to fin
 
     }else if(nRank == fRank){
         fRank = nRank;
-        findBest(fRank, fHighCardArr, e20Hand, e20Suits);
+        findBest(fRank, fHighCardArr, e20Hand);
     }
 
     return fRank;
@@ -629,11 +629,10 @@ int MainWindow::makeHand(int h[5], int s[5])    /// Makes hand rank from hand in
 }
 
 
-void MainWindow::findBest(int r, int fR[5], int h[5], int s[5])     /// Finds best combination on same rank hands
+void MainWindow::findBest(int r, int fR[5], int h[5])     /// Finds best combination on same rank hands
 {
     int hand[5] = {h[0], h[1], h[2], h[3], h[4]};
     int swap[5] = {fR[0], fR[1], fR[2], fR[3], fR[4]};
-    int suits[5] = {s[0], s[1], s[2], s[3], s[4]};
     int hole[] = {suitSplit1[0], suitSplit2[0]};
     std::sort(hole, hole + 2);
     std::sort(swap, swap + 5);

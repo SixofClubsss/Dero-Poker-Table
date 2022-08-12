@@ -52,7 +52,7 @@ int rpc::getBalance()  /// Gets players dero balance
       curl_easy_setopt(curlBalanceCheck, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlBalanceCheck, CURLOPT_URL, pCh);
       curl_easy_setopt(curlBalanceCheck, CURLOPT_VERBOSE, 1L);
-      curl_easy_setopt(curlBalanceCheck, CURLOPT_CONNECTTIMEOUT, 6L);
+      curl_easy_setopt(curlBalanceCheck, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlBalanceCheck, CURLOPT_ERRORBUFFER, error);
       curl_easy_setopt(curlBalanceCheck, CURLOPT_USERPWD, loginCh);
       curl_easy_setopt(curlBalanceCheck, CURLOPT_POSTFIELDS, postthis);
@@ -99,7 +99,7 @@ int rpc::getHeight()  /// Gets current block height
       curl_easy_setopt(curlHeightCheck, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlHeightCheck, CURLOPT_URL, fhCh);
       curl_easy_setopt(curlHeightCheck, CURLOPT_VERBOSE, 1L);
-      curl_easy_setopt(curlHeightCheck, CURLOPT_CONNECTTIMEOUT, 6L);
+      curl_easy_setopt(curlHeightCheck, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlHeightCheck, CURLOPT_ERRORBUFFER, error);
       /// curl_easy_setopt(curlHeightCheck, CURLOPT_SSL_VERIFYPEER, 0);   *Remove comment for windows SSL disable*
       curl_easy_setopt(curlHeightCheck, CURLOPT_POSTFIELDS, postthis);
@@ -148,7 +148,7 @@ int rpc::fetchScData()       /// Get SC variables
       curl_easy_setopt(curlFetch, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlFetch, CURLOPT_URL, fdCh);
       curl_easy_setopt(curlFetch, CURLOPT_VERBOSE, 1L);
-      curl_easy_setopt(curlFetch, CURLOPT_CONNECTTIMEOUT, 6L);
+      curl_easy_setopt(curlFetch, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlFetch, CURLOPT_ERRORBUFFER, error);
       /// curl_easy_setopt(curlFetch, CURLOPT_SSL_VERIFYPEER, 0);   *Remove comment for windows SSL disable*
       curl_easy_setopt(curlFetch, CURLOPT_POSTFIELDS, postthis);

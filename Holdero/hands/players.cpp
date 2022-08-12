@@ -60,7 +60,7 @@ void MainWindow::getCommunity()  /// Gets ciommunity cards
 
 int MainWindow::getPlayer1() /// Gets player hand and hand rank
 {
-    int player1HandRaw[] = {keyCard(rpc::hashOneone, rpc::salt, 1), keyCard(rpc::hashOnetwo, rpc::salt, 1)};
+    int player1HandRaw[] = {keyCard(rpc::hashOneone, 1), keyCard(rpc::hashOnetwo, 1)};
     p1Rank = 100;
     p1HighPair = 0;
     getArray(player1HandRaw[0]);
@@ -85,7 +85,7 @@ int MainWindow::getPlayer1() /// Gets player hand and hand rank
 
 int MainWindow::getPlayer2()
 {
-    int player2HandRaw[] = {keyCard(rpc::hashTwoone, rpc::salt, 2), keyCard(rpc::hashTwotwo, rpc::salt, 2)};
+    int player2HandRaw[] = {keyCard(rpc::hashTwoone, 2), keyCard(rpc::hashTwotwo, 2)};
     p2Rank = 100;
     p2HighPair = 0;
     getArray(player2HandRaw[0]);
@@ -110,7 +110,7 @@ int MainWindow::getPlayer2()
 
 int MainWindow::getPlayer3()
 {
-    int player3HandRaw[] = {keyCard(rpc::hashThreeone, rpc::salt, 3), keyCard(rpc::hashThreetwo, rpc::salt, 3)};
+    int player3HandRaw[] = {keyCard(rpc::hashThreeone, 3), keyCard(rpc::hashThreetwo, 3)};
     p3Rank = 100;
     p3HighPair = 0;
     getArray(player3HandRaw[0]);
@@ -136,7 +136,7 @@ int MainWindow::getPlayer3()
 int MainWindow::getPlayer4()
 {
 
-    int player4HandRaw[] = {keyCard(rpc::hashFourone, rpc::salt, 4), keyCard(rpc::hashFourtwo, rpc::salt, 4)};
+    int player4HandRaw[] = {keyCard(rpc::hashFourone, 4), keyCard(rpc::hashFourtwo, 4)};
     p4Rank = 100;
     p4HighPair = 0;
     getArray(player4HandRaw[0]);
@@ -162,7 +162,7 @@ int MainWindow::getPlayer4()
 int MainWindow::getPlayer5()
 {
 
-    int player5HandRaw[] = {keyCard(rpc::hashFiveone, rpc::salt, 5), keyCard(rpc::hashFivetwo, rpc::salt, 5)};
+    int player5HandRaw[] = {keyCard(rpc::hashFiveone, 5), keyCard(rpc::hashFivetwo, 5)};
     p5Rank = 100;
     p5HighPair = 0;
     getArray(player5HandRaw[0]);
@@ -188,7 +188,7 @@ int MainWindow::getPlayer5()
 int MainWindow::getPlayer6()
 {
 
-    int player6HandRaw[] = {keyCard(rpc::hashSixone, rpc::salt, 6), keyCard(rpc::hashSixtwo, rpc::salt, 6)};
+    int player6HandRaw[] = {keyCard(rpc::hashSixone, 6), keyCard(rpc::hashSixtwo, 6)};
     p6Rank = 100;
     p6HighPair = 0;
     getArray(player6HandRaw[0]);

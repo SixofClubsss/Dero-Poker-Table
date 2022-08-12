@@ -63,8 +63,8 @@ public:
     int dealHand();
     int check();
     int bet();
-    int card(QString hash, QString salt);
-    int keyCard(QString hash, QString salt, int);
+    int card(QString hash);
+    int keyCard(QString hash, int);
     QString hasDisplay(int);
     QString thisHandIs(int);
     QString findCards(int);
@@ -89,7 +89,7 @@ public:
     void atTable();
     void ownerAtTable(int p1Out, QString oneId);
     void isTableFull(double seats, double pot, double turn);
-    void localPlayerControl(int bet, int draw, double wager, double ante, double raised);
+    void localPlayerControl(int bet, double wager, double ante, double raised);
     void storedEnd(int end, QString ondId);
     void localEndSignal(QString oneId);
     void disableButtons();
@@ -126,7 +126,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
-    void findBest(int r, int fR[], int h[], int s[]);
+    void findBest(int r, int fR[], int h[]);
     void compareLoop();
     void getCommunity();
     int compareThese();
