@@ -29,6 +29,7 @@ https://dreamtables.net
 
 bool MainWindow::clicked;
 bool MainWindow::startUpSkip;
+bool MainWindow::displayedRes;
 int MainWindow::skipCount;
 
 bool Hand::hasBet;
@@ -183,7 +184,7 @@ void MainWindow::checkBalance(double balance)
 
 void MainWindow::setOpenClosed(int seats, double ante, double dealer)       /// Sets display for seats open or closed, set dealer display, sets minium bet == ante
 {
-    ui->turnReadOut->setStyleSheet( "QTextBrowser{border-color: rgb(128, 128, 128); border-style: inset; border-width: 2px; border-radius: 6px; padding: 3px; background-color: rgb(85, 88, 93, 90); color: rgb(255, 255, 255);};" );
+    ui->turnReadOut->setStyleSheet( "QTextBrowser{border-color: rgb(128, 128, 128); border-style: inset; border-width: 2px; border-radius: 6px; padding: 3px; background-color: rgba(85, 88, 93, 90); color: rgb(255, 255, 255);};" );
     ui->groupBoxP1->setStyleSheet( "QGroupBox{ border: 2px solid gray; border-radius: 5px; };" );
     ui->betSpinBox->setMinimum(ante/100000);
     ui->anteIsDSB->setValue(ante/100000);
@@ -318,12 +319,12 @@ void MainWindow::setPlayerStatus(int p1Out, QString oneId, QString twoId, QStrin
 
 void MainWindow::highlightWhosTurn(int turn, int seats)     /// Highlight player indicator when player turn
 {
-    ui->p1CheckBox->setStyleSheet( "QCheckBox{ color: rgb(0, 0, 0); background-color: rgb(255, 255, 255, 180); border: 2px solid gray; border-radius: 5px; border-style: inset; };" );
-    ui->p2CheckBox->setStyleSheet( "QCheckBox{ color: rgb(0, 0, 0); background-color: rgb(255, 255, 255, 180); border: 2px solid gray; border-radius: 5px; border-style: inset; };" );
-    ui->p3CheckBox->setStyleSheet( "QCheckBox{ color: rgb(0, 0, 0); background-color: rgb(255, 255, 255, 180); border: 2px solid gray; border-radius: 5px; border-style: inset; };" );
-    ui->p4CheckBox->setStyleSheet( "QCheckBox{ color: rgb(0, 0, 0); background-color: rgb(255, 255, 255, 180); border: 2px solid gray; border-radius: 5px; border-style: inset; };" );
-    ui->p5CheckBox->setStyleSheet( "QCheckBox{ color: rgb(0, 0, 0); background-color: rgb(255, 255, 255, 180); border: 2px solid gray; border-radius: 5px; border-style: inset; };" );
-    ui->p6CheckBox->setStyleSheet( "QCheckBox{ color: rgb(0, 0, 0); background-color: rgb(255, 255, 255, 180); border: 2px solid gray; border-radius: 5px; border-style: inset; };" );
+    ui->p1CheckBox->setStyleSheet( "QCheckBox{ color: rgb(0, 0, 0); background-color: rgba(255, 255, 255, 180); border: 2px solid gray; border-radius: 5px; border-style: inset; };" );
+    ui->p2CheckBox->setStyleSheet( "QCheckBox{ color: rgb(0, 0, 0); background-color: rgba(255, 255, 255, 180); border: 2px solid gray; border-radius: 5px; border-style: inset; };" );
+    ui->p3CheckBox->setStyleSheet( "QCheckBox{ color: rgb(0, 0, 0); background-color: rgba(255, 255, 255, 180); border: 2px solid gray; border-radius: 5px; border-style: inset; };" );
+    ui->p4CheckBox->setStyleSheet( "QCheckBox{ color: rgb(0, 0, 0); background-color: rgba(255, 255, 255, 180); border: 2px solid gray; border-radius: 5px; border-style: inset; };" );
+    ui->p5CheckBox->setStyleSheet( "QCheckBox{ color: rgb(0, 0, 0); background-color: rgba(255, 255, 255, 180); border: 2px solid gray; border-radius: 5px; border-style: inset; };" );
+    ui->p6CheckBox->setStyleSheet( "QCheckBox{ color: rgb(0, 0, 0); background-color: rgba(255, 255, 255, 180); border: 2px solid gray; border-radius: 5px; border-style: inset; };" );
 
     if(turn != seats){
         switch(turn){
@@ -393,6 +394,7 @@ void MainWindow::potEmpty(double pot)       ///  Blank display when hand is paye
         ui->winnerComboBox->setEnabled(false);
         rpc::paidOut = false;
         Hand::keyIsPub = false;
+        MainWindow::displayedRes = false;
     }
 }
 
@@ -414,6 +416,7 @@ void MainWindow::setMinBet(double wager, double raised)     /// Sets minimum bet
 
     }else {
         ui->betSpinBox->setMinimum(wager/100000);
+        ui->betSpinBox->setMaximum(100000000);
 
         if(raised > 0){
             ui->betSpinBox->setMaximum(wager/100000);
@@ -497,7 +500,9 @@ void MainWindow::localPlayerControl(int bet, int draw, double wager, double ante
             ui->turnReadOut->setText("Bet is "+w);
             ui->turnReadOut->insertPlainText("Your Turn    ");
         }else {
-            ui->turnReadOut->setText("Your Turn");
+            if(Hand::keyIsPub == false){
+                ui->turnReadOut->setText("Your Turn");
+            }
             ui->turnReadOut->setStyleSheet( "QTextBrowser{border-color: rgb(128, 128, 128); border-style: inset; border-width: 2px; border-radius: 6px; padding: 3px; color: rgb(255, 255, 255); background-color: rgb(56, 47, 165); };" );
             ui->groupBoxP1->setStyleSheet( "QGroupBox{ border-color: rgb(56, 47, 165); };" );
 
@@ -536,6 +541,7 @@ void MainWindow::localPlayerControl(int bet, int draw, double wager, double ante
 
         if(rpc::revealBool == 1 && Hand::keyIsPub == false){
             if(Hand::endSignal == false){
+                ui->turnReadOut->setText("Revealing key");
                 revealKey();
             }
         }
@@ -590,8 +596,8 @@ void MainWindow::localEndSignal(QString oneId)     /// Local end signal, all pla
         ui->dealHandPushButton->setEnabled(false);
         ui->leaveButton->setEnabled(false);
         if(oneId == rpc::IdHash && Menu::autoPayout == false){
-        ui->payoutPushButton->setEnabled(true);
-        ui->winnerComboBox->setEnabled(true);
+            ui->payoutPushButton->setEnabled(true);
+            ui->winnerComboBox->setEnabled(true);
         }
     }
 }
@@ -624,55 +630,57 @@ void MainWindow::disableButtons()   /// Buttons not in play
 
 void MainWindow::foldedBools(int p1Fold, int p2Fold, int p3Fold, int p4Fold, int p5Fold, int p6Fold)      /// Sets player indicator text to fold when player folds and sets payout menu
 {
-    ui->winnerComboBox->insertItem(0, "Player1");
-    ui->winnerComboBox->insertItem(1, "Player2");
-    ui->winnerComboBox->insertItem(2, "Player3");
-    ui->winnerComboBox->insertItem(3, "Player4");
-    ui->winnerComboBox->insertItem(4, "Player5");
-    ui->winnerComboBox->insertItem(5, "Player6");
+    if(rpc::end != 1){
+        ui->winnerComboBox->insertItem(0, "Player1");
+        ui->winnerComboBox->insertItem(1, "Player2");
+        ui->winnerComboBox->insertItem(2, "Player3");
+        ui->winnerComboBox->insertItem(3, "Player4");
+        ui->winnerComboBox->insertItem(4, "Player5");
+        ui->winnerComboBox->insertItem(5, "Player6");
 
-    ui->winnerComboBox->setMaxCount(rpc::seats);
+        ui->winnerComboBox->setMaxCount(rpc::seats);
 
-    if(p6Fold == 1){
-        Hand::foldSix = true;
-        ui->winnerComboBox->removeItem(5);
-    }else {
-        Hand::foldSix = false;
-    }
+        if(p6Fold == 1){
+            Hand::foldSix = true;
+            ui->winnerComboBox->removeItem(5);
+        }else {
+            Hand::foldSix = false;
+        }
 
-    if(p5Fold == 1){
-        Hand::foldFive = true;
-        ui->winnerComboBox->removeItem(4);
-    }else {
-        Hand::foldFive = false;
-    }
+        if(p5Fold == 1){
+            Hand::foldFive = true;
+            ui->winnerComboBox->removeItem(4);
+        }else {
+            Hand::foldFive = false;
+        }
 
-    if(p4Fold == 1){
-        Hand::foldFour = true;
-        ui->winnerComboBox->removeItem(3);
-    }else {
-        Hand::foldFour = false;
-    }
+        if(p4Fold == 1){
+            Hand::foldFour = true;
+            ui->winnerComboBox->removeItem(3);
+        }else {
+            Hand::foldFour = false;
+        }
 
-    if(p3Fold == 1){
-        Hand::foldThree = true;
-        ui->winnerComboBox->removeItem(2);
-    }else {
-        Hand::foldThree = false;
-    }
+        if(p3Fold == 1){
+            Hand::foldThree = true;
+            ui->winnerComboBox->removeItem(2);
+        }else {
+            Hand::foldThree = false;
+        }
 
-    if(p2Fold == 1){
-        Hand::foldTwo = true;
-        ui->winnerComboBox->removeItem(1);
-    }else {
-        Hand::foldTwo = false;
-    }
+        if(p2Fold == 1){
+            Hand::foldTwo = true;
+            ui->winnerComboBox->removeItem(1);
+        }else {
+            Hand::foldTwo = false;
+        }
 
-    if(p1Fold == 1){
-        Hand::foldOne = true;
-        ui->winnerComboBox->removeItem(0);
-    }else {
-        Hand::foldOne = false;
+        if(p1Fold == 1){
+            Hand::foldOne = true;
+            ui->winnerComboBox->removeItem(0);
+        }else {
+            Hand::foldOne = false;
+        }
     }
 
 }
@@ -912,35 +920,8 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
         suitSplit5[1] = arrSplit[1];
         p1Rank = makeHand();
 
-        if(p1HighCardArr[0] == 1){
-            p1HighCardArr[0] = 14;
-        }
-
-        if(p1HighCardArr[1] == 1){
-            p1HighCardArr[1] = 14;
-        }
-
-        if(p1HighCardArr[2] == 1){
-            p1HighCardArr[2] = 14;
-        }
-
-        if(p1HighCardArr[3] == 1){
-            p1HighCardArr[3] = 14;
-        }
-
-        if(p1HighCardArr[4] == 1){
-            p1HighCardArr[4] = 14;
-        }
-
         std::sort(p1HighCardArr, p1HighCardArr + 5);
-
-        for (int i = 0; i < 4; ++i){
-            if(p1HighCardArr[i] == p1HighCardArr[i+1]){
-                if(p1HighCardArr[i] > p1HighPair){
-                    p1HighPair = p1HighCardArr[i];
-                }
-            }
-        }
+        p1HighPair = getHighPair(p1HighCardArr);
 
     }else{
         p1Rank = 100;
@@ -979,35 +960,8 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
         suitSplit5[1] = arrSplit[1];
         p2Rank = makeHand();
 
-        if(p2HighCardArr[0] == 1){
-           p2HighCardArr[0] = 14;
-        }
-
-        if(p2HighCardArr[1] == 1){
-            p2HighCardArr[1] = 14;
-        }
-
-        if(p2HighCardArr[2] == 1){
-            p2HighCardArr[2] = 14;
-        }
-
-        if(p2HighCardArr[3] == 1){
-            p2HighCardArr[3] = 14;
-        }
-
-        if(p2HighCardArr[4] == 1){
-            p2HighCardArr[4] = 14;
-        }
-
         std::sort(p2HighCardArr, p2HighCardArr + 5);
-
-        for (int i = 0; i < 4; ++i){
-            if(p2HighCardArr[i] == p2HighCardArr[i+1]){
-                if(p2HighCardArr[i] > p2HighPair){
-                    p2HighPair = p2HighCardArr[i];
-                }
-            }
-        }
+        p2HighPair = getHighPair(p2HighCardArr);
 
     }else{
         p2Rank = 100;
@@ -1046,34 +1000,8 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
         suitSplit5[1] = arrSplit[1];
         p3Rank = makeHand();
 
-        if(p3HighCardArr[0] == 1){
-           p3HighCardArr[0] = 14;
-        }
-
-        if(p3HighCardArr[1] == 1){
-            p3HighCardArr[1] = 14;
-        }
-
-        if(p3HighCardArr[2] == 1){
-            p3HighCardArr[2] = 14;
-        }
-
-        if(p3HighCardArr[3] == 1){
-            p3HighCardArr[3] = 14;
-        }
-
-        if(p3HighCardArr[4] == 1){
-            p3HighCardArr[4] = 14;
-        }
         std::sort(p3HighCardArr, p3HighCardArr + 5);
-
-        for (int i = 0; i < 4; ++i){
-            if(p3HighCardArr[i] == p3HighCardArr[i+1]){
-                if(p3HighCardArr[i] > p3HighPair){
-                    p3HighPair = p3HighCardArr[i];
-                }
-            }
-        }
+        p3HighPair = getHighPair(p3HighCardArr);
 
     }else{
         p3Rank = 100;
@@ -1112,34 +1040,8 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
         suitSplit5[1] = arrSplit[1];
         p4Rank = makeHand();
 
-        if(p4HighCardArr[0] == 1){
-           p4HighCardArr[0] = 14;
-        }
-
-        if(p4HighCardArr[1] == 1){
-            p4HighCardArr[1] = 14;
-        }
-
-        if(p4HighCardArr[2] == 1){
-            p4HighCardArr[2] = 14;
-        }
-
-        if(p4HighCardArr[3] == 1){
-            p4HighCardArr[3] = 14;
-        }
-
-        if(p4HighCardArr[4] == 1){
-            p4HighCardArr[4] = 14;
-        }
         std::sort(p4HighCardArr, p4HighCardArr + 5);
-
-        for (int i = 0; i < 4; ++i){
-            if(p4HighCardArr[i] == p4HighCardArr[i+1]){
-                if(p4HighCardArr[i] > p4HighPair){
-                    p4HighPair = p4HighCardArr[i];
-                }
-            }
-        }
+        p4HighPair = getHighPair(p4HighCardArr);
 
     }else{
         p4Rank = 100;
@@ -1177,34 +1079,8 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
         suitSplit5[1] = arrSplit[1];
         p5Rank = makeHand();
 
-        if(p5HighCardArr[0] == 1){
-           p5HighCardArr[0] = 14;
-        }
-
-        if(p5HighCardArr[1] == 1){
-            p5HighCardArr[1] = 14;
-        }
-
-        if(p5HighCardArr[2] == 1){
-            p5HighCardArr[2] = 14;
-        }
-
-        if(p5HighCardArr[3] == 1){
-            p5HighCardArr[3] = 14;
-        }
-
-        if(p5HighCardArr[4] == 1){
-            p5HighCardArr[4] = 14;
-        }
         std::sort(p5HighCardArr, p5HighCardArr + 5);
-
-        for (int i = 0; i < 4; ++i){
-            if(p5HighCardArr[i] == p5HighCardArr[i+1]){
-                if(p5HighCardArr[i] > p5HighPair){
-                    p5HighPair = p5HighCardArr[i];
-                }
-            }
-        }
+        p5HighPair = getHighPair(p5HighCardArr);
 
     }else{
         p5Rank = 100;
@@ -1242,134 +1118,109 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
         suitSplit5[1] = arrSplit[1];
         p6Rank = makeHand();
 
-        if(p6HighCardArr[0] == 1){
-           p6HighCardArr[0] = 14;
-        }
-
-        if(p6HighCardArr[1] == 1){
-            p6HighCardArr[1] = 14;
-        }
-
-        if(p6HighCardArr[2] == 1){
-            p6HighCardArr[2] = 14;
-        }
-
-        if(p6HighCardArr[3] == 1){
-            p6HighCardArr[3] = 14;
-        }
-
-        if(p6HighCardArr[4] == 1){
-            p6HighCardArr[4] = 14;
-        }
         std::sort(p6HighCardArr, p6HighCardArr + 5);
-
-        for (int i = 0; i < 4; ++i){
-            if(p6HighCardArr[i] == p6HighCardArr[i+1]){
-                if(p6HighCardArr[i] > p6HighPair){
-                    p6HighPair = p6HighCardArr[i];
-                }
-            }
-        }
+        p6HighPair = getHighPair(p6HighCardArr);
 
     }else{
         p6Rank = 100;
     }
 
-    switch (seats){
-
-    case 2:
-        ui->logTextBrowser->setText("Player 1 Has: "+findCards(player1HandRaw[0])+" "+findCards(player1HandRaw[1])+" "+findCards(player1HandRaw[2])+" "+findCards(player1HandRaw[3])+" "+findCards(player1HandRaw[4])+"  "+handToText(p1Rank));
-        ui->logTextBrowser->append("Player 2 Has: "+findCards(player2HandRaw[0])+" "+findCards(player2HandRaw[1])+" "+findCards(player2HandRaw[2])+" "+findCards(player2HandRaw[3])+" "+findCards(player2HandRaw[4])+"  "+handToText(p2Rank));
-        break;
-
-    case 3:
-        ui->logTextBrowser->setText("");
-
-        if(p1Fold != 1){
-            ui->logTextBrowser->append("Player 1 Has: "+findCards(player1HandRaw[0])+" "+findCards(player1HandRaw[1])+" "+findCards(player1HandRaw[2])+" "+findCards(player1HandRaw[3])+" "+findCards(player1HandRaw[4])+"  "+handToText(p1Rank));
-        }
-
-        if(p2Fold != 1){
+    if(MainWindow::displayedRes == false){
+        switch (seats){
+        case 2:
+            ui->logTextBrowser->setText("Player 1 Has: "+findCards(player1HandRaw[0])+" "+findCards(player1HandRaw[1])+" "+findCards(player1HandRaw[2])+" "+findCards(player1HandRaw[3])+" "+findCards(player1HandRaw[4])+"  "+handToText(p1Rank));
             ui->logTextBrowser->append("Player 2 Has: "+findCards(player2HandRaw[0])+" "+findCards(player2HandRaw[1])+" "+findCards(player2HandRaw[2])+" "+findCards(player2HandRaw[3])+" "+findCards(player2HandRaw[4])+"  "+handToText(p2Rank));
+            break;
+
+        case 3:
+            ui->logTextBrowser->setText("");
+
+            if(p1Fold != 1){
+                ui->logTextBrowser->append("Player 1 Has: "+findCards(player1HandRaw[0])+" "+findCards(player1HandRaw[1])+" "+findCards(player1HandRaw[2])+" "+findCards(player1HandRaw[3])+" "+findCards(player1HandRaw[4])+"  "+handToText(p1Rank));
+            }
+
+            if(p2Fold != 1){
+                ui->logTextBrowser->append("Player 2 Has: "+findCards(player2HandRaw[0])+" "+findCards(player2HandRaw[1])+" "+findCards(player2HandRaw[2])+" "+findCards(player2HandRaw[3])+" "+findCards(player2HandRaw[4])+"  "+handToText(p2Rank));
+            }
+
+            if(p3Fold != 1){
+                ui->logTextBrowser->append("Player 3 Has: "+findCards(player3HandRaw[0])+" "+findCards(player3HandRaw[1])+" "+findCards(player3HandRaw[2])+" "+findCards(player3HandRaw[3])+" "+findCards(player3HandRaw[4])+"  "+handToText(p3Rank));
+            }
+            break;
+
+        case 4:
+            ui->logTextBrowser->setText("");
+
+            if(p1Fold != 1){
+                ui->logTextBrowser->append("Player 1 Has: "+findCards(player1HandRaw[0])+" "+findCards(player1HandRaw[1])+" "+findCards(player1HandRaw[2])+" "+findCards(player1HandRaw[3])+" "+findCards(player1HandRaw[4])+"  "+handToText(p1Rank));
+            }
+
+            if(p2Fold != 1){
+                ui->logTextBrowser->append("Player 2 Has: "+findCards(player2HandRaw[0])+" "+findCards(player2HandRaw[1])+" "+findCards(player2HandRaw[2])+" "+findCards(player2HandRaw[3])+" "+findCards(player2HandRaw[4])+"  "+handToText(p2Rank));
+            }
+
+            if(p3Fold != 1){
+                ui->logTextBrowser->append("Player 3 Has: "+findCards(player3HandRaw[0])+" "+findCards(player3HandRaw[1])+" "+findCards(player3HandRaw[2])+" "+findCards(player3HandRaw[3])+" "+findCards(player3HandRaw[4])+"  "+handToText(p3Rank));
+            }
+
+            if(p4Fold != 1){
+                ui->logTextBrowser->append("Player 4 Has: "+findCards(player4HandRaw[0])+" "+findCards(player4HandRaw[1])+" "+findCards(player4HandRaw[2])+" "+findCards(player4HandRaw[3])+" "+findCards(player4HandRaw[4])+"  "+handToText(p4Rank));
+            }
+            break;
+
+        case 5:
+            ui->logTextBrowser->setText("");
+
+            if(p1Fold != 1){
+                ui->logTextBrowser->append("Player 1 Has: "+findCards(player1HandRaw[0])+" "+findCards(player1HandRaw[1])+" "+findCards(player1HandRaw[2])+" "+findCards(player1HandRaw[3])+" "+findCards(player1HandRaw[4])+"  "+handToText(p1Rank));
+            }
+
+            if(p2Fold != 1){
+                ui->logTextBrowser->append("Player 2 Has: "+findCards(player2HandRaw[0])+" "+findCards(player2HandRaw[1])+" "+findCards(player2HandRaw[2])+" "+findCards(player2HandRaw[3])+" "+findCards(player2HandRaw[4])+"  "+handToText(p2Rank));
+            }
+
+            if(p3Fold != 1){
+                ui->logTextBrowser->append("Player 3 Has: "+findCards(player3HandRaw[0])+" "+findCards(player3HandRaw[1])+" "+findCards(player3HandRaw[2])+" "+findCards(player3HandRaw[3])+" "+findCards(player3HandRaw[4])+"  "+handToText(p3Rank));
+            }
+
+            if(p4Fold != 1){
+                ui->logTextBrowser->append("Player 4 Has: "+findCards(player4HandRaw[0])+" "+findCards(player4HandRaw[1])+" "+findCards(player4HandRaw[2])+" "+findCards(player4HandRaw[3])+" "+findCards(player4HandRaw[4])+"  "+handToText(p4Rank));
+            }
+
+            if(p5Fold != 1){
+                ui->logTextBrowser->append("Player 5 Has: "+findCards(player5HandRaw[0])+" "+findCards(player5HandRaw[1])+" "+findCards(player5HandRaw[2])+" "+findCards(player5HandRaw[3])+" "+findCards(player5HandRaw[4])+"  "+handToText(p5Rank));
+            }
+            break;
+
+        case 6:
+            ui->logTextBrowser->setText("");
+
+            if(p1Fold != 1){
+                ui->logTextBrowser->append("Player 1 Has: "+findCards(player1HandRaw[0])+" "+findCards(player1HandRaw[1])+" "+findCards(player1HandRaw[2])+" "+findCards(player1HandRaw[3])+" "+findCards(player1HandRaw[4])+"  "+handToText(p1Rank));
+            }
+
+            if(p2Fold != 1){
+                ui->logTextBrowser->append("Player 2 Has: "+findCards(player2HandRaw[0])+" "+findCards(player2HandRaw[1])+" "+findCards(player2HandRaw[2])+" "+findCards(player2HandRaw[3])+" "+findCards(player2HandRaw[4])+"  "+handToText(p2Rank));
+            }
+
+            if(p3Fold != 1){
+                ui->logTextBrowser->append("Player 3 Has: "+findCards(player3HandRaw[0])+" "+findCards(player3HandRaw[1])+" "+findCards(player3HandRaw[2])+" "+findCards(player3HandRaw[3])+" "+findCards(player3HandRaw[4])+"  "+handToText(p3Rank));
+            }
+
+            if(p4Fold != 1){
+                ui->logTextBrowser->append("Player 4 Has: "+findCards(player4HandRaw[0])+" "+findCards(player4HandRaw[1])+" "+findCards(player4HandRaw[2])+" "+findCards(player4HandRaw[3])+" "+findCards(player4HandRaw[4])+"  "+handToText(p4Rank));
+            }
+
+            if(p5Fold != 1){
+                ui->logTextBrowser->append("Player 5 Has: "+findCards(player5HandRaw[0])+" "+findCards(player5HandRaw[1])+" "+findCards(player5HandRaw[2])+" "+findCards(player5HandRaw[3])+" "+findCards(player5HandRaw[4])+"  "+handToText(p5Rank));
+            }
+
+            if(p6Fold != 1){
+                ui->logTextBrowser->append("Player 6 Has: "+findCards(player6HandRaw[0])+" "+findCards(player6HandRaw[1])+" "+findCards(player6HandRaw[2])+" "+findCards(player6HandRaw[3])+" "+findCards(player6HandRaw[4])+"  "+handToText(p6Rank));
+            }
+            break;
+
         }
-
-        if(p3Fold != 1){
-            ui->logTextBrowser->append("Player 3 Has: "+findCards(player3HandRaw[0])+" "+findCards(player3HandRaw[1])+" "+findCards(player3HandRaw[2])+" "+findCards(player3HandRaw[3])+" "+findCards(player3HandRaw[4])+"  "+handToText(p3Rank));
-        }
-        break;
-
-    case 4:
-        ui->logTextBrowser->setText("");
-
-        if(p1Fold != 1){
-            ui->logTextBrowser->append("Player 1 Has: "+findCards(player1HandRaw[0])+" "+findCards(player1HandRaw[1])+" "+findCards(player1HandRaw[2])+" "+findCards(player1HandRaw[3])+" "+findCards(player1HandRaw[4])+"  "+handToText(p1Rank));
-        }
-
-        if(p2Fold != 1){
-            ui->logTextBrowser->append("Player 2 Has: "+findCards(player2HandRaw[0])+" "+findCards(player2HandRaw[1])+" "+findCards(player2HandRaw[2])+" "+findCards(player2HandRaw[3])+" "+findCards(player2HandRaw[4])+"  "+handToText(p2Rank));
-        }
-
-        if(p3Fold != 1){
-            ui->logTextBrowser->append("Player 3 Has: "+findCards(player3HandRaw[0])+" "+findCards(player3HandRaw[1])+" "+findCards(player3HandRaw[2])+" "+findCards(player3HandRaw[3])+" "+findCards(player3HandRaw[4])+"  "+handToText(p3Rank));
-        }
-
-        if(p4Fold != 1){
-            ui->logTextBrowser->append("Player 4 Has: "+findCards(player4HandRaw[0])+" "+findCards(player4HandRaw[1])+" "+findCards(player4HandRaw[2])+" "+findCards(player4HandRaw[3])+" "+findCards(player4HandRaw[4])+"  "+handToText(p4Rank));
-        }
-        break;
-
-    case 5:
-        ui->logTextBrowser->setText("");
-
-        if(p1Fold != 1){
-            ui->logTextBrowser->append("Player 1 Has: "+findCards(player1HandRaw[0])+" "+findCards(player1HandRaw[1])+" "+findCards(player1HandRaw[2])+" "+findCards(player1HandRaw[3])+" "+findCards(player1HandRaw[4])+"  "+handToText(p1Rank));
-        }
-
-        if(p2Fold != 1){
-            ui->logTextBrowser->append("Player 2 Has: "+findCards(player2HandRaw[0])+" "+findCards(player2HandRaw[1])+" "+findCards(player2HandRaw[2])+" "+findCards(player2HandRaw[3])+" "+findCards(player2HandRaw[4])+"  "+handToText(p2Rank));
-        }
-
-        if(p3Fold != 1){
-            ui->logTextBrowser->append("Player 3 Has: "+findCards(player3HandRaw[0])+" "+findCards(player3HandRaw[1])+" "+findCards(player3HandRaw[2])+" "+findCards(player3HandRaw[3])+" "+findCards(player3HandRaw[4])+"  "+handToText(p3Rank));
-        }
-
-        if(p4Fold != 1){
-            ui->logTextBrowser->append("Player 4 Has: "+findCards(player4HandRaw[0])+" "+findCards(player4HandRaw[1])+" "+findCards(player4HandRaw[2])+" "+findCards(player4HandRaw[3])+" "+findCards(player4HandRaw[4])+"  "+handToText(p4Rank));
-        }
-
-        if(p5Fold != 1){
-            ui->logTextBrowser->append("Player 5 Has: "+findCards(player5HandRaw[0])+" "+findCards(player5HandRaw[1])+" "+findCards(player5HandRaw[2])+" "+findCards(player5HandRaw[3])+" "+findCards(player5HandRaw[4])+"  "+handToText(p5Rank));
-        }
-        break;
-
-    case 6:
-        ui->logTextBrowser->setText("");
-
-        if(p1Fold != 1){
-            ui->logTextBrowser->append("Player 1 Has: "+findCards(player1HandRaw[0])+" "+findCards(player1HandRaw[1])+" "+findCards(player1HandRaw[2])+" "+findCards(player1HandRaw[3])+" "+findCards(player1HandRaw[4])+"  "+handToText(p1Rank));
-        }
-
-        if(p2Fold != 1){
-            ui->logTextBrowser->append("Player 2 Has: "+findCards(player2HandRaw[0])+" "+findCards(player2HandRaw[1])+" "+findCards(player2HandRaw[2])+" "+findCards(player2HandRaw[3])+" "+findCards(player2HandRaw[4])+"  "+handToText(p2Rank));
-        }
-
-        if(p3Fold != 1){
-            ui->logTextBrowser->append("Player 3 Has: "+findCards(player3HandRaw[0])+" "+findCards(player3HandRaw[1])+" "+findCards(player3HandRaw[2])+" "+findCards(player3HandRaw[3])+" "+findCards(player3HandRaw[4])+"  "+handToText(p3Rank));
-        }
-
-        if(p4Fold != 1){
-            ui->logTextBrowser->append("Player 4 Has: "+findCards(player4HandRaw[0])+" "+findCards(player4HandRaw[1])+" "+findCards(player4HandRaw[2])+" "+findCards(player4HandRaw[3])+" "+findCards(player4HandRaw[4])+"  "+handToText(p4Rank));
-        }
-
-        if(p5Fold != 1){
-            ui->logTextBrowser->append("Player 5 Has: "+findCards(player5HandRaw[0])+" "+findCards(player5HandRaw[1])+" "+findCards(player5HandRaw[2])+" "+findCards(player5HandRaw[3])+" "+findCards(player5HandRaw[4])+"  "+handToText(p5Rank));
-        }
-
-        if(p6Fold != 1){
-            ui->logTextBrowser->append("Player 6 Has: "+findCards(player6HandRaw[0])+" "+findCards(player6HandRaw[1])+" "+findCards(player6HandRaw[2])+" "+findCards(player6HandRaw[3])+" "+findCards(player6HandRaw[4])+"  "+handToText(p6Rank));
-        }
-        break;
-
     }
 
     int winningRank[] = {p1Rank, p2Rank, p3Rank, p4Rank, p5Rank, p6Rank};
@@ -1477,58 +1328,8 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
         }
 
 
-        if(winningRank[0] == 10){       /// Compares and strips loosing hands in high card situations
-            compare1_2();
-            compare2_1();
-            if(p1HighCardArr[4] > p2HighCardArr[4]){
-                compare3_1();
-                compare1_3();
-            }else {
-                compare3_2();
-                compare2_3();
-            }
-
-            if(p1HighCardArr[4] > p3HighCardArr[4]){
-                compare1_4();
-                compare4_1();
-            }else if(p2HighCardArr[4] > p3HighCardArr[4]){
-                compare2_4();
-                compare4_2();
-            }else {
-                compare3_4();
-                compare4_3();
-            }
-
-            if(p1HighCardArr[4] > p4HighCardArr[4]){
-                compare1_5();
-                compare5_1();
-            }else if(p2HighCardArr[4] > p4HighCardArr[4]){
-                compare2_5();
-                compare5_2();
-            }else if(p3HighCardArr[4] > p4HighCardArr[4]){
-                compare3_5();
-                compare5_3();
-            }else {
-                compare4_5();
-                compare5_4();
-            }
-
-            if(p1HighCardArr[4] > p5HighCardArr[4]){
-                compare1_6();
-                compare6_1();
-            }else if(p2HighCardArr[4] > p5HighCardArr[4]){
-                compare2_6();
-                compare6_2();
-            }else if(p3HighCardArr[4] > p5HighCardArr[4]){
-                compare3_6();
-                compare6_3();
-            }else if(p4HighCardArr[4] > p5HighCardArr[4]){
-                compare4_6();
-                compare6_4();
-            }else {
-                compare5_6();
-                compare6_5();
-            }
+        if(winningRank[0] == 10){       /// Compares and strips loosing hands in high card situation
+            compareLoop();
         }
 
         if(p1HighPair > p2HighPair && p1HighPair > p3HighPair && p1HighPair > p4HighPair && p1HighPair > p5HighPair && p1HighPair > p6HighPair){  /// If player has highest pairing
@@ -1829,35 +1630,44 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
             }
 
         }else {
-            ui->turnReadOut->setText("Push, owner to split pot");
+            ui->turnReadOut->setText("Push, Split Pot");
+            compareLoop();
             if(rpc::oneId == rpc::IdHash){
 
                 if(Menu::autoPayout == true && rpc::paidOut == false && rpc::pot != 0){     /// Contract not set up for split pot situation, owner will split
                     rpc::paidOut = true;
-                    QString whoWon = "Player1";
                     payoutDelay(30);
-                    autopayWinner(whoWon);
+                    splitWinner();
                 }
 
             }
+
         }
 
     }
 
   }
-
-   ui->logTextBrowser->setFontPointSize(23);
+  MainWindow::displayedRes = true;
+  ui->logTextBrowser->setFontPointSize(23);
 
 }
 
 
 void MainWindow::blankDisplay()  /// Shows null cards when not playing
 {
-    ui->localPlayerCard1->setPixmap(QPixmap(":/images/card53.png"));
-    ui->localPlayerCard2->setPixmap(QPixmap(":/images/card53.png"));
-    ui->localPlayerCard3->setPixmap(QPixmap(":/images/card53.png"));
-    ui->localPlayerCard4->setPixmap(QPixmap(":/images/card53.png"));
-    ui->localPlayerCard5->setPixmap(QPixmap(":/images/card53.png"));
+    if(ui->deckComboBox->currentIndex() > 1){
+        ui->localPlayerCard1->setPixmap(QPixmap(displayStandard(0)));
+        ui->localPlayerCard2->setPixmap(QPixmap(displayStandard(0)));
+        ui->localPlayerCard3->setPixmap(QPixmap(displayStandard(0)));
+        ui->localPlayerCard4->setPixmap(QPixmap(displayStandard(0)));
+        ui->localPlayerCard5->setPixmap(QPixmap(displayStandard(0)));
+    }else {
+        ui->localPlayerCard1->setPixmap(QPixmap(displayStandard(0)));
+        ui->localPlayerCard2->setPixmap(QPixmap(displayStandard(0)));
+        ui->localPlayerCard3->setPixmap(QPixmap(displayStandard(0)));
+        ui->localPlayerCard4->setPixmap(QPixmap(displayStandard(0)));
+        ui->localPlayerCard5->setPixmap(QPixmap(displayStandard(0)));
+    }
 }
 
 
@@ -1943,298 +1753,192 @@ QString MainWindow::findCards(int card) /// To show all hand results at end
 
 void MainWindow::displayCardOne(int card) /// Displays local card one
 {
-    switch (card){
-    case 1: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card1.png")); break;
-    case 2: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card2.png")); break;
-    case 3: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card3.png")); break;
-    case 4: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card4.png")); break;
-    case 5: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card5.png")); break;
-    case 6: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card6.png"));; break;
-    case 7: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card7.png")); break;
-    case 8: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card8.png")); break;
-    case 9: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card9.png")); break;
-    case 10: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card10.png")); break;
-    case 11: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card11.png")); break;
-    case 12: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card12.png")); break;
-    case 13: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card13.png")); break;
-    case 14: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card14.png")); break;
-    case 15: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card15.png")); break;
-    case 16: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card16.png")); break;
-    case 17: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card17.png")); break;
-    case 18: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card18.png")); break;
-    case 19: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card19.png")); break;
-    case 20: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card20.png")); break;
-    case 21: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card21.png")); break;
-    case 22: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card22.png")); break;
-    case 23: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card23.png")); break;
-    case 24: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card24.png")); break;
-    case 25: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card25.png")); break;
-    case 26: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card26.png")); break;
-    case 27: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card27.png")); break;
-    case 28: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card28.png")); break;
-    case 29: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card29.png")); break;
-    case 30: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card30.png")); break;
-    case 31: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card31.png")); break;
-    case 32: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card32.png")); break;
-    case 33: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card33.png")); break;
-    case 34: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card34.png")); break;
-    case 35: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card35.png")); break;
-    case 36: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card36.png")); break;
-    case 37: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card37.png")); break;
-    case 38: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card38.png")); break;
-    case 39: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card39.png")); break;
-    case 40: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card40.png")); break;
-    case 41: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card41.png")); break;
-    case 42: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card42.png")); break;
-    case 43: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card43.png")); break;
-    case 44: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card44.png")); break;
-    case 45: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card45.png")); break;
-    case 46: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card46.png")); break;
-    case 47: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card47.png")); break;
-    case 48: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card48.png")); break;
-    case 49: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card49.png")); break;
-    case 50: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card50.png")); break;
-    case 51: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card51.png")); break;
-    case 52: ui->localPlayerCard1->setPixmap(QPixmap(":/images/card52.png")); break;
+    if(ui->deckComboBox->currentIndex() > 1){
+        ui->localPlayerCard1->setPixmap(QPixmap(displayStandard(card)));
+    }else {
+        ui->localPlayerCard1->setPixmap(QPixmap(displayStandard(card)));
     }
-
 }
 
 
 void MainWindow::displayCardTwo(int card)  /// Displays local card two
 {
-    switch (card){
-    case 1: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card1.png")); break;
-    case 2: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card2.png")); break;
-    case 3: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card3.png")); break;
-    case 4: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card4.png")); break;
-    case 5: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card5.png")); break;
-    case 6: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card6.png"));; break;
-    case 7: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card7.png")); break;
-    case 8: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card8.png")); break;
-    case 9: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card9.png")); break;
-    case 10: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card10.png")); break;
-    case 11: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card11.png")); break;
-    case 12: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card12.png")); break;
-    case 13: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card13.png")); break;
-    case 14: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card14.png")); break;
-    case 15: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card15.png")); break;
-    case 16: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card16.png")); break;
-    case 17: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card17.png")); break;
-    case 18: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card18.png")); break;
-    case 19: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card19.png")); break;
-    case 20: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card20.png")); break;
-    case 21: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card21.png")); break;
-    case 22: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card22.png")); break;
-    case 23: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card23.png")); break;
-    case 24: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card24.png")); break;
-    case 25: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card25.png")); break;
-    case 26: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card26.png")); break;
-    case 27: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card27.png")); break;
-    case 28: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card28.png")); break;
-    case 29: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card29.png")); break;
-    case 30: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card30.png")); break;
-    case 31: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card31.png")); break;
-    case 32: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card32.png")); break;
-    case 33: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card33.png")); break;
-    case 34: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card34.png")); break;
-    case 35: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card35.png")); break;
-    case 36: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card36.png")); break;
-    case 37: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card37.png")); break;
-    case 38: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card38.png")); break;
-    case 39: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card39.png")); break;
-    case 40: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card40.png")); break;
-    case 41: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card41.png")); break;
-    case 42: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card42.png")); break;
-    case 43: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card43.png")); break;
-    case 44: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card44.png")); break;
-    case 45: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card45.png")); break;
-    case 46: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card46.png")); break;
-    case 47: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card47.png")); break;
-    case 48: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card48.png")); break;
-    case 49: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card49.png")); break;
-    case 50: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card50.png")); break;
-    case 51: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card51.png")); break;
-    case 52: ui->localPlayerCard2->setPixmap(QPixmap(":/images/card52.png")); break;
+    if(ui->deckComboBox->currentIndex() > 1){
+        ui->localPlayerCard2->setPixmap(QPixmap(displayStandard(card)));
+    }else {
+        ui->localPlayerCard2->setPixmap(QPixmap(displayStandard(card)));
     }
-
 }
 
 
 void MainWindow::displayCardThree(int card)    /// Displays local card three
 {
-    switch (card){
-    case 1: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card1.png")); break;
-    case 2: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card2.png")); break;
-    case 3: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card3.png")); break;
-    case 4: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card4.png")); break;
-    case 5: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card5.png")); break;
-    case 6: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card6.png"));; break;
-    case 7: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card7.png")); break;
-    case 8: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card8.png")); break;
-    case 9: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card9.png")); break;
-    case 10: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card10.png")); break;
-    case 11: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card11.png")); break;
-    case 12: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card12.png")); break;
-    case 13: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card13.png")); break;
-    case 14: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card14.png")); break;
-    case 15: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card15.png")); break;
-    case 16: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card16.png")); break;
-    case 17: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card17.png")); break;
-    case 18: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card18.png")); break;
-    case 19: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card19.png")); break;
-    case 20: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card20.png")); break;
-    case 21: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card21.png")); break;
-    case 22: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card22.png")); break;
-    case 23: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card23.png")); break;
-    case 24: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card24.png")); break;
-    case 25: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card25.png")); break;
-    case 26: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card26.png")); break;
-    case 27: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card27.png")); break;
-    case 28: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card28.png")); break;
-    case 29: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card29.png")); break;
-    case 30: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card30.png")); break;
-    case 31: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card31.png")); break;
-    case 32: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card32.png")); break;
-    case 33: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card33.png")); break;
-    case 34: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card34.png")); break;
-    case 35: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card35.png")); break;
-    case 36: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card36.png")); break;
-    case 37: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card37.png")); break;
-    case 38: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card38.png")); break;
-    case 39: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card39.png")); break;
-    case 40: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card40.png")); break;
-    case 41: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card41.png")); break;
-    case 42: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card42.png")); break;
-    case 43: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card43.png")); break;
-    case 44: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card44.png")); break;
-    case 45: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card45.png")); break;
-    case 46: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card46.png")); break;
-    case 47: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card47.png")); break;
-    case 48: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card48.png")); break;
-    case 49: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card49.png")); break;
-    case 50: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card50.png")); break;
-    case 51: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card51.png")); break;
-    case 52: ui->localPlayerCard3->setPixmap(QPixmap(":/images/card52.png")); break;
+    if(ui->deckComboBox->currentIndex() > 1){
+        ui->localPlayerCard3->setPixmap(QPixmap(displayStandard(card)));
+    }else {
+        ui->localPlayerCard3->setPixmap(QPixmap(displayStandard(card)));
     }
 }
 
 
 void MainWindow::displayCardFour(int card)   ///  Displays local card four
 {
-    switch (card){
-    case 1: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card1.png")); break;
-    case 2: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card2.png")); break;
-    case 3: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card3.png")); break;
-    case 4: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card4.png")); break;
-    case 5: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card5.png")); break;
-    case 6: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card6.png"));; break;
-    case 7: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card7.png")); break;
-    case 8: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card8.png")); break;
-    case 9: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card9.png")); break;
-    case 10: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card10.png")); break;
-    case 11: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card11.png")); break;
-    case 12: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card12.png")); break;
-    case 13: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card13.png")); break;
-    case 14: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card14.png")); break;
-    case 15: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card15.png")); break;
-    case 16: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card16.png")); break;
-    case 17: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card17.png")); break;
-    case 18: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card18.png")); break;
-    case 19: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card19.png")); break;
-    case 20: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card20.png")); break;
-    case 21: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card21.png")); break;
-    case 22: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card22.png")); break;
-    case 23: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card23.png")); break;
-    case 24: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card24.png")); break;
-    case 25: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card25.png")); break;
-    case 26: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card26.png")); break;
-    case 27: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card27.png")); break;
-    case 28: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card28.png")); break;
-    case 29: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card29.png")); break;
-    case 30: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card30.png")); break;
-    case 31: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card31.png")); break;
-    case 32: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card32.png")); break;
-    case 33: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card33.png")); break;
-    case 34: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card34.png")); break;
-    case 35: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card35.png")); break;
-    case 36: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card36.png")); break;
-    case 37: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card37.png")); break;
-    case 38: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card38.png")); break;
-    case 39: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card39.png")); break;
-    case 40: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card40.png")); break;
-    case 41: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card41.png")); break;
-    case 42: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card42.png")); break;
-    case 43: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card43.png")); break;
-    case 44: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card44.png")); break;
-    case 45: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card45.png")); break;
-    case 46: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card46.png")); break;
-    case 47: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card47.png")); break;
-    case 48: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card48.png")); break;
-    case 49: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card49.png")); break;
-    case 50: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card50.png")); break;
-    case 51: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card51.png")); break;
-    case 52: ui->localPlayerCard4->setPixmap(QPixmap(":/images/card52.png")); break;
+    if(ui->deckComboBox->currentIndex() > 1){
+        ui->localPlayerCard4->setPixmap(QPixmap(displayStandard(card)));
+    }else {
+        ui->localPlayerCard4->setPixmap(QPixmap(displayStandard(card)));
     }
-
 }
 
 
 void MainWindow::displayCardFive(int card)   ///  Displays local card five
 {
-    switch (card){
-    case 1: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card1.png")); break;
-    case 2: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card2.png")); break;
-    case 3: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card3.png")); break;
-    case 4: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card4.png")); break;
-    case 5: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card5.png")); break;
-    case 6: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card6.png"));; break;
-    case 7: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card7.png")); break;
-    case 8: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card8.png")); break;
-    case 9: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card9.png")); break;
-    case 10: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card10.png")); break;
-    case 11: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card11.png")); break;
-    case 12: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card12.png")); break;
-    case 13: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card13.png")); break;
-    case 14: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card14.png")); break;
-    case 15: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card15.png")); break;
-    case 16: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card16.png")); break;
-    case 17: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card17.png")); break;
-    case 18: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card18.png")); break;
-    case 19: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card19.png")); break;
-    case 20: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card20.png")); break;
-    case 21: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card21.png")); break;
-    case 22: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card22.png")); break;
-    case 23: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card23.png")); break;
-    case 24: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card24.png")); break;
-    case 25: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card25.png")); break;
-    case 26: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card26.png")); break;
-    case 27: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card27.png")); break;
-    case 28: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card28.png")); break;
-    case 29: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card29.png")); break;
-    case 30: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card30.png")); break;
-    case 31: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card31.png")); break;
-    case 32: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card32.png")); break;
-    case 33: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card33.png")); break;
-    case 34: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card34.png")); break;
-    case 35: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card35.png")); break;
-    case 36: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card36.png")); break;
-    case 37: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card37.png")); break;
-    case 38: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card38.png")); break;
-    case 39: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card39.png")); break;
-    case 40: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card40.png")); break;
-    case 41: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card41.png")); break;
-    case 42: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card42.png")); break;
-    case 43: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card43.png")); break;
-    case 44: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card44.png")); break;
-    case 45: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card45.png")); break;
-    case 46: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card46.png")); break;
-    case 47: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card47.png")); break;
-    case 48: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card48.png")); break;
-    case 49: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card49.png")); break;
-    case 50: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card50.png")); break;
-    case 51: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card51.png")); break;
-    case 52: ui->localPlayerCard5->setPixmap(QPixmap(":/images/card52.png")); break;
+    if(ui->deckComboBox->currentIndex() > 1){
+        ui->localPlayerCard5->setPixmap(QPixmap(displayStandard(card)));
+    }else {
+        ui->localPlayerCard5->setPixmap(QPixmap(displayStandard(card)));
+    }
+}
+
+
+QString MainWindow::displayStandard(int card)   /// Gets suffix for custom card image display
+{
+    QString pre;
+    QString suffix;
+    QString path;
+
+    if(ui->deckComboBox->currentIndex() == 1){
+        pre = ":/images/";
+
+    }else {
+        pre = ":/images/";
     }
 
+    switch (card){
+       case 0: suffix = "card53.png" ; break;
+       case 1: suffix = "card1.png"; break;
+       case 2: suffix = "card2.png"; break;
+       case 3: suffix = "card3.png"; break;
+       case 4: suffix = "card4.png"; break;
+       case 5: suffix = "card5.png"; break;
+       case 6: suffix = "card6.png"; break;
+       case 7: suffix = "card7.png"; break;
+       case 8: suffix = "card8.png"; break;
+       case 9: suffix = "card9.png"; break;
+       case 10: suffix = "card10.png" ; break;
+       case 11: suffix = "card11.png" ; break;
+       case 12: suffix = "card12.png" ; break;
+       case 13: suffix = "card13.png" ; break;
+       case 14: suffix = "card14.png" ; break;
+       case 15: suffix = "card15.png" ; break;
+       case 16: suffix = "card16.png" ; break;
+       case 17: suffix = "card17.png" ; break;
+       case 18: suffix = "card18.png" ; break;
+       case 19: suffix = "card19.png" ; break;
+       case 20: suffix = "card20.png" ; break;
+       case 21: suffix = "card21.png" ; break;
+       case 22: suffix = "card22.png" ; break;
+       case 23: suffix = "card23.png" ; break;
+       case 24: suffix = "card24.png" ; break;
+       case 25: suffix = "card25.png" ; break;
+       case 26: suffix = "card26.png" ; break;
+       case 27: suffix = "card27.png" ; break;
+       case 28: suffix = "card28.png" ; break;
+       case 29: suffix = "card29.png" ; break;
+       case 30: suffix = "card30.png" ; break;
+       case 31: suffix = "card31.png" ; break;
+       case 32: suffix = "card32.png" ; break;
+       case 33: suffix = "card33.png" ; break;
+       case 34: suffix = "card34.png" ; break;
+       case 35: suffix = "card35.png" ; break;
+       case 36: suffix = "card36.png" ; break;
+       case 37: suffix = "card37.png" ; break;
+       case 38: suffix = "card38.png" ; break;
+       case 39: suffix = "card39.png" ; break;
+       case 40: suffix = "card40.png" ; break;
+       case 41: suffix = "card41.png" ; break;
+       case 42: suffix = "card42.png" ; break;
+       case 43: suffix = "card43.png" ; break;
+       case 44: suffix = "card44.png" ; break;
+       case 45: suffix = "card45.png" ; break;
+       case 46: suffix = "card46.png" ; break;
+       case 47: suffix = "card47.png" ; break;
+       case 48: suffix = "card48.png" ; break;
+       case 49: suffix = "card49.png" ; break;
+       case 50: suffix = "card50.png" ; break;
+       case 51: suffix = "card51.png" ; break;
+       case 52: suffix = "card52.png" ; break;
+       case 53: suffix = "card53.png" ; break;
+       }
+
+    path = pre+suffix;
+
+    return path;
 }
+
+
+//QImage MainWindow::displayCustom(int card)   /// Gets suffix for custom card image display
+//{
+//    QString suffix;
+//    switch (card){
+//       case 0: suffix = "card53.png" ; break;
+//       case 1: suffix = "card1.png"; break;
+//       case 2: suffix = "card2.png"; break;
+//       case 3: suffix = "card3.png"; break;
+//       case 4: suffix = "card4.png"; break;
+//       case 5: suffix = "card5.png"; break;
+//       case 6: suffix = "card6.png"; break;
+//       case 7: suffix = "card7.png"; break;
+//       case 8: suffix = "card8.png"; break;
+//       case 9: suffix = "card9.png"; break;
+//       case 10: suffix = "card10.png" ; break;
+//       case 11: suffix = "card11.png" ; break;
+//       case 12: suffix = "card12.png" ; break;
+//       case 13: suffix = "card13.png" ; break;
+//       case 14: suffix = "card14.png" ; break;
+//       case 15: suffix = "card15.png" ; break;
+//       case 16: suffix = "card16.png" ; break;
+//       case 17: suffix = "card17.png" ; break;
+//       case 18: suffix = "card18.png" ; break;
+//       case 19: suffix = "card19.png" ; break;
+//       case 20: suffix = "card20.png" ; break;
+//       case 21: suffix = "card21.png" ; break;
+//       case 22: suffix = "card22.png" ; break;
+//       case 23: suffix = "card23.png" ; break;
+//       case 24: suffix = "card24.png" ; break;
+//       case 25: suffix = "card25.png" ; break;
+//       case 26: suffix = "card26.png" ; break;
+//       case 27: suffix = "card27.png" ; break;
+//       case 28: suffix = "card28.png" ; break;
+//       case 29: suffix = "card29.png" ; break;
+//       case 30: suffix = "card30.png" ; break;
+//       case 31: suffix = "card31.png" ; break;
+//       case 32: suffix = "card32.png" ; break;
+//       case 33: suffix = "card33.png" ; break;
+//       case 34: suffix = "card34.png" ; break;
+//       case 35: suffix = "card35.png" ; break;
+//       case 36: suffix = "card36.png" ; break;
+//       case 37: suffix = "card37.png" ; break;
+//       case 38: suffix = "card38.png" ; break;
+//       case 39: suffix = "card39.png" ; break;
+//       case 40: suffix = "card40.png" ; break;
+//       case 41: suffix = "card41.png" ; break;
+//       case 42: suffix = "card42.png" ; break;
+//       case 43: suffix = "card43.png" ; break;
+//       case 44: suffix = "card44.png" ; break;
+//       case 45: suffix = "card45.png" ; break;
+//       case 46: suffix = "card46.png" ; break;
+//       case 47: suffix = "card47.png" ; break;
+//       case 48: suffix = "card48.png" ; break;
+//       case 49: suffix = "card49.png" ; break;
+//       case 50: suffix = "card50.png" ; break;
+//       case 51: suffix = "card51.png" ; break;
+//       case 52: suffix = "card52.png" ; break;
+//       case 53: suffix = "card53.png" ; break;
+//       }
+
+//    QImageReader reader(deckSelect(ui->deckComboBox->currentIndex())+suffix);
+//    QImage path = reader.read();
+
+//    return path;
+//}

@@ -419,7 +419,7 @@ QGroupBox::indicator {
          </size>
         </property>
         <property name="text">
-         <string>89a2e5102561c72fa60441733b081c7f546cfa8b4037e71a3f1d9ca11a2f1b88</string>
+         <string/>
         </property>
         <property name="placeholderText">
          <string>Table Contract Address:</string>
@@ -441,7 +441,7 @@ QGroupBox::indicator {
          </size>
         </property>
         <property name="text">
-         <string>127.0.0.1:30000</string>
+         <string/>
         </property>
         <property name="placeholderText">
          <string>Enter Wallet RPC Address</string>
@@ -504,7 +504,7 @@ QGroupBox::indicator {
          </size>
         </property>
         <property name="text">
-         <string>127.0.0.1:20000</string>
+         <string/>
         </property>
         <property name="placeholderText">
          <string>Enter Daemon RPC Address</string>

@@ -136,7 +136,8 @@ void MainWindow::setFonts()
 void MainWindow::refresh()      /// Controller refresh rate
 {
 
-    if(rpc::turn != ui->playerId->value()-1 && rpc::blockHeight > rpc::clickedHeight+1 && ui->playerId->value() != 0){
+    if((rpc::turn != ui->playerId->value()-1 && rpc::blockHeight > rpc::clickedHeight+1 && ui->playerId->value() != 0) ||
+            (rpc::turn == ui->playerId->value()-1 && rpc::blockHeight > rpc::clickedHeight+3)){
         MainWindow::clicked = false;
     }
 
@@ -147,7 +148,7 @@ void MainWindow::refresh()      /// Controller refresh rate
         MainWindow::skipCount = 0;
     }else {
         MainWindow::skipCount++;
-        if(MainWindow::skipCount >= 8){
+        if(MainWindow::skipCount >= 9){
             MainWindow::clicked = false;
             MainWindow::skipCount = 0;
         }

@@ -53,11 +53,11 @@ void HandRanks::setFonts()
 }
 
 
-int MainWindow::getArray(int card)  /// Splipts card into value and suit for hand compare
+int MainWindow::getArray(int card)  /// Splits card into value and suit for hand compare
 {
     switch(card){
     ////// Spades
-    case 1: arrSplit [0] = 1;
+    case 1: arrSplit [0] = 14;
             arrSplit [1] = 0; break;
 
     case 2: arrSplit [0] = 2;
@@ -97,128 +97,146 @@ int MainWindow::getArray(int card)  /// Splipts card into value and suit for han
              arrSplit [1] = 0; break;
 
              ////// Hearts
-    case 14: arrSplit [0] = 1;
-             arrSplit [1] = 1; break;
+    case 14: arrSplit [0] = 14;
+             arrSplit [1] = 13; break;
 
     case 15: arrSplit [0] = 2;
-             arrSplit [1] = 1; break;
+             arrSplit [1] = 13; break;
 
     case 16: arrSplit [0] = 3;
-             arrSplit [1] = 1; break;
+             arrSplit [1] = 13; break;
 
     case 17: arrSplit [0] = 4;
-             arrSplit [1] = 1; break;
+             arrSplit [1] = 13; break;
 
     case 18: arrSplit [0] = 5;
-             arrSplit [1] = 1; break;
+             arrSplit [1] = 13; break;
 
     case 19: arrSplit [0] = 6;
-             arrSplit [1] = 1; break;
+             arrSplit [1] = 13; break;
 
     case 20: arrSplit [0] = 7;
-             arrSplit [1] = 1; break;
+             arrSplit [1] = 13; break;
 
     case 21: arrSplit [0] = 8;
-             arrSplit [1] = 1; break;
+             arrSplit [1] = 13; break;
 
     case 22: arrSplit [0] = 9;
-             arrSplit [1] = 1; break;
+             arrSplit [1] = 13; break;
 
     case 23: arrSplit [0] = 10;
-             arrSplit [1] = 1; break;
+             arrSplit [1] = 13; break;
 
     case 24: arrSplit [0] = 11;
-             arrSplit [1] = 1; break;
+             arrSplit [1] = 13; break;
 
     case 25: arrSplit [0] = 12;
-             arrSplit [1] = 1; break;
+             arrSplit [1] = 13; break;
 
     case 26: arrSplit [0] = 13;
-             arrSplit [1] = 1; break;
+             arrSplit [1] = 13; break;
 
              ////// Clubs
-    case 27: arrSplit [0] = 1;
-             arrSplit [1] = 2; break;
+    case 27: arrSplit [0] = 14;
+             arrSplit [1] = 26; break;
 
     case 28: arrSplit [0] = 2;
-             arrSplit [1] = 2; break;
+             arrSplit [1] = 26; break;
 
     case 29: arrSplit [0] = 3;
-             arrSplit [1] = 2; break;
+             arrSplit [1] = 26; break;
 
     case 30: arrSplit [0] = 4;
-             arrSplit [1] = 2; break;
+             arrSplit [1] = 26; break;
 
     case 31: arrSplit [0] = 5;
-             arrSplit [1] = 2; break;
+             arrSplit [1] = 26; break;
 
     case 32: arrSplit [0] = 6;
-             arrSplit [1] = 2; break;
+             arrSplit [1] = 26; break;
 
     case 33: arrSplit [0] = 7;
-             arrSplit [1] = 2; break;
+             arrSplit [1] = 26; break;
 
     case 34: arrSplit [0] = 8;
-             arrSplit [1] = 2; break;
+             arrSplit [1] = 26; break;
 
     case 35: arrSplit [0] = 9;
-             arrSplit [1] = 2; break;
+             arrSplit [1] = 26; break;
 
     case 36: arrSplit [0] = 10;
-             arrSplit [1] = 2; break;
+             arrSplit [1] = 26; break;
 
     case 37: arrSplit [0] = 11;
-             arrSplit [1] = 2; break;
+             arrSplit [1] = 26; break;
 
     case 38: arrSplit [0] = 12;
-             arrSplit [1] = 2; break;
+             arrSplit [1] = 26; break;
 
     case 39: arrSplit [0] = 13;
-             arrSplit [1] = 2; break;
+             arrSplit [1] = 26; break;
 
              ////// Diamonds
-    case 40: arrSplit [0] = 1;
-             arrSplit [1] = 3; break;
+    case 40: arrSplit [0] = 14;
+             arrSplit [1] = 39; break;
 
     case 41: arrSplit [0] = 2;
-             arrSplit [1] = 3; break;
+             arrSplit [1] = 39; break;
 
     case 42: arrSplit [0] = 3;
-             arrSplit [1] = 3; break;
+             arrSplit [1] = 39; break;
 
     case 43: arrSplit [0] = 4;
-             arrSplit [1] = 3; break;
+             arrSplit [1] = 39; break;
 
     case 44: arrSplit [0] = 5;
-             arrSplit [1] = 3; break;
+             arrSplit [1] = 39; break;
 
     case 45: arrSplit [0] = 6;
-             arrSplit [1] = 3; break;
+             arrSplit [1] = 39; break;
 
     case 46: arrSplit [0] = 7;
-             arrSplit [1] = 3; break;
+             arrSplit [1] = 39; break;
 
     case 47: arrSplit [0] = 8;
-             arrSplit [1] = 3; break;
+             arrSplit [1] = 39; break;
 
     case 48: arrSplit [0] = 9;
-             arrSplit [1] = 3; break;
+             arrSplit [1] = 39; break;
 
     case 49: arrSplit [0] = 10;
-             arrSplit [1] = 3; break;
+             arrSplit [1] = 39; break;
 
     case 50: arrSplit [0] = 11;
-             arrSplit [1] = 3; break;
+             arrSplit [1] = 39; break;
 
     case 51: arrSplit [0] = 12;
-             arrSplit [1] = 3; break;
+             arrSplit [1] = 39; break;
 
     case 52: arrSplit [0] = 13;
-             arrSplit [1] = 3; break;
+             arrSplit [1] = 39; break;
 
     }
     return 0;
 
+}
+
+
+int MainWindow::getHighPair(int h[5])    /// Make high pair from hand
+{
+
+    int hand[5] = {h[0], h[1], h[2], h[3], h[4]};
+    int highPair = 0;
+
+    for (int i = 0; i < 4; ++i){
+        if(hand[i] == hand[i+1]){
+            if(hand[i] > highPair){
+                highPair = hand[i];
+            }
+        }
+    }
+
+    return highPair;
 }
 
 
@@ -227,18 +245,19 @@ int MainWindow::makeHand()
    int nakedHand[] = {suitSplit1[0], suitSplit2[0], suitSplit3[0], suitSplit4[0], suitSplit5[0]};
    int nakedSuits[] = {suitSplit1[1], suitSplit2[1], suitSplit3[1], suitSplit4[1], suitSplit5[1]};
 
-   int n = sizeof(nakedHand) / sizeof(nakedHand[0]);
-   std::sort(nakedHand, nakedHand + n);
+   std::sort(nakedHand, nakedHand + 5);
 
    /// Royal flush
-   if(nakedHand[0] == 1 && nakedHand[1] == 10 && nakedHand[2] == 11 && nakedHand[3] == 12 && nakedHand[4] == 13 &&
+   if(nakedHand[0] == 10 && nakedHand[1] == 11 && nakedHand[2] == 12 && nakedHand[3] == 13 && nakedHand[4] == 14 &&
       nakedSuits[0] == nakedSuits[1] && nakedSuits[0] == nakedSuits[2] && nakedSuits[0] == nakedSuits[3] && nakedSuits[0] == nakedSuits[4]){
        return 1;
    }
 
    /// Straight flush
-   if(nakedHand[0]+1 == nakedHand[1] && nakedHand[1]+1 == nakedHand[2] && nakedHand[2]+1 == nakedHand[3] && nakedHand[3]+1 == nakedHand[4] && nakedHand[0]+4 == nakedHand[4] &&
-      nakedSuits[0] == nakedSuits[1] && nakedSuits[0] == nakedSuits[2] && nakedSuits[0] == nakedSuits[3] && nakedSuits[0] == nakedSuits[4]){
+   if((nakedHand[0]+1 == nakedHand[1] && nakedHand[1]+1 == nakedHand[2] && nakedHand[2]+1 == nakedHand[3] && nakedHand[3]+1 == nakedHand[4] && nakedHand[0]+4 == nakedHand[4] &&
+      nakedSuits[0] == nakedSuits[1] && nakedSuits[0] == nakedSuits[2] && nakedSuits[0] == nakedSuits[3] && nakedSuits[0] == nakedSuits[4]) ||
+      (nakedHand[0] == 2 && nakedHand[1] == 3 && nakedHand[2] == 4 && nakedHand[3] == 5 && nakedHand[4] == 14 &&
+      nakedSuits[0] == nakedSuits[1] && nakedSuits[0] == nakedSuits[2] && nakedSuits[0] == nakedSuits[3] && nakedSuits[0] == nakedSuits[4])){
        return 2;
    }
 
@@ -261,7 +280,7 @@ int MainWindow::makeHand()
 
    /// Straight
    if((nakedHand[0]+1 == nakedHand[1] && nakedHand[1]+1 == nakedHand[2] && nakedHand[2]+1 == nakedHand[3] && nakedHand[3]+1 == nakedHand[4] && nakedHand[0]+4 == nakedHand[4]) ||
-      (nakedHand[0] == 1 && nakedHand[1] == 10 && nakedHand[2] == 11 && nakedHand[3] == 12 && nakedHand[4] == 13)){
+      (nakedHand[0] == 2 && nakedHand[1] == 3 && nakedHand[2] == 4 && nakedHand[3] == 5 && nakedHand[4] == 14)){
        return 6;
    }
 
@@ -289,6 +308,62 @@ int MainWindow::makeHand()
        return 10;
    }
 
+}
+
+
+void MainWindow::compareLoop()  /// Compare each players hand against each other and strip lesser hand
+{
+    compare1_2();
+    compare2_1();
+    if(p1HighCardArr[4] > p2HighCardArr[4]){
+        compare3_1();
+        compare1_3();
+    }else {
+        compare3_2();
+        compare2_3();
+    }
+
+    if(p1HighCardArr[4] > p3HighCardArr[4]){
+        compare1_4();
+        compare4_1();
+    }else if(p2HighCardArr[4] > p3HighCardArr[4]){
+        compare2_4();
+        compare4_2();
+    }else {
+        compare3_4();
+        compare4_3();
+    }
+
+    if(p1HighCardArr[4] > p4HighCardArr[4]){
+        compare1_5();
+        compare5_1();
+    }else if(p2HighCardArr[4] > p4HighCardArr[4]){
+        compare2_5();
+        compare5_2();
+    }else if(p3HighCardArr[4] > p4HighCardArr[4]){
+        compare3_5();
+        compare5_3();
+    }else {
+        compare4_5();
+        compare5_4();
+    }
+
+    if(p1HighCardArr[4] > p5HighCardArr[4]){
+        compare1_6();
+        compare6_1();
+    }else if(p2HighCardArr[4] > p5HighCardArr[4]){
+        compare2_6();
+        compare6_2();
+    }else if(p3HighCardArr[4] > p5HighCardArr[4]){
+        compare3_6();
+        compare6_3();
+    }else if(p4HighCardArr[4] > p5HighCardArr[4]){
+        compare4_6();
+        compare6_4();
+    }else {
+        compare5_6();
+        compare6_5();
+    }
 }
 
 

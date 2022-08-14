@@ -74,6 +74,7 @@ int Menu::checkDaemon()       /// Check connection to daemon
       curl_easy_setopt(curlDaemonCheck, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlDaemonCheck, CURLOPT_URL, dCh);
       curl_easy_setopt(curlDaemonCheck, CURLOPT_VERBOSE, 1L);
+      curl_easy_setopt(curlDaemonCheck, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlDaemonCheck, CURLOPT_ERRORBUFFER, error);
       /// curl_easy_setopt(curlDaemonCheck, CURLOPT_SSL_VERIFYPEER, 0);   *Remove comment for windows SSL disable*
       curl_easy_setopt(curlDaemonCheck, CURLOPT_POSTFIELDS, postthis);
@@ -137,6 +138,7 @@ int Menu::checkWallet()  /// Echo blockchain to confirm wallet is connected
       curl_easy_setopt(curlWalletCheck, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlWalletCheck, CURLOPT_URL, pCh);
       curl_easy_setopt(curlWalletCheck, CURLOPT_VERBOSE, 1L);
+      curl_easy_setopt(curlWalletCheck, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlWalletCheck, CURLOPT_ERRORBUFFER, error);
       curl_easy_setopt(curlWalletCheck, CURLOPT_USERPWD, loginCh);
       curl_easy_setopt(curlWalletCheck, CURLOPT_POSTFIELDS, postthis);
@@ -214,6 +216,7 @@ int Menu::checkContract()       /// Check if table is valid
       curl_easy_setopt(curlContract, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlContract, CURLOPT_URL, dCh);
       curl_easy_setopt(curlContract, CURLOPT_VERBOSE, 1L);
+      curl_easy_setopt(curlContract, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlContract, CURLOPT_ERRORBUFFER, error);
       curl_easy_setopt(curlContract, CURLOPT_POSTFIELDS, postthis);
       /// curl_easy_setopt(curlContract, CURLOPT_SSL_VERIFYPEER, 0);   *Remove comment for windows SSL disable*
@@ -252,8 +255,8 @@ int Menu::checkContract()       /// Check if table is valid
           ui->cleanTableButton->setEnabled(true);
           ui->menuTextBrowser->setText("You Own Table "+Menu::contractAddress+"\n");
           ui->autoPayRButton->setEnabled(true);
-          ui->listTableButton->setEnabled(true);
-          ui->delistTableButton->setEnabled(true);
+          /*ui->listTableButton->setEnabled(true);
+          ui->delistTableButton->setEnabled(true);       Disabled until new listing contract*/
       }else {
           ui->cleanTableButton->setEnabled(false);
           ui->autoPayRButton->setEnabled(true);
@@ -293,6 +296,7 @@ int Menu::checkAddress()  /// Gets player wallet address and hashes to get playe
       curl_easy_setopt(curlAddressCheck, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlAddressCheck, CURLOPT_URL, pCh);
       curl_easy_setopt(curlAddressCheck, CURLOPT_VERBOSE, 1L);
+      curl_easy_setopt(curlAddressCheck, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlAddressCheck, CURLOPT_ERRORBUFFER, error);
       curl_easy_setopt(curlAddressCheck, CURLOPT_USERPWD, loginCh);
       curl_easy_setopt(curlAddressCheck, CURLOPT_POSTFIELDS, postthis);
@@ -350,6 +354,7 @@ int Menu::setTable()      /// Owner set table player limit and ante
       curl_easy_setopt(curlSetTable, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlSetTable, CURLOPT_URL, stCh);
       curl_easy_setopt(curlSetTable, CURLOPT_VERBOSE, 1L);
+      curl_easy_setopt(curlSetTable, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlSetTable, CURLOPT_ERRORBUFFER, error);
       curl_easy_setopt(curlSetTable, CURLOPT_USERPWD, loginCh);
       curl_easy_setopt(curlSetTable, CURLOPT_POSTFIELDS, postthis);
@@ -409,6 +414,7 @@ int Menu::cleanTable()      /// Clean table function to withdraw any funds at ta
       curl_easy_setopt(curlCleanTable, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlCleanTable, CURLOPT_URL, stCh);
       curl_easy_setopt(curlCleanTable, CURLOPT_VERBOSE, 1L);
+      curl_easy_setopt(curlCleanTable, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlCleanTable, CURLOPT_ERRORBUFFER, error);
       curl_easy_setopt(curlCleanTable, CURLOPT_USERPWD, loginCh);
       curl_easy_setopt(curlCleanTable, CURLOPT_POSTFIELDS, postthis);
@@ -468,6 +474,7 @@ int Menu::getDreams()      /// Gets dReams Tokens
       curl_easy_setopt(curlgetDreams, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlgetDreams, CURLOPT_URL, gDr);
       curl_easy_setopt(curlgetDreams, CURLOPT_VERBOSE, 1L);
+      curl_easy_setopt(curlgetDreams, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlgetDreams, CURLOPT_ERRORBUFFER, error);
       curl_easy_setopt(curlgetDreams, CURLOPT_USERPWD, loginCh);
       curl_easy_setopt(curlgetDreams, CURLOPT_POSTFIELDS, postthis);
@@ -576,6 +583,7 @@ int Menu::fetchInfo()  /// Fetch blockchain info for contract uploads
       curl_easy_setopt(curlFetchInfo, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlFetchInfo, CURLOPT_URL, fdCh);
       curl_easy_setopt(curlFetchInfo, CURLOPT_VERBOSE, 1L);
+      curl_easy_setopt(curlFetchInfo, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlFetchInfo, CURLOPT_ERRORBUFFER, error);
       /// curl_easy_setopt(curlFetchInfo, CURLOPT_SSL_VERIFYPEER, 0);   *Remove comment for widnows SSL disable*
       curl_easy_setopt(curlFetchInfo, CURLOPT_POSTFIELDS, postthis);
@@ -630,6 +638,7 @@ int Menu::listTable()      /// Owner can list table for public sit an go play
       curl_easy_setopt(curlListTable, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlListTable, CURLOPT_URL, stCh);
       curl_easy_setopt(curlListTable, CURLOPT_VERBOSE, 1L);
+      curl_easy_setopt(curlListTable, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlListTable, CURLOPT_ERRORBUFFER, error);
       curl_easy_setopt(curlListTable, CURLOPT_USERPWD, loginCh);
       curl_easy_setopt(curlListTable, CURLOPT_POSTFIELDS, postthis);
@@ -687,6 +696,7 @@ int Menu::delistTable()      /// Owner can remove listing made by current addres
       curl_easy_setopt(curlDelistTable, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlDelistTable, CURLOPT_URL, stCh);
       curl_easy_setopt(curlDelistTable, CURLOPT_VERBOSE, 1L);
+      curl_easy_setopt(curlDelistTable, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlDelistTable, CURLOPT_ERRORBUFFER, error);
       curl_easy_setopt(curlDelistTable, CURLOPT_USERPWD, loginCh);
       curl_easy_setopt(curlDelistTable, CURLOPT_POSTFIELDS, postthis);
@@ -742,6 +752,7 @@ int Menu::checkIfListed()       /// Checks if players table is already listed
       curl_easy_setopt(curlListedCheck, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlListedCheck, CURLOPT_URL, fdCh);
       curl_easy_setopt(curlListedCheck, CURLOPT_VERBOSE, 1L);
+      curl_easy_setopt(curlListedCheck, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlListedCheck, CURLOPT_ERRORBUFFER, error);
       /// curl_easy_setopt(curlFetchInfo, CURLOPT_SSL_VERIFYPEER, 0);   *Remove comment for widnows SSL disable*
       curl_easy_setopt(curlListedCheck, CURLOPT_POSTFIELDS, postthis);
@@ -765,11 +776,11 @@ int Menu::checkIfListed()       /// Checks if players table is already listed
         QString searchId = QString::number(i);
         QJsonValue table = cbStringKeys.value("Table#"+searchId.toUtf8()+":");
         if(table.toString() == Menu::contractAddress){
-            ui->listTableButton->setEnabled(false);
-            ui->delistTableButton->setEnabled(true);
+            ///ui->listTableButton->setEnabled(false);
+            ///ui->delistTableButton->setEnabled(true);
         }else {
-            ui->listTableButton->setEnabled(true);
-            ui->delistTableButton->setEnabled(false);
+            ///ui->listTableButton->setEnabled(true);
+            ///ui->delistTableButton->setEnabled(false);
         }
 
       }
@@ -805,6 +816,7 @@ int Menu::fetchListingScData()       /// Fetch Public table listings and display
       curl_easy_setopt(curlListingFetch, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlListingFetch, CURLOPT_URL, fdCh);
       curl_easy_setopt(curlListingFetch, CURLOPT_VERBOSE, 1L);
+      curl_easy_setopt(curlListingFetch, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlListingFetch, CURLOPT_ERRORBUFFER, error);
       /// curl_easy_setopt(curlFetchInfo, CURLOPT_SSL_VERIFYPEER, 0);   *Remove comment for widnows SSL disable*
       curl_easy_setopt(curlListingFetch, CURLOPT_POSTFIELDS, postthis);
@@ -866,6 +878,7 @@ int Menu::forceStart()      /// Owner can start the game with empty seats
       curl_easy_setopt(curlforceStart, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlforceStart, CURLOPT_URL, stCh);
       curl_easy_setopt(curlforceStart, CURLOPT_VERBOSE, 1L);
+      curl_easy_setopt(curlforceStart, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlforceStart, CURLOPT_ERRORBUFFER, error);
       curl_easy_setopt(curlforceStart, CURLOPT_USERPWD, loginCh);
       curl_easy_setopt(curlforceStart, CURLOPT_POSTFIELDS, postthis);

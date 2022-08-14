@@ -45,6 +45,7 @@ public:
     ~MainWindow();
     static bool clicked;
     static bool startUpSkip;
+    static bool displayedRes;
     static int skipCount;
     void offset();
     void setFonts();
@@ -64,6 +65,8 @@ public:
     int card(QString hash, int salt);
     int keyCard(QString hash, int salt, int who);
     QString findCards(int);
+    QImage displayCustom(int);
+    QString displayStandard(int);
     void displayCardOne(int);
     void displayCardTwo(int);
     void displayCardThree(int);
@@ -73,6 +76,7 @@ public:
     void clearHighlight();
     int winner();
     int autopayWinner(QString whoWon);
+    int splitWinner();
     void setOpenClosed(int seats, double ante, double dealer);
     void setPlayerStatus(int p1Out, QString oneId, QString twoId, QString threeId, QString fourId, QString fiveId, QString sixId);
     void highlightWhosTurn(int turn, int seats);
@@ -124,6 +128,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
+    void compareLoop();
     void compare1_2();
     void compare1_3();
     void compare1_4();
@@ -186,6 +191,7 @@ private:
     int p6HighPair = 0;
     int p6HighCardArr[5];
     int getArray(int card);
+    int getHighPair(int h[5]);
     int makeHand();
     QString handToText(int rank);
 

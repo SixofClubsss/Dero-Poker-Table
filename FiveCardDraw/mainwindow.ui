@@ -1491,6 +1491,21 @@ p, li { white-space: pre-wrap; }
       </property>
      </widget>
     </item>
+    <item row="7" column="3" alignment="Qt::AlignRight">
+     <widget class="QComboBox" name="deckComboBox">
+      <property name="minimumSize">
+       <size>
+        <width>143</width>
+        <height>0</height>
+       </size>
+      </property>
+      <item>
+       <property name="text">
+        <string>Light</string>
+       </property>
+      </item>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">

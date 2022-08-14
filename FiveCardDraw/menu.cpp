@@ -293,6 +293,7 @@ void Menu::on_delistTableButton_clicked()
 //        delistTable();
 //        ui->delistTableButton->setEnabled(false);
 //        ui->listTableButton->setEnabled(true);
+//        Confirm::actionConfirmed = false;
 //    }else {
 
 //        Confirm::actionConfirmed = false;
@@ -315,6 +316,7 @@ void Menu::on_forceButton_clicked()
 
     if(Confirm::actionConfirmed == true){
         forceStart();
+        Confirm::actionConfirmed = false;
     }else {
 
         Confirm::actionConfirmed = false;

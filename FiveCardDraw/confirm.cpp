@@ -37,6 +37,8 @@ Confirm::Confirm(QWidget *parent) :
     ui->setupUi(this);
     setFonts();
 
+    Confirm::actionConfirmed = false;
+
     if(Confirm::whichText == 1){           /// Confirm menu will look at which button was clicked
         getTableText();
 
