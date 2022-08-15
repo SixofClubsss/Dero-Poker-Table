@@ -31,6 +31,8 @@ https://dreamtables.net
 #include "QFont"
 #include "QFontDatabase"
 #include "QImageReader"
+#include "rpc/rpc.h"
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -51,8 +53,10 @@ public:
     void offset();
     void setFonts();
     void checkDecks();
-    void AZY();
-    void SIX();
+    void AZYPC(QString, rpc&);
+    void AZYPCB(QString, rpc&);
+    void SIXPC(QString, rpc&);
+    void SIXPCB(QString, rpc&);
     void buttonDelay();
     void payoutDelay(int seconds);
     void loginInfo();

@@ -72,6 +72,10 @@ MainWindow::~MainWindow()
         keyFile.remove();
     }
 
+    qInfo() << ("\033[36m♤♡♧♢♧♡♤♡♧♢♧♡♤♡♧♢♧♡♤♡♧♢♧♡♤♡♧♢♧♡♤\033[0m");
+    qInfo() << ("\033[36m          Exiting...\033[0m");
+    qInfo() << ("\033[36m♤♡♧♢♧♡♤♡♧♢♧♡♤♡♧♢♧♡♤♡♧♢♧♡♤♡♧♢♧♡♤\033[0m");
+
     Worker::workThread.quit();
     delete ui;
 }
@@ -136,8 +140,12 @@ void MainWindow::setFonts()
 
 void MainWindow::checkDecks()
 {
-    AZY();
-    SIX();
+    rpc r;
+    QString pre = QDir().absolutePath();
+    AZYPC(pre, r);
+    AZYPCB(pre, r);
+    SIXPC(pre, r);
+    SIXPCB(pre, r);
 }
 
 

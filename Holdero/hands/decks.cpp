@@ -36,10 +36,8 @@ QString MainWindow::readmeStandard(QString find)
 }
 
 
-void MainWindow::AZY()
+void MainWindow::AZYPC(QString pre, rpc& r)
 {
-    QString pre = QDir().absolutePath();
-    rpc r;
     QString start;
     QString add;
     int i = 1;
@@ -139,10 +137,105 @@ void MainWindow::AZY()
 }
 
 
-void MainWindow::SIX()
+void MainWindow::AZYPCB(QString pre, rpc& r)
 {
-    QString pre = QDir().absolutePath();
-    rpc r;
+    QString start;
+    QString add;
+    int i = 1;
+
+    do {
+        start = "000";
+        add = start+QString::number(i);
+        QFile nfaBack(pre+"/cards/backs/AZYPCB"+add+"/README.md");
+        nfaBack.open(QIODevice::ReadOnly);
+
+        if(nfaBack.exists()){
+            QString findAddr = nfaBack.readAll();
+            findAddr = readmeStandard(findAddr);
+            r.verifyNFAcreator(findAddr);
+            if(rpc::assetConfirmed == true){
+                ui->backComboBox->insertItem(ui->backComboBox->count()+1, "AZYPCB"+add);
+                qInfo() << ("\033[35m♤Loading SIXPC Deck♡\033[0m");
+                rpc::assetConfirmed = false;
+                nfaBack.close();
+            }else {
+                rpc::assetConfirmed = false;
+                nfaBack.close();
+            }
+        }
+        ++i;
+    }while(i < 10);
+
+    do {
+        start = "00";
+        add = start+QString::number(i);
+        QFile nfaBack(pre+"/cards/backs/AZYPCB"+add+"/README.md");
+        nfaBack.open(QIODevice::ReadOnly);
+
+        if(nfaBack.exists()){
+            QString findAddr = nfaBack.readAll();
+            findAddr = readmeStandard(findAddr);
+            r.verifyNFAcreator(findAddr);
+            if(rpc::assetConfirmed == true){
+                ui->backComboBox->insertItem(ui->backComboBox->count()+1, "AZYPCB"+add);
+                qInfo() << ("\033[35m♤Loading SIXPC Deck♡\033[0m");
+                rpc::assetConfirmed = false;
+                nfaBack.close();
+            }else {
+                rpc::assetConfirmed = false;
+                nfaBack.close();
+            }
+        }
+        ++i;
+    }while(i < 100);
+
+    do {
+        start = "0";
+        add = start+QString::number(i);
+        QFile nfaBack(pre+"/cards/backs/AZYPCB"+add+"/README.md");
+        nfaBack.open(QIODevice::ReadOnly);
+
+        if(nfaBack.exists()){
+            QString findAddr = nfaBack.readAll();
+            findAddr = readmeStandard(findAddr);
+            r.verifyNFAcreator(findAddr);
+            if(rpc::assetConfirmed == true){
+                ui->backComboBox->insertItem(ui->backComboBox->count()+1, "AZYPCB"+add);
+                qInfo() << ("\033[35m♤Loading AZYPCB♡\033[0m");
+                rpc::assetConfirmed = false;
+                nfaBack.close();
+            }else {
+                rpc::assetConfirmed = false;
+                nfaBack.close();
+            }
+        }
+        ++i;
+    }while(i < 1000);
+
+    add = start+QString::number(i);
+    QFile nfaBack(pre+"/cards/AZYPCB"+add+"/README.md");
+    nfaBack.open(QIODevice::ReadOnly);
+
+    if(nfaBack.exists()){
+        QString findAddr = nfaBack.readAll();
+        findAddr = readmeStandard(findAddr);
+        r.verifyNFAcreator(findAddr);
+        if(rpc::assetConfirmed == true){
+            ui->deckComboBox->insertItem(ui->deckComboBox->count()+1, "AZYPCB"+add);
+            qInfo() << ("\033[35m♤Loading AZYPCB♡\033[0m");
+            rpc::assetConfirmed = false;
+            nfaBack.close();
+        }else {
+            rpc::assetConfirmed = false;
+            nfaBack.close();
+        }
+
+    }
+}
+
+
+void MainWindow::SIXPC(QString pre, rpc& r)
+{
     QString start;
     QString add;
     int i = 1;
@@ -170,29 +263,6 @@ void MainWindow::SIX()
         }
         ++i;
     }while(i < 10);
-
-
-
-//        start = "000";
-//        add = start+QString::number(1);
-//        QFile nfaDeck(pre+"/cards/backs/SIXPCB0001/SIXPCB0001/back.png");
-//        nfaDeck.open(QIODevice::ReadOnly);
-
-//        if(nfaDeck.exists()){
-//            ///QString findAddr = nfaDeck.readAll();
-//            ///findAddr = readmeStandard(findAddr);
-//            ///r.verifyNFAcreator(findAddr);
-//            ///if(rpc::assetConfirmed == true){
-//                ui->backComboBox->insertItem(ui->backComboBox->count()+1, "SIXPCB"+add);
-//                qInfo() << ("\033[35m♤Loading SIXPC Deck♡\033[0m");
-//                rpc::assetConfirmed = false;
-//                nfaDeck.close();
-//            }else {
-//                rpc::assetConfirmed = false;
-//                nfaDeck.close();
-//            }
-
-
 
     do {
         start = "00";
@@ -262,4 +332,101 @@ void MainWindow::SIX()
 
     }
 
+}
+
+
+void MainWindow::SIXPCB(QString pre, rpc& r)
+{
+    QString start;
+    QString add;
+    int i = 1;
+
+    do {
+        start = "000";
+        add = start+QString::number(i);
+        QFile nfaBack(pre+"/cards/backs/SIXPCB"+add+"/README.md");
+        nfaBack.open(QIODevice::ReadOnly);
+
+        if(nfaBack.exists()){
+            QString findAddr = nfaBack.readAll();
+            findAddr = readmeStandard(findAddr);
+            r.verifyNFAcreator(findAddr);
+            if(rpc::assetConfirmed == true){
+                ui->backComboBox->insertItem(ui->backComboBox->count()+1, "SIXPCB"+add);
+                qInfo() << ("\033[35m♤Loading SIXPC Deck♡\033[0m");
+                rpc::assetConfirmed = false;
+                nfaBack.close();
+            }else {
+                rpc::assetConfirmed = false;
+                nfaBack.close();
+            }
+        }
+        ++i;
+    }while(i < 10);
+
+    do {
+        start = "00";
+        add = start+QString::number(i);
+        QFile nfaBack(pre+"/cards/backs/SIXPCB"+add+"/README.md");
+        nfaBack.open(QIODevice::ReadOnly);
+
+        if(nfaBack.exists()){
+            QString findAddr = nfaBack.readAll();
+            findAddr = readmeStandard(findAddr);
+            r.verifyNFAcreator(findAddr);
+            if(rpc::assetConfirmed == true){
+                ui->backComboBox->insertItem(ui->backComboBox->count()+1, "SIXPCB"+add);
+                qInfo() << ("\033[35m♤Loading SIXPC Deck♡\033[0m");
+                rpc::assetConfirmed = false;
+                nfaBack.close();
+            }else {
+                rpc::assetConfirmed = false;
+                nfaBack.close();
+            }
+        }
+        ++i;
+    }while(i < 100);
+
+    do {
+        start = "0";
+        add = start+QString::number(i);
+        QFile nfaBack(pre+"/cards/backs/SIXPCB"+add+"/README.md");
+        nfaBack.open(QIODevice::ReadOnly);
+
+        if(nfaBack.exists()){
+            QString findAddr = nfaBack.readAll();
+            findAddr = readmeStandard(findAddr);
+            r.verifyNFAcreator(findAddr);
+            if(rpc::assetConfirmed == true){
+                ui->backComboBox->insertItem(ui->backComboBox->count()+1, "SIXPCB"+add);
+                qInfo() << ("\033[35m♤Loading SIXPCB♡\033[0m");
+                rpc::assetConfirmed = false;
+                nfaBack.close();
+            }else {
+                rpc::assetConfirmed = false;
+                nfaBack.close();
+            }
+        }
+        ++i;
+    }while(i < 1000);
+
+    add = start+QString::number(i);
+    QFile nfaBack(pre+"/cards/SIXPCB"+add+"/README.md");
+    nfaBack.open(QIODevice::ReadOnly);
+
+    if(nfaBack.exists()){
+        QString findAddr = nfaBack.readAll();
+        findAddr = readmeStandard(findAddr);
+        r.verifyNFAcreator(findAddr);
+        if(rpc::assetConfirmed == true){
+            ui->deckComboBox->insertItem(ui->deckComboBox->count()+1, "SIXPCB"+add);
+            qInfo() << ("\033[35m♤Loading SIXPCB♡\033[0m");
+            rpc::assetConfirmed = false;
+            nfaBack.close();
+        }else {
+            rpc::assetConfirmed = false;
+            nfaBack.close();
+        }
+
+    }
 }

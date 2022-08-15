@@ -51,7 +51,7 @@ int rpc::getBalance()  /// Gets players dero balance
       /// cUrl options
       curl_easy_setopt(curlBalanceCheck, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlBalanceCheck, CURLOPT_URL, pCh);
-      curl_easy_setopt(curlBalanceCheck, CURLOPT_VERBOSE, 1L);
+      curl_easy_setopt(curlBalanceCheck, CURLOPT_VERBOSE, 0L);
       curl_easy_setopt(curlBalanceCheck, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlBalanceCheck, CURLOPT_ERRORBUFFER, error);
       curl_easy_setopt(curlBalanceCheck, CURLOPT_USERPWD, loginCh);
@@ -98,7 +98,7 @@ int rpc::getHeight()  /// Gets current block height
       /// cUrl options
       curl_easy_setopt(curlHeightCheck, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlHeightCheck, CURLOPT_URL, fhCh);
-      curl_easy_setopt(curlHeightCheck, CURLOPT_VERBOSE, 1L);
+      curl_easy_setopt(curlHeightCheck, CURLOPT_VERBOSE, 0L);
       curl_easy_setopt(curlHeightCheck, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlHeightCheck, CURLOPT_ERRORBUFFER, error);
       /// curl_easy_setopt(curlHeightCheck, CURLOPT_SSL_VERIFYPEER, 0);   *Remove comment for windows SSL disable*
@@ -147,7 +147,7 @@ int rpc::fetchScData()       /// Get SC variables
       /// cUrl options
       curl_easy_setopt(curlFetch, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlFetch, CURLOPT_URL, fdCh);
-      curl_easy_setopt(curlFetch, CURLOPT_VERBOSE, 1L);
+      curl_easy_setopt(curlFetch, CURLOPT_VERBOSE, 0L);
       curl_easy_setopt(curlFetch, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlFetch, CURLOPT_ERRORBUFFER, error);
       /// curl_easy_setopt(curlFetch, CURLOPT_SSL_VERIFYPEER, 0);   *Remove comment for windows SSL disable*
@@ -330,7 +330,7 @@ int rpc::fetchScData()       /// Get SC variables
 }
 
 
-int rpc::verifyNFAcreator(QString addr)       /// Get SC variables
+int rpc::verifyNFAcreator(QString addr)       /// Verify NFA contract
 {
     CURL *curlVerifyNFA;        /// Set up cUrl
     CURLcode res;
@@ -341,7 +341,7 @@ int rpc::verifyNFAcreator(QString addr)       /// Get SC variables
     string addThis = parts.toStdString();
     const char *postthis = addThis.c_str();
 
-    string dStr = "http://192.168.1.68:12012/json_rpc";///rpc::daemonAddress.toStdString();
+    string dStr = rpc::daemonAddress.toStdString();
     const char *fdCh = dStr.c_str();
 
     curlVerifyNFA = curl_easy_init();
@@ -386,7 +386,7 @@ int rpc::verifyNFAcreator(QString addr)       /// Get SC variables
 }
 
 
-int rpc::verifyAsset(QString addr)       /// Get SC variables
+int rpc::verifyAsset(QString addr)       /// Verify NFA balance
 {
     CURL *curlVerifyAsset;
     CURLcode res;

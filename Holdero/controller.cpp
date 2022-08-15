@@ -822,21 +822,31 @@ void MainWindow::displayLocalHand(QString hashOne, QString hashTwo) /// Displays
     if(card(hashOne) > 0){
         if(Menu::sharedDeck == false){
             if(ui->deckComboBox->currentIndex() > 1){
+                ui->holeCard1Label->setGeometry(70, 20, 166, 227);
+                ui->holeCard2Label->setGeometry(0, 10, 166, 227);
                 ui->holeCard1Label->setPixmap(QPixmap::fromImage(displayCustom(card(hashOne))));
                 ui->holeCard2Label->setPixmap(QPixmap::fromImage(displayCustom(card(hashTwo))));
             }else {
+                ui->holeCard1Label->setGeometry(80, 20, 166, 227);
+                ui->holeCard2Label->setGeometry(-10, 10, 166, 227);
                 ui->holeCard1Label->setPixmap(QPixmap(displayStandard(card(hashOne))));
                 ui->holeCard2Label->setPixmap(QPixmap(displayStandard(card(hashTwo))));
             }
         }else {
+            ui->holeCard1Label->setGeometry(80, 20, 166, 227);
+            ui->holeCard2Label->setGeometry(-10, 10, 166, 227);
             ui->holeCard1Label->setPixmap(QPixmap(displayStandard(card(hashOne))));
             ui->holeCard2Label->setPixmap(QPixmap(displayStandard(card(hashTwo))));
         }
     }else {
         if(ui->backComboBox->currentIndex() > 1){
+            ui->holeCard1Label->setGeometry(70, 20, 166, 227);
+            ui->holeCard2Label->setGeometry(0, 10, 166, 227);
             ui->holeCard1Label->setPixmap(QPixmap::fromImage(displayCustom(0)));
             ui->holeCard2Label->setPixmap(QPixmap::fromImage(displayCustom(0)));
         }else {
+            ui->holeCard1Label->setGeometry(80, 20, 166, 227);
+            ui->holeCard2Label->setGeometry(-10, 10, 166, 227);
             ui->holeCard1Label->setPixmap(QPixmap(displayStandard(0)));
             ui->holeCard2Label->setPixmap(QPixmap(displayStandard(0)));
         }
@@ -1454,6 +1464,7 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
                 ui->turnReadOut->setText("Push, Split pot");
                 compareLoop();
                 if(rpc::oneId == rpc::IdHash){
+                    ui->winnerComboBox->insertItem(ui->winnerComboBox->count()+1, "Split");
 
                     if(Menu::autoPayout == true && rpc::paidOut == false && rpc::pot != 0){     /// Contract not set up for split pot situation, owner will split
                         rpc::paidOut = true;
@@ -1486,13 +1497,6 @@ QString MainWindow::deckSelect(int d)   /// Gets deck path prefix for card image
     }
     path = pre+post;
 
-    if(ui->deckComboBox->currentIndex() > 1 ){
-        ui->holeCard1Label->setGeometry(70, 20, 166, 227);
-        ui->holeCard2Label->setGeometry(0, 10, 166, 227);
-    }else {
-        ui->holeCard1Label->setGeometry(80, 20, 166, 227);
-        ui->holeCard2Label->setGeometry(-10, 10, 166, 227);
-    }
     return path;
 }
 
@@ -1509,13 +1513,6 @@ QString MainWindow::backSelect(int d)   /// Gets back path prefix for card image
     }
     path = pre+post;
 
-    if(ui->backComboBox->currentIndex() > 1 ){
-        ui->holeCard1Label->setGeometry(70, 20, 166, 227);
-        ui->holeCard2Label->setGeometry(0, 10, 166, 227);
-    }else {
-        ui->holeCard1Label->setGeometry(80, 20, 166, 227);
-        ui->holeCard2Label->setGeometry(-10, 10, 166, 227);
-    }
     return path;
 }
 
@@ -1680,63 +1677,63 @@ QImage MainWindow::displayCustom(int card)   /// Gets suffix for custom card ima
     QString suffix;
     QImage path;
     if(card > 0){
-    switch (card){
-       case 1: suffix = "card1.png"; break;
-       case 2: suffix = "card2.png"; break;
-       case 3: suffix = "card3.png"; break;
-       case 4: suffix = "card4.png"; break;
-       case 5: suffix = "card5.png"; break;
-       case 6: suffix = "card6.png"; break;
-       case 7: suffix = "card7.png"; break;
-       case 8: suffix = "card8.png"; break;
-       case 9: suffix = "card9.png"; break;
-       case 10: suffix = "card10.png" ; break;
-       case 11: suffix = "card11.png" ; break;
-       case 12: suffix = "card12.png" ; break;
-       case 13: suffix = "card13.png" ; break;
-       case 14: suffix = "card14.png" ; break;
-       case 15: suffix = "card15.png" ; break;
-       case 16: suffix = "card16.png" ; break;
-       case 17: suffix = "card17.png" ; break;
-       case 18: suffix = "card18.png" ; break;
-       case 19: suffix = "card19.png" ; break;
-       case 20: suffix = "card20.png" ; break;
-       case 21: suffix = "card21.png" ; break;
-       case 22: suffix = "card22.png" ; break;
-       case 23: suffix = "card23.png" ; break;
-       case 24: suffix = "card24.png" ; break;
-       case 25: suffix = "card25.png" ; break;
-       case 26: suffix = "card26.png" ; break;
-       case 27: suffix = "card27.png" ; break;
-       case 28: suffix = "card28.png" ; break;
-       case 29: suffix = "card29.png" ; break;
-       case 30: suffix = "card30.png" ; break;
-       case 31: suffix = "card31.png" ; break;
-       case 32: suffix = "card32.png" ; break;
-       case 33: suffix = "card33.png" ; break;
-       case 34: suffix = "card34.png" ; break;
-       case 35: suffix = "card35.png" ; break;
-       case 36: suffix = "card36.png" ; break;
-       case 37: suffix = "card37.png" ; break;
-       case 38: suffix = "card38.png" ; break;
-       case 39: suffix = "card39.png" ; break;
-       case 40: suffix = "card40.png" ; break;
-       case 41: suffix = "card41.png" ; break;
-       case 42: suffix = "card42.png" ; break;
-       case 43: suffix = "card43.png" ; break;
-       case 44: suffix = "card44.png" ; break;
-       case 45: suffix = "card45.png" ; break;
-       case 46: suffix = "card46.png" ; break;
-       case 47: suffix = "card47.png" ; break;
-       case 48: suffix = "card48.png" ; break;
-       case 49: suffix = "card49.png" ; break;
-       case 50: suffix = "card50.png" ; break;
-       case 51: suffix = "card51.png" ; break;
-       case 52: suffix = "card52.png" ; break;
-       }
+        switch (card){
+           case 1: suffix = "card1.png"; break;
+           case 2: suffix = "card2.png"; break;
+           case 3: suffix = "card3.png"; break;
+           case 4: suffix = "card4.png"; break;
+           case 5: suffix = "card5.png"; break;
+           case 6: suffix = "card6.png"; break;
+           case 7: suffix = "card7.png"; break;
+           case 8: suffix = "card8.png"; break;
+           case 9: suffix = "card9.png"; break;
+           case 10: suffix = "card10.png" ; break;
+           case 11: suffix = "card11.png" ; break;
+           case 12: suffix = "card12.png" ; break;
+           case 13: suffix = "card13.png" ; break;
+           case 14: suffix = "card14.png" ; break;
+           case 15: suffix = "card15.png" ; break;
+           case 16: suffix = "card16.png" ; break;
+           case 17: suffix = "card17.png" ; break;
+           case 18: suffix = "card18.png" ; break;
+           case 19: suffix = "card19.png" ; break;
+           case 20: suffix = "card20.png" ; break;
+           case 21: suffix = "card21.png" ; break;
+           case 22: suffix = "card22.png" ; break;
+           case 23: suffix = "card23.png" ; break;
+           case 24: suffix = "card24.png" ; break;
+           case 25: suffix = "card25.png" ; break;
+           case 26: suffix = "card26.png" ; break;
+           case 27: suffix = "card27.png" ; break;
+           case 28: suffix = "card28.png" ; break;
+           case 29: suffix = "card29.png" ; break;
+           case 30: suffix = "card30.png" ; break;
+           case 31: suffix = "card31.png" ; break;
+           case 32: suffix = "card32.png" ; break;
+           case 33: suffix = "card33.png" ; break;
+           case 34: suffix = "card34.png" ; break;
+           case 35: suffix = "card35.png" ; break;
+           case 36: suffix = "card36.png" ; break;
+           case 37: suffix = "card37.png" ; break;
+           case 38: suffix = "card38.png" ; break;
+           case 39: suffix = "card39.png" ; break;
+           case 40: suffix = "card40.png" ; break;
+           case 41: suffix = "card41.png" ; break;
+           case 42: suffix = "card42.png" ; break;
+           case 43: suffix = "card43.png" ; break;
+           case 44: suffix = "card44.png" ; break;
+           case 45: suffix = "card45.png" ; break;
+           case 46: suffix = "card46.png" ; break;
+           case 47: suffix = "card47.png" ; break;
+           case 48: suffix = "card48.png" ; break;
+           case 49: suffix = "card49.png" ; break;
+           case 50: suffix = "card50.png" ; break;
+           case 51: suffix = "card51.png" ; break;
+           case 52: suffix = "card52.png" ; break;
+           }
 
-    QImageReader reader(deckSelect(ui->deckComboBox->currentIndex())+suffix);
-    path = reader.read();
+        QImageReader reader(deckSelect(ui->deckComboBox->currentIndex())+suffix);
+        path = reader.read();
     }else {
         QImageReader reader(backSelect(ui->backComboBox->currentIndex())+"back.png");
         path = reader.read();
@@ -1824,8 +1821,7 @@ QString MainWindow::displayStandard(int card)   /// Gets suffix for custom card 
         }else {
             path = ":/images/cards/backs/back1.png";
         }
-        ui->holeCard1Label->setGeometry(80, 20, 166, 227);
-        ui->holeCard2Label->setGeometry(-10, 10, 166, 227);
+
     }
 
     return path;
