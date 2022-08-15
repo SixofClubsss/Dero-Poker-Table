@@ -155,7 +155,7 @@ void MainWindow::AZYPCB(QString pre, rpc& r)
             r.verifyNFAcreator(findAddr);
             if(rpc::assetConfirmed == true){
                 ui->backComboBox->insertItem(ui->backComboBox->count()+1, "AZYPCB"+add);
-                qInfo() << ("\033[35m♤Loading SIXPC Deck♡\033[0m");
+                qInfo() << ("\033[35m♤Loading AZYPCB♡\033[0m");
                 rpc::assetConfirmed = false;
                 nfaBack.close();
             }else {
@@ -178,7 +178,7 @@ void MainWindow::AZYPCB(QString pre, rpc& r)
             r.verifyNFAcreator(findAddr);
             if(rpc::assetConfirmed == true){
                 ui->backComboBox->insertItem(ui->backComboBox->count()+1, "AZYPCB"+add);
-                qInfo() << ("\033[35m♤Loading SIXPC Deck♡\033[0m");
+                qInfo() << ("\033[35m♤Loading AZYPCB♡\033[0m");
                 rpc::assetConfirmed = false;
                 nfaBack.close();
             }else {
@@ -353,7 +353,7 @@ void MainWindow::SIXPCB(QString pre, rpc& r)
             r.verifyNFAcreator(findAddr);
             if(rpc::assetConfirmed == true){
                 ui->backComboBox->insertItem(ui->backComboBox->count()+1, "SIXPCB"+add);
-                qInfo() << ("\033[35m♤Loading SIXPC Deck♡\033[0m");
+                qInfo() << ("\033[35m♤Loading SIXPCB♡\033[0m");
                 rpc::assetConfirmed = false;
                 nfaBack.close();
             }else {
@@ -376,7 +376,7 @@ void MainWindow::SIXPCB(QString pre, rpc& r)
             r.verifyNFAcreator(findAddr);
             if(rpc::assetConfirmed == true){
                 ui->backComboBox->insertItem(ui->backComboBox->count()+1, "SIXPCB"+add);
-                qInfo() << ("\033[35m♤Loading SIXPC Deck♡\033[0m");
+                qInfo() << ("\033[35m♤Loading SIXPCB♡\033[0m");
                 rpc::assetConfirmed = false;
                 nfaBack.close();
             }else {
