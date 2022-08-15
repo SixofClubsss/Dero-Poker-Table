@@ -329,3 +329,119 @@ int rpc::fetchScData()       /// Get SC variables
     return 0;
 }
 
+
+int rpc::verifyNFAcreator(QString addr)       /// Get SC variables
+{
+    CURL *curlVerifyNFA;        /// Set up cUrl
+    CURLcode res;
+    string nfaReadBuffer;
+    char error[CURL_ERROR_SIZE];
+
+    QString parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"getsc\",\"params\":{\"scid\":\""+addr+"\",  \"ringsize\":2, \"code\":false , \"variables\":true}}";
+    string addThis = parts.toStdString();
+    const char *postthis = addThis.c_str();
+
+    string dStr = "http://192.168.1.68:12012/json_rpc";///rpc::daemonAddress.toStdString();
+    const char *fdCh = dStr.c_str();
+
+    curlVerifyNFA = curl_easy_init();
+
+    if(curlVerifyNFA) {
+      struct curl_slist *headers = NULL;
+      /// Add request headers
+      headers = curl_slist_append(headers, "Accept: application/json");
+      headers = curl_slist_append(headers, "Content-Type: application/json");
+      headers = curl_slist_append(headers, "charset: utf-8");
+      /// cUrl options
+      curl_easy_setopt(curlVerifyNFA, CURLOPT_HTTPHEADER, headers);
+      curl_easy_setopt(curlVerifyNFA, CURLOPT_URL, fdCh);
+      curl_easy_setopt(curlVerifyNFA, CURLOPT_VERBOSE, 0L);
+      curl_easy_setopt(curlVerifyNFA, CURLOPT_CONNECTTIMEOUT, 4L);
+      curl_easy_setopt(curlVerifyNFA, CURLOPT_ERRORBUFFER, error);
+      /// curl_easy_setopt(curlVerifyNFA, CURLOPT_SSL_VERIFYPEER, 0);   *Remove comment for windows SSL disable*
+      curl_easy_setopt(curlVerifyNFA, CURLOPT_POSTFIELDS, postthis);
+      curl_easy_setopt(curlVerifyNFA, CURLOPT_POSTFIELDSIZE, (long)strlen(postthis));
+      curl_easy_setopt(curlVerifyNFA, CURLOPT_WRITEFUNCTION, WriteCallback);
+      curl_easy_setopt(curlVerifyNFA, CURLOPT_WRITEDATA, &nfaReadBuffer);
+
+      res = curl_easy_perform(curlVerifyNFA);               /// Preform cUrl and clean up
+      curl_easy_cleanup(curlVerifyNFA);
+
+      QByteArray brw = nfaReadBuffer.c_str();          /// Get cUrl results into QByteArray
+      QJsonDocument cbDoc = QJsonDocument::fromJson(brw);
+      QJsonObject cbObj = cbDoc.object();
+      QJsonObject cbResults = cbObj["result"].toObject();
+      QJsonObject cbStringKeys = cbResults["stringkeys"].toObject();
+      QJsonValue Creator_jv = cbStringKeys.value("creatorAddr");
+      QJsonValue ArtId_jv = cbStringKeys.value("artificerAddr");
+      QString AZY = "136a39436003f2d8496f9215e48155a3a5135de348dc71401a31b9698bec136400";
+      QString Artificer = "1f6b84b0291cabbf3c53cdb217ebbc441a63b8d9a2372f56ad3f4d1daadef09d01";
+
+      if(Creator_jv.toString() == AZY && ArtId_jv.toString() == Artificer){
+          verifyAsset(addr);
+      }
+
+    }
+    return 0;
+}
+
+
+int rpc::verifyAsset(QString addr)       /// Get SC variables
+{
+    CURL *curlVerifyAsset;
+    CURLcode res;
+    string vAssetReadBuffer;
+    char error[CURL_ERROR_SIZE];
+
+    rpc::assetConfirmed = false;
+    QString parts = "{\"jsonrpc\":\"2.0\",\"id\": \"1\",\"method\": \"GetBalance\", \"params\": {\"scid\":\""+addr+"\"}}";
+    string addThis = parts.toStdString();
+    const char *postthis = addThis.c_str();
+
+    string pStr = rpc::playerAddress.toStdString();
+    const char *pCh = pStr.c_str();
+
+    const char *loginCh = rpc::rpcLogin.c_str();
+
+    curlVerifyAsset = curl_easy_init();
+
+    if(curlVerifyAsset) {
+      struct curl_slist *headers = NULL;
+      /// Add request headers
+      headers = curl_slist_append(headers, "Accept: application/json");
+      headers = curl_slist_append(headers, "Content-Type: application/json");
+      headers = curl_slist_append(headers, "charset: utf-8");
+      /// cUrl options
+      curl_easy_setopt(curlVerifyAsset, CURLOPT_HTTPHEADER, headers);
+      curl_easy_setopt(curlVerifyAsset, CURLOPT_URL, pCh);
+      curl_easy_setopt(curlVerifyAsset, CURLOPT_VERBOSE, 0L);
+      curl_easy_setopt(curlVerifyAsset, CURLOPT_CONNECTTIMEOUT, 4L);
+      curl_easy_setopt(curlVerifyAsset, CURLOPT_ERRORBUFFER, error);
+      curl_easy_setopt(curlVerifyAsset, CURLOPT_USERPWD, loginCh);
+      /// curl_easy_setopt(curlVerifyAsset, CURLOPT_SSL_VERIFYPEER, 0);   *Remove comment for windows SSL disable*
+      curl_easy_setopt(curlVerifyAsset, CURLOPT_POSTFIELDS, postthis);
+      curl_easy_setopt(curlVerifyAsset, CURLOPT_POSTFIELDSIZE, (long)strlen(postthis));
+      curl_easy_setopt(curlVerifyAsset, CURLOPT_WRITEFUNCTION, WriteCallback);
+      curl_easy_setopt(curlVerifyAsset, CURLOPT_WRITEDATA, &vAssetReadBuffer);
+
+      res = curl_easy_perform(curlVerifyAsset);               /// Preform cUrl and clean up
+      curl_easy_cleanup(curlVerifyAsset);
+
+      QByteArray br = vAssetReadBuffer.c_str();
+      QJsonDocument cbDoc = QJsonDocument::fromJson(br);
+      QJsonObject cbObj = cbDoc.object();
+      QJsonObject cbResults = cbObj["result"].toObject();
+      QJsonValue Balance_jv = cbResults.value("balance");
+
+      std::cout << vAssetReadBuffer << std::endl;
+
+      if(Balance_jv.toInt() >= 1){
+          rpc::assetConfirmed = true;
+          qInfo() << "NFA Approved";
+      }else {
+          qInfo() << "NOT Approved";
+      }
+
+    }
+    return 0;
+}

@@ -135,7 +135,6 @@ int MainWindow::getPlayer3()
 
 int MainWindow::getPlayer4()
 {
-
     int player4HandRaw[] = {keyCard(rpc::hashFourone, 4), keyCard(rpc::hashFourtwo, 4)};
     p4Rank = 100;
     p4HighPair = 0;
@@ -161,7 +160,6 @@ int MainWindow::getPlayer4()
 
 int MainWindow::getPlayer5()
 {
-
     int player5HandRaw[] = {keyCard(rpc::hashFiveone, 5), keyCard(rpc::hashFivetwo, 5)};
     p5Rank = 100;
     p5HighPair = 0;
@@ -187,7 +185,6 @@ int MainWindow::getPlayer5()
 
 int MainWindow::getPlayer6()
 {
-
     int player6HandRaw[] = {keyCard(rpc::hashSixone, 6), keyCard(rpc::hashSixtwo, 6)};
     p6Rank = 100;
     p6HighPair = 0;

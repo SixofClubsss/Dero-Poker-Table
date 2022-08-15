@@ -54,7 +54,7 @@ void HandRanks::setFonts()
 }
 
 
-int MainWindow::getArray(int card)  /// Splipts card into value and suit for hand compare
+int MainWindow::getArray(int card)  /// Splits card into value and suit for hand compare
 {
     switch(card){
     ////// Spades

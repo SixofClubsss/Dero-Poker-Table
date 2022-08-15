@@ -136,86 +136,15 @@ void MainWindow::setFonts()
 
 void MainWindow::checkDecks()
 {
-    QString pre = QDir().absolutePath();
-
-    QFile customFile1(pre+"/cards/custom/deck1/card1.png");
-    customFile1.open(QIODevice::ReadOnly);
-
-    QFile customFile2(pre+"/cards/custom/deck2/card1.png");
-    customFile2.open(QIODevice::ReadOnly);
-
-    QFile customFile3(pre+"/cards/custom/deck3/card53.png");
-    customFile3.open(QIODevice::ReadOnly);
-
-    QFile customFile4(pre+"/cards/custom/deck4/card53.png");
-    customFile4.open(QIODevice::ReadOnly);
-
-    QFile customFile5(pre+"/cards/custom/deck5/card53.png");
-    customFile5.open(QIODevice::ReadOnly);
-
-    QFile customFile6(pre+"/cards/custom/deck6/card53.png");
-    customFile6.open(QIODevice::ReadOnly);
-
-    QFile customFile7(pre+"/cards/custom/deck7/card53.png");
-    customFile7.open(QIODevice::ReadOnly);
-
-    QFile customFile8(pre+"/cards/custom/deck8/card53.png");
-    customFile8.open(QIODevice::ReadOnly);
-
-    QFile customFile9(pre+"/cards/custom/deck9/card53.png");
-    customFile9.open(QIODevice::ReadOnly);
-
-    if(customFile1.exists()){
-        ui->deckComboBox->insertItem(3, "Custom 1");
-         qInfo() << ("\033[35m♤Loading Custom Deck 1♤\033[0m");
-    }
-
-    if(customFile2.exists()){
-        ui->deckComboBox->insertItem(4, "Custom 2");
-         qInfo() << ("\033[35m♡Loading Custom Deck 2♡\033[0m");
-    }
-
-    if(customFile3.exists()){
-        ui->deckComboBox->insertItem(5, "Custom 3");
-        qInfo() << ("\033[35m♧Loading Custom Deck 3♧\033[0m");
-    }
-
-    if(customFile4.exists()){
-        ui->deckComboBox->insertItem(6, "Custom 4");
-         qInfo() << ("\033[35m♢Loading Custom Deck 4♢\033[0m");
-    }
-
-    if(customFile5.exists()){
-        ui->deckComboBox->insertItem(7, "Custom 5");
-         qInfo() << ("\033[35m♤Loading Custom Deck 5♤\033[0m");
-    }
-
-    if(customFile6.exists()){
-        ui->deckComboBox->insertItem(8, "Custom 6");
-         qInfo() << ("\033[35m♡Loading Custom Deck 6♡\033[0m");
-    }
-
-    if(customFile7.exists()){
-        ui->deckComboBox->insertItem(9, "Custom 7");
-         qInfo() << ("\033[35m♧Loading Custom Deck 7♧\033[0m");
-    }
-
-    if(customFile9.exists()){
-        ui->deckComboBox->insertItem(10, "Custom 8");
-         qInfo() << ("\033[35m♢Loading Custom Deck 8♢\033[0m");
-    }
-
-    if(customFile9.exists()){
-        ui->deckComboBox->insertItem(11, "Custom 9");
-         qInfo() << ("\033[35m♤Loading Custom Deck♤9\033[0m");
-    }
-
+    AZY();
+    SIX();
 }
 
 
 void MainWindow::refresh()      /// Controller refresh rate
 {
-    if(rpc::turn != ui->playerId->value()-1 && rpc::blockHeight > rpc::clickedHeight+1 && ui->playerId->value() != 0){
+    if((rpc::turn != ui->playerId->value()-1 && rpc::blockHeight > rpc::clickedHeight+1 && ui->playerId->value() != 0) ||
+            (rpc::turn == ui->playerId->value()-1 && rpc::blockHeight > rpc::clickedHeight+3)){
         MainWindow::clicked = false;
     }
 

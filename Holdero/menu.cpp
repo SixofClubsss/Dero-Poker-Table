@@ -35,6 +35,7 @@ QString Menu::listingAddress;
 QString Menu::donationAddress;
 bool Menu::mainnet;
 bool Menu::autoPayout;
+bool Menu::sharedDeck;
 
 
 Menu::Menu(QWidget *parent) :
@@ -96,6 +97,7 @@ Menu::Menu(QWidget *parent) :
     qInfo() << ("\033[36m   https://dreamtables.net\033[0m");
     qInfo() << ("\033[36m     © 2022 dReam Tables\033[0m");
     qInfo() << ("\033[36m♤♡♧♢♧♡♤♡♧♢♧♡♤♡♧♢♧♡♤♡♧♢♧♡♤♡♧♢♧♡♤\033[0m");
+
 }
 
 
@@ -280,7 +282,16 @@ void Menu::on_autoPayRButton_clicked()
     }else {
         Menu::autoPayout = false;
     }
+}
 
+
+void Menu::on_sharedRButton_clicked()
+{
+    if(ui->sharedRButton->isChecked()){
+        Menu::sharedDeck = true;
+    }else {
+        Menu::sharedDeck = false;
+    }
 }
 
 
@@ -342,7 +353,7 @@ void Menu::on_forceButton_clicked()
 
 }
 
-void Menu::on_blindSpinBox_valueChanged()
+void Menu::on_blindSpinBox_valueChanged(double arg1)
 {
     QString bb = QString::number(ui->blindSpinBox->value()*2);
     ui->blindSpinBox->setPrefix("Big Blind: "+bb+" / Small Blind: ");

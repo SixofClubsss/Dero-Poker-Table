@@ -59,7 +59,6 @@
         <file>images/cards/standard/dark/card50.png</file>
         <file>images/cards/standard/dark/card51.png</file>
         <file>images/cards/standard/dark/card52.png</file>
-        <file>images/cards/standard/dark/card53.png</file>
         <file>images/cards/standard/light/card1.png</file>
         <file>images/cards/standard/light/card2.png</file>
         <file>images/cards/standard/light/card3.png</file>
@@ -112,6 +111,7 @@
         <file>images/cards/standard/light/card50.png</file>
         <file>images/cards/standard/light/card51.png</file>
         <file>images/cards/standard/light/card52.png</file>
-        <file>images/cards/standard/light/card53.png</file>
+        <file>images/cards/backs/back1.png</file>
+        <file>images/cards/backs/back2.png</file>
     </qresource>
 </RCC>

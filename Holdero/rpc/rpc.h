@@ -52,6 +52,7 @@ class rpc
 public:
     static bool inGame;
     static bool paidOut;
+    static bool assetConfirmed;
     static double blockHeight;
     static double clickedHeight;
     static std::string rpcLogin;
@@ -117,7 +118,6 @@ public:
     static QString hashFourone ;
     static QString hashFourtwo ;
 
-
     static QString hashFiveone ;
     static QString hashFivetwo ;
 
@@ -144,24 +144,10 @@ public:
     int getHeight();
     int fetchScData();
     int getDreams();
+    int verifyNFAcreator(QString);
+    int verifyAsset(QString);
 
 };
-
-
-//class Hand
-//{
-//public:
-//    static bool hasBet;
-//    static bool endSignal;
-//    static bool foldOne;
-//    static bool foldTwo;
-//    static bool foldThree;
-//    static bool foldFour;
-//    static bool foldFive;
-//    static bool foldSix;
-//    static bool keyIsPub;
-
-//};
 
 
 class Worker : public QObject

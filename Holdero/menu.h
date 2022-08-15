@@ -50,6 +50,7 @@ public:
     static bool mainnet;
     static bool dReams;
     static bool autoPayout;
+    static bool sharedDeck;
     void setFonts();
     void loginInfo();
     void delay();
@@ -102,7 +103,9 @@ private slots:
 
     void on_forceButton_clicked();
 
-    void on_blindSpinBox_valueChanged();
+    void on_blindSpinBox_valueChanged(double);
+
+    void on_sharedRButton_clicked();
 
 private:
     Ui::Menu *ui;

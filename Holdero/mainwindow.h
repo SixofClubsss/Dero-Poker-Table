@@ -51,6 +51,8 @@ public:
     void offset();
     void setFonts();
     void checkDecks();
+    void AZY();
+    void SIX();
     void buttonDelay();
     void payoutDelay(int seconds);
     void loginInfo();
@@ -65,10 +67,12 @@ public:
     int bet();
     int card(QString hash);
     int keyCard(QString hash, int);
+    QString readmeStandard(QString);
     QString hasDisplay(int);
     QString thisHandIs(int);
     QString findCards(int);
     QString deckSelect(int);
+    QString backSelect(int);
     QImage displayCustom(int);
     QString displayStandard(int);
     void displayFlop(int, int, int);

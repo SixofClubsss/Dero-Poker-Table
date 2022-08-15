@@ -47,6 +47,7 @@ SOURCES += \
     aes/qaesencryption.cpp \
     confirm.cpp \
     controller.cpp \
+    hands/decks.cpp \
     hands/handranks.cpp \
     hands/players.cpp \
     main.cpp \
