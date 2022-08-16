@@ -375,9 +375,10 @@ int rpc::verifyNFAcreator(QString addr)       /// Verify NFA contract
       QJsonValue Creator_jv = cbStringKeys.value("creatorAddr");
       QJsonValue ArtId_jv = cbStringKeys.value("artificerAddr");
       QString AZY = "136a39436003f2d8496f9215e48155a3a5135de348dc71401a31b9698bec136400";
+      QString SIX = " ";
       QString Artificer = "1f6b84b0291cabbf3c53cdb217ebbc441a63b8d9a2372f56ad3f4d1daadef09d01";
 
-      if(Creator_jv.toString() == AZY && ArtId_jv.toString() == Artificer){
+      if((Creator_jv.toString() == AZY && ArtId_jv.toString() == Artificer) || Creator_jv.toString() == SIX && ArtId_jv.toString() == Artificer){
           verifyAsset(addr);
       }
 
@@ -432,8 +433,6 @@ int rpc::verifyAsset(QString addr)       /// Verify NFA balance
       QJsonObject cbObj = cbDoc.object();
       QJsonObject cbResults = cbObj["result"].toObject();
       QJsonValue Balance_jv = cbResults.value("balance");
-
-      std::cout << vAssetReadBuffer << std::endl;
 
       if(Balance_jv.toInt() >= 1){
           rpc::assetConfirmed = true;

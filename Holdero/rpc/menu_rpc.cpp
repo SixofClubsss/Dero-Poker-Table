@@ -92,15 +92,13 @@ int Menu::checkDaemon()       /// Check connection to daemon
       QJsonValue okCheck = cbResults["status"];
 
       if(okCheck == "OK"){
-          ui->daemonConnectedBox->setChecked(true);
-          std::cout << "Daemon Connected" << std::endl;     /// Connected message
-          ui->menuTextBrowser->setText("Daemon Connected");
+          ui->daemonConnectedBox->setChecked(true);   
+          ui->menuTextBrowser->setText("Daemon Connected"); /// Connected message
           ui->findTablesButton->setEnabled(true);
           Menu::daemonConnected = true;
       }else {
-          ui->daemonConnectedBox->setChecked(false);
-          std::cout << "Daemon Not Connected" << std::endl;     /// Not connected
-          ui->menuTextBrowser->setText("Daemon Not Connected");
+          ui->daemonConnectedBox->setChecked(false);     
+          ui->menuTextBrowser->setText("Daemon Not Connected"); /// Not connected
           ui->findTablesButton->setEnabled(false);
       }
 
@@ -153,7 +151,6 @@ int Menu::checkWallet()  /// Echo blockchain to confirm wallet is connected
 
       if(okCheck == "WALLET Hello World !"){
           ui->walletConnectedBox->setChecked(true);
-          std::cout << "Wallet Connected" << std::endl;
           ui->menuTextBrowser->insertPlainText("Wallet Connected\n");
            Menu::walletConnected = true;
 
@@ -176,7 +173,6 @@ int Menu::checkWallet()  /// Echo blockchain to confirm wallet is connected
 
       }else {
           ui->walletConnectedBox->setChecked(false);
-          std::cout << "Wallet Not Connected" << std::endl;
           ui->menuTextBrowser->setText("Wallet Not Connected");
           ui->getTableButton->setEnabled(false);
       }
@@ -234,7 +230,6 @@ int Menu::checkContract()       /// Check if table is valid
 
       if(tableOwner.isString() && cardsInDeck.toInt() >= 1){                /// Checks if table has valid "owner:" key and cards
           ui->contractCheckBox->setChecked(true);
-          std::cout << "Contract is Valid" << std::endl;
           ui->menuTextBrowser->setText("Connected to Contract "+Menu::contractAddress);
           QFile contractFile("contract/Holdero.bas");
           contractFile.open(QIODevice::ReadOnly);
@@ -444,7 +439,7 @@ int Menu::getDreams()      /// Gets dReams Tokens
     string getDreamsReadBuffer;
     char error[CURL_ERROR_SIZE];
 
-    QString parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"transfer\",\"params\":{\"transfers\":[{\"amount\":90000,\"destination\":\"dero1qyr8yjnu6cl2c5yqkls0hmxe6rry77kn24nmc5fje6hm9jltyvdd5qq4hn5pn\",\"burn\":10000}],\"scid\":\"8289c6109f41cbe1f6d5f27a419db537bf3bf30a25eff285241a36e1ae3e48a4\", \"ringsize\":2 , \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"IssueChips\"}] }}";
+    QString parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"transfer\",\"params\":{\"transfers\":[{\"amount\":290000,\"destination\":\"dero1qyr8yjnu6cl2c5yqkls0hmxe6rry77kn24nmc5fje6hm9jltyvdd5qq4hn5pn\",\"burn\":10000}],\"scid\":\"8289c6109f41cbe1f6d5f27a419db537bf3bf30a25eff285241a36e1ae3e48a4\", \"ringsize\":2 , \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"IssueChips\"}] }}";
     string addThis = parts.toStdString();
     const char *postthis = addThis.c_str();
 

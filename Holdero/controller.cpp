@@ -1743,7 +1743,7 @@ QImage MainWindow::displayCustom(int card)   /// Gets suffix for custom card ima
 }
 
 
-QString MainWindow::displayStandard(int card)   /// Gets suffix for custom card image display
+QString MainWindow::displayStandard(int card)   /// Gets suffix for standard card image display
 {
     QString pre;
     QString suffix;
@@ -1852,9 +1852,9 @@ void MainWindow::displayFlop(int flop1, int flop2, int flop3)   /// Displays 3 f
             ui->flopCard2Label->setPixmap(QPixmap::fromImage(displayCustom(0)));
             ui->flopCard3Label->setPixmap(QPixmap::fromImage(displayCustom(0)));
         }else {
-            ui->flopCard1Label->setPixmap(QPixmap(displayStandard(flop1)));
-            ui->flopCard2Label->setPixmap(QPixmap(displayStandard(flop2)));
-            ui->flopCard3Label->setPixmap(QPixmap(displayStandard(flop3)));
+            ui->flopCard1Label->setPixmap(QPixmap(displayStandard(0)));
+            ui->flopCard2Label->setPixmap(QPixmap(displayStandard(0)));
+            ui->flopCard3Label->setPixmap(QPixmap(displayStandard(0)));
         }
     }
 
@@ -1875,9 +1875,9 @@ void MainWindow::displayTurnCard(int card)   ///  Displays turn card
         }
     }else {
         if(ui->backComboBox->currentIndex() > 1){
-            ui->turnCardLabel->setPixmap(QPixmap::fromImage(displayCustom(card)));
+            ui->turnCardLabel->setPixmap(QPixmap::fromImage(displayCustom(0)));
         }else {
-            ui->turnCardLabel->setPixmap(QPixmap(displayStandard(card)));
+            ui->turnCardLabel->setPixmap(QPixmap(displayStandard(0)));
         }
     }
 }
@@ -1897,9 +1897,9 @@ void MainWindow::displayRiverCard(int card)   ///  Displays river card
         }
     }else {
         if(ui->backComboBox->currentIndex() > 1){
-            ui->riverCardLabel->setPixmap(QPixmap::fromImage(displayCustom(card)));
+            ui->riverCardLabel->setPixmap(QPixmap::fromImage(displayCustom(0)));
         }else {
-            ui->riverCardLabel->setPixmap(QPixmap(displayStandard(card)));
+            ui->riverCardLabel->setPixmap(QPixmap(displayStandard(0)));
         }
     }
 }

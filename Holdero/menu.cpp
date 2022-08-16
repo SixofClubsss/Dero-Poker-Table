@@ -353,6 +353,7 @@ void Menu::on_forceButton_clicked()
 
 }
 
+
 void Menu::on_blindSpinBox_valueChanged(double arg1)
 {
     QString bb = QString::number(ui->blindSpinBox->value()*2);

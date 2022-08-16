@@ -161,6 +161,7 @@ void MainWindow::generateKey()    /// Generates player client key
     srand(time(0));
     QString key = QString::number(rand() % 999999999999);
     rpc::clientKey = QString(QCryptographicHash::hash((key.toUtf8()),QCryptographicHash::Sha256).toHex());
+    ui->txLogTextBrowser->append("Round Key: "+rpc::clientKey+"\n");
 
     QFile keyFile(".handKey");
     keyFile.open(QIODevice::ReadWrite);
@@ -573,13 +574,7 @@ int MainWindow::splitWinner()     /// Owner sends split payout to winners
             ui->logTextBrowser->setText("Split Winner TXID: "+txid.toString());
             ui->txLogTextBrowser->append("TXID: "+txid.toString()+"\n");
             blankDisplay();
-
-            if(rpc::end == 1){
-                rpc::hashOne ="null";
-                rpc::hashTwo = "null";
-            }
             MainWindow::displayedRes = false;
-
         }else {
 
             ui->logTextBrowser->setText("Split Error No Winner TXID");
