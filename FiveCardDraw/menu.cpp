@@ -35,6 +35,7 @@ QString Menu::listingAddress;
 QString Menu::donationAddress;
 bool Menu::mainnet;
 bool Menu::autoPayout;
+bool Menu::sharedDeck;
 
 
 Menu::Menu(QWidget *parent) :
@@ -236,6 +237,20 @@ void Menu::on_newTableButton_clicked()
     confirmationBox();
 
     if(Confirm::actionConfirmed == true){
+        QFile scriptFile("contract/createTable.sh");
+        scriptFile.open(QIODevice::ReadWrite);
+        QByteArray userPass = rpc::rpcLogin.c_str();
+        QByteArray tableOwner = rpc::playerAddress.toUtf8();
+        tableOwner.chop(9);
+
+        if(scriptFile.exists()){
+          scriptFile.resize(0);
+          scriptFile.write("curl -u "+userPass+"  --request POST --data-binary  @contract/FiveCard.bas "+tableOwner+"/install_sc >> contract/Tables.txt");
+        }
+
+        scriptFile.setPermissions(QFile::ReadOwner|QFile::WriteOwner|QFile::ExeOwner|QFile::ReadGroup|QFile::ExeGroup|QFile::ReadOther|QFile::ExeOther);
+        scriptFile.close();
+
         system("./contract/createTable.sh >> contract/Tables.txt");
         ui->menuTextBrowser->setText("Check Tables.txt for table Id");
         Confirm::actionConfirmed = false;
@@ -263,6 +278,16 @@ void Menu::on_autoPayRButton_clicked()
         Menu::autoPayout = false;
     }
 
+}
+
+
+void Menu::on_sharedRButton_clicked()
+{
+    if(ui->sharedRButton->isChecked()){
+        Menu::sharedDeck = true;
+    }else {
+        Menu::sharedDeck = false;
+    }
 }
 
 

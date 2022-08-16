@@ -30,6 +30,8 @@ https://dreamtables.net
 #include "QTimer"
 #include "QFont"
 #include "QFontDatabase"
+#include "QImageReader"
+#include "rpc/rpc.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -49,6 +51,11 @@ public:
     static int skipCount;
     void offset();
     void setFonts();
+    void checkDecks();
+    void AZYPC(QString, rpc&);
+    void AZYPCB(QString, rpc&);
+    void SIXPC(QString, rpc&);
+    void SIXPCB(QString, rpc&);
     void buttonDelay();
     void payoutDelay(int seconds);
     void loginInfo();
@@ -64,7 +71,10 @@ public:
     int drawCards();
     int card(QString hash, int salt);
     int keyCard(QString hash, int salt, int who);
+    QString readmeStandard(QString);
     QString findCards(int);
+    QString deckSelect(int);
+    QString backSelect(int);
     QImage displayCustom(int);
     QString displayStandard(int);
     void displayCardOne(int);

@@ -46,6 +46,7 @@ SOURCES += \
     confirm.cpp \
     controller.cpp \
     handranks.cpp \
+    hands/decks.cpp \
     main.cpp \
     mainwindow.cpp \
     menu.cpp \

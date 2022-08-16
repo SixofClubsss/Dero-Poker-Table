@@ -27,6 +27,8 @@ https://dreamtables.net
 #include "aes/qaesencryption.h"
 #include "QDialog"
 #include "QFile"
+#include "QImage"
+#include "QDir"
 
 
 namespace Ui { class Menu; }
@@ -48,6 +50,7 @@ public:
     static bool mainnet;
     static bool dReams;
     static bool autoPayout;
+    static bool sharedDeck;
     void setFonts();
     void loginInfo();
     void delay();
@@ -99,6 +102,8 @@ private slots:
     void on_autoPayRButton_clicked();
 
     void on_forceButton_clicked();
+
+    void on_sharedRButton_clicked();
 
 private:
     Ui::Menu *ui;

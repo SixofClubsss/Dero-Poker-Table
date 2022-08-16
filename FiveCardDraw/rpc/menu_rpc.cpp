@@ -73,7 +73,7 @@ int Menu::checkDaemon()       /// Check connection to daemon
       /// cUrl options
       curl_easy_setopt(curlDaemonCheck, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlDaemonCheck, CURLOPT_URL, dCh);
-      curl_easy_setopt(curlDaemonCheck, CURLOPT_VERBOSE, 1L);
+      curl_easy_setopt(curlDaemonCheck, CURLOPT_VERBOSE, 0L);
       curl_easy_setopt(curlDaemonCheck, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlDaemonCheck, CURLOPT_ERRORBUFFER, error);
       /// curl_easy_setopt(curlDaemonCheck, CURLOPT_SSL_VERIFYPEER, 0);   *Remove comment for windows SSL disable*
@@ -91,18 +91,14 @@ int Menu::checkDaemon()       /// Check connection to daemon
       QJsonObject cbResults = cbObj["result"].toObject();
       QJsonValue okCheck = cbResults["status"];
 
-      std::cout << daemonReadBuffer << std::endl;
-
       if(okCheck == "OK"){
           ui->daemonConnectedBox->setChecked(true);
-          std::cout << "Daemon Connected" << std::endl;     /// Connected message
-          ui->menuTextBrowser->setText("Daemon Connected");
+          ui->menuTextBrowser->setText("Daemon Connected");     /// Connected message
           ui->findTablesButton->setEnabled(true);
           Menu::daemonConnected = true;
       }else {
-          ui->daemonConnectedBox->setChecked(false);
-          std::cout << "Daemon Not Connected" << std::endl;     /// Not connected
-          ui->menuTextBrowser->setText("Daemon Not Connected");
+          ui->daemonConnectedBox->setChecked(false);   
+          ui->menuTextBrowser->setText("Daemon Not Connected"); /// Not connected
           ui->findTablesButton->setEnabled(false);
       }
 
@@ -137,7 +133,7 @@ int Menu::checkWallet()  /// Echo blockchain to confirm wallet is connected
       /// cUrl options
       curl_easy_setopt(curlWalletCheck, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlWalletCheck, CURLOPT_URL, pCh);
-      curl_easy_setopt(curlWalletCheck, CURLOPT_VERBOSE, 1L);
+      curl_easy_setopt(curlWalletCheck, CURLOPT_VERBOSE, 0L);
       curl_easy_setopt(curlWalletCheck, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlWalletCheck, CURLOPT_ERRORBUFFER, error);
       curl_easy_setopt(curlWalletCheck, CURLOPT_USERPWD, loginCh);
@@ -153,11 +149,8 @@ int Menu::checkWallet()  /// Echo blockchain to confirm wallet is connected
       QJsonObject cbObj = cbDoc.object();
       QJsonValue okCheck = cbObj["result"];
 
-      std::cout << readBuffer << std::endl;
-
       if(okCheck == "WALLET Hello World !"){
           ui->walletConnectedBox->setChecked(true);
-          std::cout << "Wallet Connected" << std::endl;
           ui->menuTextBrowser->insertPlainText("Wallet Connected\n");
            Menu::walletConnected = true;
 
@@ -180,7 +173,6 @@ int Menu::checkWallet()  /// Echo blockchain to confirm wallet is connected
 
       }else {
           ui->walletConnectedBox->setChecked(false);
-          std::cout << "Wallet Not Connected" << std::endl;
           ui->menuTextBrowser->setText("Wallet Not Connected");
           ui->getTableButton->setEnabled(false);
       }
@@ -215,7 +207,7 @@ int Menu::checkContract()       /// Check if table is valid
       /// cUrl options
       curl_easy_setopt(curlContract, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlContract, CURLOPT_URL, dCh);
-      curl_easy_setopt(curlContract, CURLOPT_VERBOSE, 1L);
+      curl_easy_setopt(curlContract, CURLOPT_VERBOSE, 0L);
       curl_easy_setopt(curlContract, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlContract, CURLOPT_ERRORBUFFER, error);
       curl_easy_setopt(curlContract, CURLOPT_POSTFIELDS, postthis);
@@ -237,7 +229,6 @@ int Menu::checkContract()       /// Check if table is valid
 
       if(tableOwner.isString()){                /// Checks if table has valid "owner:" key
           ui->contractCheckBox->setChecked(true);
-          std::cout << "Contract is Valid" << std::endl;
           ui->menuTextBrowser->setText("Connected to Contract "+Menu::contractAddress);
           QFile contractFile("contract/FiveCard.bas");
           contractFile.open(QIODevice::ReadOnly);
@@ -295,7 +286,7 @@ int Menu::checkAddress()  /// Gets player wallet address and hashes to get playe
       /// cUrl options
       curl_easy_setopt(curlAddressCheck, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlAddressCheck, CURLOPT_URL, pCh);
-      curl_easy_setopt(curlAddressCheck, CURLOPT_VERBOSE, 1L);
+      curl_easy_setopt(curlAddressCheck, CURLOPT_VERBOSE, 0L);
       curl_easy_setopt(curlAddressCheck, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlAddressCheck, CURLOPT_ERRORBUFFER, error);
       curl_easy_setopt(curlAddressCheck, CURLOPT_USERPWD, loginCh);
@@ -303,6 +294,7 @@ int Menu::checkAddress()  /// Gets player wallet address and hashes to get playe
       curl_easy_setopt(curlAddressCheck, CURLOPT_POSTFIELDSIZE, (long)strlen(postthis));
       curl_easy_setopt(curlAddressCheck, CURLOPT_WRITEFUNCTION, WriteCallback);
       curl_easy_setopt(curlAddressCheck, CURLOPT_WRITEDATA, &checkAddressReadBuffer);
+
       res = curl_easy_perform(curlAddressCheck);
       curl_easy_cleanup(curlAddressCheck);
 
@@ -311,10 +303,8 @@ int Menu::checkAddress()  /// Gets player wallet address and hashes to get playe
       QJsonObject cbObj = cbDoc.object();
       QJsonObject cbResults = cbObj["result"].toObject();
       QJsonValue address = cbResults.value("address");
-      std::cout << checkAddressReadBuffer << std::endl;
 
       if(address.isString()){                   /// Stores address hash to verify player Id
-          ///rpc::IdAddress = address.toString();
           rpc::IdHash = QString(QCryptographicHash::hash((address.toString().toUtf8()),QCryptographicHash::Sha256).toHex());
           ui->menuTextBrowser->setText("Your Player ID is: "+rpc::IdHash);
       }
@@ -353,7 +343,7 @@ int Menu::setTable()      /// Owner set table player limit and ante
       /// cUrl options
       curl_easy_setopt(curlSetTable, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlSetTable, CURLOPT_URL, stCh);
-      curl_easy_setopt(curlSetTable, CURLOPT_VERBOSE, 1L);
+      curl_easy_setopt(curlSetTable, CURLOPT_VERBOSE, 0L);
       curl_easy_setopt(curlSetTable, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlSetTable, CURLOPT_ERRORBUFFER, error);
       curl_easy_setopt(curlSetTable, CURLOPT_USERPWD, loginCh);
@@ -370,8 +360,6 @@ int Menu::setTable()      /// Owner set table player limit and ante
       QJsonObject cbObj = cbDoc.object();
       QJsonObject cbResults = cbObj["result"].toObject();
       QJsonValue setTableTxid = cbResults.value("txid");
-
-      std::cout << setTableReadBuffer << std::endl;
 
       if(setTableTxid.isString()){
           ui->menuTextBrowser->setText("Set Table TXID: "+setTableTxid.toString());
@@ -413,7 +401,7 @@ int Menu::cleanTable()      /// Clean table function to withdraw any funds at ta
       /// cUrl options
       curl_easy_setopt(curlCleanTable, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlCleanTable, CURLOPT_URL, stCh);
-      curl_easy_setopt(curlCleanTable, CURLOPT_VERBOSE, 1L);
+      curl_easy_setopt(curlCleanTable, CURLOPT_VERBOSE, 0L);
       curl_easy_setopt(curlCleanTable, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlCleanTable, CURLOPT_ERRORBUFFER, error);
       curl_easy_setopt(curlCleanTable, CURLOPT_USERPWD, loginCh);
@@ -430,8 +418,6 @@ int Menu::cleanTable()      /// Clean table function to withdraw any funds at ta
       QJsonObject cbObj = cbDoc.object();
       QJsonObject cbResults = cbObj["result"].toObject();
       QJsonValue cleanTableTxid = cbResults.value("txid");
-
-      std::cout << cleanTableReadBuffer << std::endl;
 
       if(cleanTableTxid.isString()){
           ui->menuTextBrowser->setText("Clean Table TXID: "+cleanTableTxid.toString());
@@ -473,7 +459,7 @@ int Menu::getDreams()      /// Gets dReams Tokens
       /// cUrl options
       curl_easy_setopt(curlgetDreams, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlgetDreams, CURLOPT_URL, gDr);
-      curl_easy_setopt(curlgetDreams, CURLOPT_VERBOSE, 1L);
+      curl_easy_setopt(curlgetDreams, CURLOPT_VERBOSE, 0L);
       curl_easy_setopt(curlgetDreams, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlgetDreams, CURLOPT_ERRORBUFFER, error);
       curl_easy_setopt(curlgetDreams, CURLOPT_USERPWD, loginCh);
@@ -582,7 +568,7 @@ int Menu::fetchInfo()  /// Fetch blockchain info for contract uploads
       /// cUrl options
       curl_easy_setopt(curlFetchInfo, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlFetchInfo, CURLOPT_URL, fdCh);
-      curl_easy_setopt(curlFetchInfo, CURLOPT_VERBOSE, 1L);
+      curl_easy_setopt(curlFetchInfo, CURLOPT_VERBOSE, 0L);
       curl_easy_setopt(curlFetchInfo, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlFetchInfo, CURLOPT_ERRORBUFFER, error);
       /// curl_easy_setopt(curlFetchInfo, CURLOPT_SSL_VERIFYPEER, 0);   *Remove comment for widnows SSL disable*
@@ -637,7 +623,7 @@ int Menu::listTable()      /// Owner can list table for public sit an go play
       /// cUrl options
       curl_easy_setopt(curlListTable, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlListTable, CURLOPT_URL, stCh);
-      curl_easy_setopt(curlListTable, CURLOPT_VERBOSE, 1L);
+      curl_easy_setopt(curlListTable, CURLOPT_VERBOSE, 0L);
       curl_easy_setopt(curlListTable, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlListTable, CURLOPT_ERRORBUFFER, error);
       curl_easy_setopt(curlListTable, CURLOPT_USERPWD, loginCh);
@@ -654,8 +640,6 @@ int Menu::listTable()      /// Owner can list table for public sit an go play
       QJsonObject cbObj = cbDoc.object();
       QJsonObject cbResults = cbObj["result"].toObject();
       QJsonValue listTableTxid = cbResults.value("txid");
-
-      std::cout << listTableReadBuffer << std::endl;
 
       if(listTableTxid.isString()){
           ui->menuTextBrowser->setText("List Table TXID: "+listTableTxid.toString());
@@ -695,7 +679,7 @@ int Menu::delistTable()      /// Owner can remove listing made by current addres
       /// cUrl options
       curl_easy_setopt(curlDelistTable, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlDelistTable, CURLOPT_URL, stCh);
-      curl_easy_setopt(curlDelistTable, CURLOPT_VERBOSE, 1L);
+      curl_easy_setopt(curlDelistTable, CURLOPT_VERBOSE, 0L);
       curl_easy_setopt(curlDelistTable, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlDelistTable, CURLOPT_ERRORBUFFER, error);
       curl_easy_setopt(curlDelistTable, CURLOPT_USERPWD, loginCh);
@@ -712,8 +696,6 @@ int Menu::delistTable()      /// Owner can remove listing made by current addres
       QJsonObject cbObj = cbDoc.object();
       QJsonObject cbResults = cbObj["result"].toObject();
       QJsonValue delistTableTxid = cbResults.value("txid");
-
-      std::cout << listTableReadBuffer << std::endl;
 
       if(delistTableTxid.isString()){
           ui->menuTextBrowser->setText("Delist Table TXID: "+delistTableTxid.toString());
@@ -751,7 +733,7 @@ int Menu::checkIfListed()       /// Checks if players table is already listed
       /// cUrl options
       curl_easy_setopt(curlListedCheck, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlListedCheck, CURLOPT_URL, fdCh);
-      curl_easy_setopt(curlListedCheck, CURLOPT_VERBOSE, 1L);
+      curl_easy_setopt(curlListedCheck, CURLOPT_VERBOSE, 0L);
       curl_easy_setopt(curlListedCheck, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlListedCheck, CURLOPT_ERRORBUFFER, error);
       /// curl_easy_setopt(curlFetchInfo, CURLOPT_SSL_VERIFYPEER, 0);   *Remove comment for widnows SSL disable*
@@ -815,7 +797,7 @@ int Menu::fetchListingScData()       /// Fetch Public table listings and display
       /// cUrl options
       curl_easy_setopt(curlListingFetch, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlListingFetch, CURLOPT_URL, fdCh);
-      curl_easy_setopt(curlListingFetch, CURLOPT_VERBOSE, 1L);
+      curl_easy_setopt(curlListingFetch, CURLOPT_VERBOSE, 0L);
       curl_easy_setopt(curlListingFetch, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlListingFetch, CURLOPT_ERRORBUFFER, error);
       /// curl_easy_setopt(curlFetchInfo, CURLOPT_SSL_VERIFYPEER, 0);   *Remove comment for widnows SSL disable*
@@ -877,7 +859,7 @@ int Menu::forceStart()      /// Owner can start the game with empty seats
       /// cUrl options
       curl_easy_setopt(curlforceStart, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlforceStart, CURLOPT_URL, stCh);
-      curl_easy_setopt(curlforceStart, CURLOPT_VERBOSE, 1L);
+      curl_easy_setopt(curlforceStart, CURLOPT_VERBOSE, 0L);
       curl_easy_setopt(curlforceStart, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlforceStart, CURLOPT_ERRORBUFFER, error);
       curl_easy_setopt(curlforceStart, CURLOPT_USERPWD, loginCh);
@@ -894,8 +876,6 @@ int Menu::forceStart()      /// Owner can start the game with empty seats
       QJsonObject cbObj = cbDoc.object();
       QJsonObject cbResults = cbObj["result"].toObject();
       QJsonValue forceStartTxid = cbResults.value("txid");
-
-      std::cout << forceReadBuffer << std::endl;
 
       if(forceStartTxid.isString()){
           ui->menuTextBrowser->setText("Game Start TXID: "+forceStartTxid.toString());

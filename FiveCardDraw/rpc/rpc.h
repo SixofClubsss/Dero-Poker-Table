@@ -52,6 +52,7 @@ class rpc
 public:
     static bool inGame;
     static bool paidOut;
+    static bool assetConfirmed;
     static int revealBool;
     static double blockHeight;
     static double clickedHeight;
@@ -151,6 +152,8 @@ public:
     int getHeight();
     int fetchScData();
     int getDreams();
+    int verifyNFAcreator(QString);
+    int verifyAsset(QString);
 
 };
 
@@ -166,7 +169,7 @@ public:
     static bool foldFour;
     static bool foldFive;
     static bool foldSix;
-        static bool keyIsPub;
+    static bool keyIsPub;
 
 };
 

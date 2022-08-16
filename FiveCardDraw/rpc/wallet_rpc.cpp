@@ -54,7 +54,7 @@ int MainWindow::playerEntry()      /// Player registry (sit down at table)
       /// cUrl options
       curl_easy_setopt(curlPlayerEntry, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlPlayerEntry, CURLOPT_URL, dealCh);
-      curl_easy_setopt(curlPlayerEntry, CURLOPT_VERBOSE, 1L);
+      curl_easy_setopt(curlPlayerEntry, CURLOPT_VERBOSE, 0L);
       curl_easy_setopt(curlPlayerEntry, CURLOPT_ERRORBUFFER, error);
       curl_easy_setopt(curlPlayerEntry, CURLOPT_USERPWD, loginCh);
       curl_easy_setopt(curlPlayerEntry, CURLOPT_POSTFIELDS, postthis);
@@ -116,7 +116,7 @@ int MainWindow::playerLeave()      /// Player leave table
       /// cUrl options
       curl_easy_setopt(curlplayerLeave, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlplayerLeave, CURLOPT_URL, dealCh);
-      curl_easy_setopt(curlplayerLeave, CURLOPT_VERBOSE, 1L);
+      curl_easy_setopt(curlplayerLeave, CURLOPT_VERBOSE, 0L);
       curl_easy_setopt(curlplayerLeave, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlplayerLeave, CURLOPT_ERRORBUFFER, error);
       curl_easy_setopt(curlplayerLeave, CURLOPT_USERPWD, loginCh);
@@ -157,6 +157,14 @@ void MainWindow::generateKey()    /// Generates player client key
     QString key = QString::number(rand() % 999999999999);
     rpc::clientKey = QString(QCryptographicHash::hash((key.toUtf8()),QCryptographicHash::Sha256).toHex());
     ui->txLogTextBrowser->append("Round Key: "+rpc::clientKey+"\n");
+
+    QFile keyFile(".handKey");
+    keyFile.open(QIODevice::ReadWrite);
+
+    if(keyFile.exists()) {
+        keyFile.resize(0);
+        keyFile.write(rpc::clientKey.toStdString().c_str());
+    }
 }
 
 
@@ -189,7 +197,7 @@ int MainWindow::dealFiveCardHand()      /// Ante and deals player a hand
       /// cUrl options
       curl_easy_setopt(curlDealFiveCards, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlDealFiveCards, CURLOPT_URL, dealCh);
-      curl_easy_setopt(curlDealFiveCards, CURLOPT_VERBOSE, 1L);
+      curl_easy_setopt(curlDealFiveCards, CURLOPT_VERBOSE, 0L);
       curl_easy_setopt(curlDealFiveCards, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlDealFiveCards, CURLOPT_ERRORBUFFER, error);
       curl_easy_setopt(curlDealFiveCards, CURLOPT_USERPWD, loginCh);
@@ -250,7 +258,7 @@ int MainWindow::bet()      /// Place bet also for call and raise
       /// cUrl options
       curl_easy_setopt(curlBet, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlBet, CURLOPT_URL, bCh);
-      curl_easy_setopt(curlBet, CURLOPT_VERBOSE, 1L);
+      curl_easy_setopt(curlBet, CURLOPT_VERBOSE, 0L);
       curl_easy_setopt(curlBet, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlBet, CURLOPT_ERRORBUFFER, error);
       curl_easy_setopt(curlBet, CURLOPT_USERPWD, loginCh);
@@ -310,7 +318,7 @@ int MainWindow::check()      /// Check also used to fold on bet
       /// cUrl options
       curl_easy_setopt(curlCheck, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlCheck, CURLOPT_URL, cfCh);
-      curl_easy_setopt(curlCheck, CURLOPT_VERBOSE, 1L);
+      curl_easy_setopt(curlCheck, CURLOPT_VERBOSE, 0L);
       curl_easy_setopt(curlCheck, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlCheck, CURLOPT_ERRORBUFFER, error);
       curl_easy_setopt(curlCheck, CURLOPT_USERPWD, loginCh);
@@ -390,7 +398,7 @@ int MainWindow::drawCards() /// Get new cards at draw
         /// cUrl options
         curl_easy_setopt(curlDrawCards, CURLOPT_HTTPHEADER, headers);
         curl_easy_setopt(curlDrawCards, CURLOPT_URL, dcCh);
-        curl_easy_setopt(curlDrawCards, CURLOPT_VERBOSE, 1L);
+        curl_easy_setopt(curlDrawCards, CURLOPT_VERBOSE, 0L);
         curl_easy_setopt(curlDrawCards, CURLOPT_CONNECTTIMEOUT, 4L);
         curl_easy_setopt(curlDrawCards, CURLOPT_ERRORBUFFER, error);
         curl_easy_setopt(curlDrawCards, CURLOPT_USERPWD, loginCh);
@@ -455,7 +463,7 @@ int MainWindow::winner()     /// Owner sends payout to winner
       /// cUrl options
       curl_easy_setopt(curlWinner, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlWinner, CURLOPT_URL, pCh);
-      curl_easy_setopt(curlWinner, CURLOPT_VERBOSE, 1L);
+      curl_easy_setopt(curlWinner, CURLOPT_VERBOSE, 0L);
       curl_easy_setopt(curlWinner, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlWinner, CURLOPT_ERRORBUFFER, error);
       curl_easy_setopt(curlWinner, CURLOPT_USERPWD, loginCh);
@@ -525,7 +533,7 @@ int MainWindow::autopayWinner(QString whoWon)     /// Autopay to winner
       /// cUrl options
       curl_easy_setopt(curlAutopayWinner, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlAutopayWinner, CURLOPT_URL, pCh);
-      curl_easy_setopt(curlAutopayWinner, CURLOPT_VERBOSE, 1L);
+      curl_easy_setopt(curlAutopayWinner, CURLOPT_VERBOSE, 0L);
       curl_easy_setopt(curlAutopayWinner, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlAutopayWinner, CURLOPT_ERRORBUFFER, error);
       curl_easy_setopt(curlAutopayWinner, CURLOPT_USERPWD, loginCh);
@@ -548,11 +556,11 @@ int MainWindow::autopayWinner(QString whoWon)     /// Autopay to winner
             ui->txLogTextBrowser->append("TXID: "+txid.toString()+"\n");
 
             if(rpc::end == 1){
-                rpc::hashOne ="null";
-                rpc::hashTwo = "null";
-                rpc::hashThree = "null";
-                rpc::hashFour = "null";
-                rpc::hashFive = "null";
+//                rpc::hashOne ="null";
+//                rpc::hashTwo = "null";
+//                rpc::hashThree = "null";
+//                rpc::hashFour = "null";
+//                rpc::hashFive = "null";
                 MainWindow::displayedRes = false;
             }
 
@@ -632,7 +640,7 @@ int MainWindow::splitWinner()     /// Owner sends split payout to winners
       /// cUrl options
       curl_easy_setopt(curlSplit, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlSplit, CURLOPT_URL, pCh);
-      curl_easy_setopt(curlSplit, CURLOPT_VERBOSE, 1L);
+      curl_easy_setopt(curlSplit, CURLOPT_VERBOSE, 0L);
       curl_easy_setopt(curlSplit, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlSplit, CURLOPT_ERRORBUFFER, error);
       curl_easy_setopt(curlSplit, CURLOPT_USERPWD, loginCh);
@@ -699,7 +707,7 @@ int MainWindow::revealKey()      /// Stores client key on db for other players t
       /// cUrl options
       curl_easy_setopt(curlReveal, CURLOPT_HTTPHEADER, headers);
       curl_easy_setopt(curlReveal, CURLOPT_URL, revCh);
-      curl_easy_setopt(curlReveal, CURLOPT_VERBOSE, 1L);
+      curl_easy_setopt(curlReveal, CURLOPT_VERBOSE, 0L);
       curl_easy_setopt(curlReveal, CURLOPT_CONNECTTIMEOUT, 4L);
       curl_easy_setopt(curlReveal, CURLOPT_ERRORBUFFER, error);
       curl_easy_setopt(curlReveal, CURLOPT_USERPWD, loginCh);

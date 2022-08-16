@@ -45,6 +45,7 @@ bool Hand::keyIsPub;
 string rpc::rpcLogin;
 bool rpc::inGame;
 bool rpc::paidOut;
+bool rpc::assetConfirmed;
 int rpc::checkPlayerId;
 int rpc::seats;
 int rpc::draw;
@@ -821,11 +822,15 @@ void MainWindow::localEnd(QString oneId, int seats, int p1Fold, int p2Fold, int 
 
 void MainWindow::displayLocalHand(QString hashOne, QString hashTwo, QString hashThree, QString hashFour, QString hashFive)
 {
-    displayCardOne(card(hashOne, rpc::salt));
-    displayCardTwo(card(hashTwo, rpc::salt));
-    displayCardThree(card(hashThree, rpc::salt));
-    displayCardFour(card(hashFour, rpc::salt));
-    displayCardFive(card(hashFive, rpc::salt));
+    if(card(hashOne, rpc::salt) > 0){
+        displayCardOne(card(hashOne, rpc::salt));
+        displayCardTwo(card(hashTwo, rpc::salt));
+        displayCardThree(card(hashThree, rpc::salt));
+        displayCardFour(card(hashFour, rpc::salt));
+        displayCardFive(card(hashFive, rpc::salt));
+    }else {
+        blankDisplay();
+    }
 }
 
 
@@ -1653,14 +1658,54 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
 }
 
 
+QString MainWindow::deckSelect(int d)   /// Gets deck path prefix for card images
+{
+    QString path;
+    QString pre = QDir().absolutePath();
+    QString post;
+    switch(d){
+    case 0: post = "/cards/standard/light/"; break;
+    case 1: post = "/cards/standard/dark/"; break;
+    default: post = "/cards/"+ui->deckComboBox->currentText()+"/"+ui->deckComboBox->currentText()+"/"; break;
+    }
+    path = pre+post;
+
+    return path;
+}
+
+
+QString MainWindow::backSelect(int d)   /// Gets back path prefix for card images
+{
+    QString path;
+    QString pre = QDir().absolutePath();
+    QString post;
+    switch(d){
+    case 0: post = "/cards/backs/"; break;
+    case 1: post = "/cards/backs/"; break;
+    default: post = "/cards/backs/"+ui->backComboBox->currentText()+"/"+ui->backComboBox->currentText()+"/"; break;
+    }
+    path = pre+post;
+
+    return path;
+}
+
+
 void MainWindow::blankDisplay()  /// Shows null cards when not playing
 {
-    if(ui->deckComboBox->currentIndex() > 1){
-        ui->localPlayerCard1->setPixmap(QPixmap(displayStandard(0)));
-        ui->localPlayerCard2->setPixmap(QPixmap(displayStandard(0)));
-        ui->localPlayerCard3->setPixmap(QPixmap(displayStandard(0)));
-        ui->localPlayerCard4->setPixmap(QPixmap(displayStandard(0)));
-        ui->localPlayerCard5->setPixmap(QPixmap(displayStandard(0)));
+    if(Menu::sharedDeck == false){
+        if(ui->backComboBox->currentIndex() > 1){
+            ui->localPlayerCard1->setPixmap(QPixmap::fromImage(displayCustom(0)));
+            ui->localPlayerCard2->setPixmap(QPixmap::fromImage(displayCustom(0)));
+            ui->localPlayerCard3->setPixmap(QPixmap::fromImage(displayCustom(0)));
+            ui->localPlayerCard4->setPixmap(QPixmap::fromImage(displayCustom(0)));
+            ui->localPlayerCard5->setPixmap(QPixmap::fromImage(displayCustom(0)));
+        }else {
+            ui->localPlayerCard1->setPixmap(QPixmap(displayStandard(0)));
+            ui->localPlayerCard2->setPixmap(QPixmap(displayStandard(0)));
+            ui->localPlayerCard3->setPixmap(QPixmap(displayStandard(0)));
+            ui->localPlayerCard4->setPixmap(QPixmap(displayStandard(0)));
+            ui->localPlayerCard5->setPixmap(QPixmap(displayStandard(0)));
+        }
     }else {
         ui->localPlayerCard1->setPixmap(QPixmap(displayStandard(0)));
         ui->localPlayerCard2->setPixmap(QPixmap(displayStandard(0)));
@@ -1753,8 +1798,13 @@ QString MainWindow::findCards(int card) /// To show all hand results at end
 
 void MainWindow::displayCardOne(int card) /// Displays local card one
 {
-    if(ui->deckComboBox->currentIndex() > 1){
-        ui->localPlayerCard1->setPixmap(QPixmap(displayStandard(card)));
+
+    if(Menu::sharedDeck == false){
+        if(ui->deckComboBox->currentIndex() > 1){
+            ui->localPlayerCard1->setPixmap(QPixmap::fromImage(displayCustom(card)));
+        }else {
+            ui->localPlayerCard1->setPixmap(QPixmap(displayStandard(card)));
+        }
     }else {
         ui->localPlayerCard1->setPixmap(QPixmap(displayStandard(card)));
     }
@@ -1763,8 +1813,12 @@ void MainWindow::displayCardOne(int card) /// Displays local card one
 
 void MainWindow::displayCardTwo(int card)  /// Displays local card two
 {
-    if(ui->deckComboBox->currentIndex() > 1){
-        ui->localPlayerCard2->setPixmap(QPixmap(displayStandard(card)));
+    if(Menu::sharedDeck == false){
+        if(ui->deckComboBox->currentIndex() > 1){
+            ui->localPlayerCard2->setPixmap(QPixmap::fromImage(displayCustom(card)));
+        }else {
+            ui->localPlayerCard2->setPixmap(QPixmap(displayStandard(card)));
+        }
     }else {
         ui->localPlayerCard2->setPixmap(QPixmap(displayStandard(card)));
     }
@@ -1773,8 +1827,12 @@ void MainWindow::displayCardTwo(int card)  /// Displays local card two
 
 void MainWindow::displayCardThree(int card)    /// Displays local card three
 {
-    if(ui->deckComboBox->currentIndex() > 1){
-        ui->localPlayerCard3->setPixmap(QPixmap(displayStandard(card)));
+    if(Menu::sharedDeck == false){
+        if(ui->deckComboBox->currentIndex() > 1){
+            ui->localPlayerCard3->setPixmap(QPixmap::fromImage(displayCustom(card)));
+        }else {
+            ui->localPlayerCard3->setPixmap(QPixmap(displayStandard(card)));
+        }
     }else {
         ui->localPlayerCard3->setPixmap(QPixmap(displayStandard(card)));
     }
@@ -1783,8 +1841,12 @@ void MainWindow::displayCardThree(int card)    /// Displays local card three
 
 void MainWindow::displayCardFour(int card)   ///  Displays local card four
 {
-    if(ui->deckComboBox->currentIndex() > 1){
-        ui->localPlayerCard4->setPixmap(QPixmap(displayStandard(card)));
+    if(Menu::sharedDeck == false){
+        if(ui->deckComboBox->currentIndex() > 1){
+            ui->localPlayerCard4->setPixmap(QPixmap::fromImage(displayCustom(card)));
+        }else {
+            ui->localPlayerCard4->setPixmap(QPixmap(displayStandard(card)));
+        }
     }else {
         ui->localPlayerCard4->setPixmap(QPixmap(displayStandard(card)));
     }
@@ -1793,152 +1855,168 @@ void MainWindow::displayCardFour(int card)   ///  Displays local card four
 
 void MainWindow::displayCardFive(int card)   ///  Displays local card five
 {
-    if(ui->deckComboBox->currentIndex() > 1){
-        ui->localPlayerCard5->setPixmap(QPixmap(displayStandard(card)));
+    if(Menu::sharedDeck == false){
+        if(ui->deckComboBox->currentIndex() > 1){
+            ui->localPlayerCard5->setPixmap(QPixmap::fromImage(displayCustom(card)));
+        }else {
+            ui->localPlayerCard5->setPixmap(QPixmap(displayStandard(card)));
+        }
     }else {
         ui->localPlayerCard5->setPixmap(QPixmap(displayStandard(card)));
     }
 }
 
 
-QString MainWindow::displayStandard(int card)   /// Gets suffix for custom card image display
+QImage MainWindow::displayCustom(int card)   /// Gets suffix for custom card image display
 {
-    QString pre;
     QString suffix;
-    QString path;
+    QImage path;
+    if(card > 0){
+        switch (card){
+           case 1: suffix = "card1.png"; break;
+           case 2: suffix = "card2.png"; break;
+           case 3: suffix = "card3.png"; break;
+           case 4: suffix = "card4.png"; break;
+           case 5: suffix = "card5.png"; break;
+           case 6: suffix = "card6.png"; break;
+           case 7: suffix = "card7.png"; break;
+           case 8: suffix = "card8.png"; break;
+           case 9: suffix = "card9.png"; break;
+           case 10: suffix = "card10.png" ; break;
+           case 11: suffix = "card11.png" ; break;
+           case 12: suffix = "card12.png" ; break;
+           case 13: suffix = "card13.png" ; break;
+           case 14: suffix = "card14.png" ; break;
+           case 15: suffix = "card15.png" ; break;
+           case 16: suffix = "card16.png" ; break;
+           case 17: suffix = "card17.png" ; break;
+           case 18: suffix = "card18.png" ; break;
+           case 19: suffix = "card19.png" ; break;
+           case 20: suffix = "card20.png" ; break;
+           case 21: suffix = "card21.png" ; break;
+           case 22: suffix = "card22.png" ; break;
+           case 23: suffix = "card23.png" ; break;
+           case 24: suffix = "card24.png" ; break;
+           case 25: suffix = "card25.png" ; break;
+           case 26: suffix = "card26.png" ; break;
+           case 27: suffix = "card27.png" ; break;
+           case 28: suffix = "card28.png" ; break;
+           case 29: suffix = "card29.png" ; break;
+           case 30: suffix = "card30.png" ; break;
+           case 31: suffix = "card31.png" ; break;
+           case 32: suffix = "card32.png" ; break;
+           case 33: suffix = "card33.png" ; break;
+           case 34: suffix = "card34.png" ; break;
+           case 35: suffix = "card35.png" ; break;
+           case 36: suffix = "card36.png" ; break;
+           case 37: suffix = "card37.png" ; break;
+           case 38: suffix = "card38.png" ; break;
+           case 39: suffix = "card39.png" ; break;
+           case 40: suffix = "card40.png" ; break;
+           case 41: suffix = "card41.png" ; break;
+           case 42: suffix = "card42.png" ; break;
+           case 43: suffix = "card43.png" ; break;
+           case 44: suffix = "card44.png" ; break;
+           case 45: suffix = "card45.png" ; break;
+           case 46: suffix = "card46.png" ; break;
+           case 47: suffix = "card47.png" ; break;
+           case 48: suffix = "card48.png" ; break;
+           case 49: suffix = "card49.png" ; break;
+           case 50: suffix = "card50.png" ; break;
+           case 51: suffix = "card51.png" ; break;
+           case 52: suffix = "card52.png" ; break;
+           }
 
-    if(ui->deckComboBox->currentIndex() == 1){
-        pre = ":/images/";
-
+        QImageReader reader(deckSelect(ui->deckComboBox->currentIndex())+suffix);
+        path = reader.read();
     }else {
-        pre = ":/images/";
+        QImageReader reader(backSelect(ui->backComboBox->currentIndex())+"back.png");
+        path = reader.read();
     }
-
-    switch (card){
-       case 0: suffix = "card53.png" ; break;
-       case 1: suffix = "card1.png"; break;
-       case 2: suffix = "card2.png"; break;
-       case 3: suffix = "card3.png"; break;
-       case 4: suffix = "card4.png"; break;
-       case 5: suffix = "card5.png"; break;
-       case 6: suffix = "card6.png"; break;
-       case 7: suffix = "card7.png"; break;
-       case 8: suffix = "card8.png"; break;
-       case 9: suffix = "card9.png"; break;
-       case 10: suffix = "card10.png" ; break;
-       case 11: suffix = "card11.png" ; break;
-       case 12: suffix = "card12.png" ; break;
-       case 13: suffix = "card13.png" ; break;
-       case 14: suffix = "card14.png" ; break;
-       case 15: suffix = "card15.png" ; break;
-       case 16: suffix = "card16.png" ; break;
-       case 17: suffix = "card17.png" ; break;
-       case 18: suffix = "card18.png" ; break;
-       case 19: suffix = "card19.png" ; break;
-       case 20: suffix = "card20.png" ; break;
-       case 21: suffix = "card21.png" ; break;
-       case 22: suffix = "card22.png" ; break;
-       case 23: suffix = "card23.png" ; break;
-       case 24: suffix = "card24.png" ; break;
-       case 25: suffix = "card25.png" ; break;
-       case 26: suffix = "card26.png" ; break;
-       case 27: suffix = "card27.png" ; break;
-       case 28: suffix = "card28.png" ; break;
-       case 29: suffix = "card29.png" ; break;
-       case 30: suffix = "card30.png" ; break;
-       case 31: suffix = "card31.png" ; break;
-       case 32: suffix = "card32.png" ; break;
-       case 33: suffix = "card33.png" ; break;
-       case 34: suffix = "card34.png" ; break;
-       case 35: suffix = "card35.png" ; break;
-       case 36: suffix = "card36.png" ; break;
-       case 37: suffix = "card37.png" ; break;
-       case 38: suffix = "card38.png" ; break;
-       case 39: suffix = "card39.png" ; break;
-       case 40: suffix = "card40.png" ; break;
-       case 41: suffix = "card41.png" ; break;
-       case 42: suffix = "card42.png" ; break;
-       case 43: suffix = "card43.png" ; break;
-       case 44: suffix = "card44.png" ; break;
-       case 45: suffix = "card45.png" ; break;
-       case 46: suffix = "card46.png" ; break;
-       case 47: suffix = "card47.png" ; break;
-       case 48: suffix = "card48.png" ; break;
-       case 49: suffix = "card49.png" ; break;
-       case 50: suffix = "card50.png" ; break;
-       case 51: suffix = "card51.png" ; break;
-       case 52: suffix = "card52.png" ; break;
-       case 53: suffix = "card53.png" ; break;
-       }
-
-    path = pre+suffix;
 
     return path;
 }
 
 
-//QImage MainWindow::displayCustom(int card)   /// Gets suffix for custom card image display
-//{
-//    QString suffix;
-//    switch (card){
-//       case 0: suffix = "card53.png" ; break;
-//       case 1: suffix = "card1.png"; break;
-//       case 2: suffix = "card2.png"; break;
-//       case 3: suffix = "card3.png"; break;
-//       case 4: suffix = "card4.png"; break;
-//       case 5: suffix = "card5.png"; break;
-//       case 6: suffix = "card6.png"; break;
-//       case 7: suffix = "card7.png"; break;
-//       case 8: suffix = "card8.png"; break;
-//       case 9: suffix = "card9.png"; break;
-//       case 10: suffix = "card10.png" ; break;
-//       case 11: suffix = "card11.png" ; break;
-//       case 12: suffix = "card12.png" ; break;
-//       case 13: suffix = "card13.png" ; break;
-//       case 14: suffix = "card14.png" ; break;
-//       case 15: suffix = "card15.png" ; break;
-//       case 16: suffix = "card16.png" ; break;
-//       case 17: suffix = "card17.png" ; break;
-//       case 18: suffix = "card18.png" ; break;
-//       case 19: suffix = "card19.png" ; break;
-//       case 20: suffix = "card20.png" ; break;
-//       case 21: suffix = "card21.png" ; break;
-//       case 22: suffix = "card22.png" ; break;
-//       case 23: suffix = "card23.png" ; break;
-//       case 24: suffix = "card24.png" ; break;
-//       case 25: suffix = "card25.png" ; break;
-//       case 26: suffix = "card26.png" ; break;
-//       case 27: suffix = "card27.png" ; break;
-//       case 28: suffix = "card28.png" ; break;
-//       case 29: suffix = "card29.png" ; break;
-//       case 30: suffix = "card30.png" ; break;
-//       case 31: suffix = "card31.png" ; break;
-//       case 32: suffix = "card32.png" ; break;
-//       case 33: suffix = "card33.png" ; break;
-//       case 34: suffix = "card34.png" ; break;
-//       case 35: suffix = "card35.png" ; break;
-//       case 36: suffix = "card36.png" ; break;
-//       case 37: suffix = "card37.png" ; break;
-//       case 38: suffix = "card38.png" ; break;
-//       case 39: suffix = "card39.png" ; break;
-//       case 40: suffix = "card40.png" ; break;
-//       case 41: suffix = "card41.png" ; break;
-//       case 42: suffix = "card42.png" ; break;
-//       case 43: suffix = "card43.png" ; break;
-//       case 44: suffix = "card44.png" ; break;
-//       case 45: suffix = "card45.png" ; break;
-//       case 46: suffix = "card46.png" ; break;
-//       case 47: suffix = "card47.png" ; break;
-//       case 48: suffix = "card48.png" ; break;
-//       case 49: suffix = "card49.png" ; break;
-//       case 50: suffix = "card50.png" ; break;
-//       case 51: suffix = "card51.png" ; break;
-//       case 52: suffix = "card52.png" ; break;
-//       case 53: suffix = "card53.png" ; break;
-//       }
+QString MainWindow::displayStandard(int card)   /// Gets suffix for standard card image display
+{
+    QString pre;
+    QString suffix;
+    QString path;
+    if(card > 0){
+        if(ui->deckComboBox->currentIndex() == 1){
+            pre = ":/images/cards/standard/dark/";
 
-//    QImageReader reader(deckSelect(ui->deckComboBox->currentIndex())+suffix);
-//    QImage path = reader.read();
+        }else {
+            pre = ":/images/cards/standard/light/";
+        }
 
-//    return path;
-//}
+        switch (card){
+           case 1: suffix = "card1.png"; break;
+           case 2: suffix = "card2.png"; break;
+           case 3: suffix = "card3.png"; break;
+           case 4: suffix = "card4.png"; break;
+           case 5: suffix = "card5.png"; break;
+           case 6: suffix = "card6.png"; break;
+           case 7: suffix = "card7.png"; break;
+           case 8: suffix = "card8.png"; break;
+           case 9: suffix = "card9.png"; break;
+           case 10: suffix = "card10.png" ; break;
+           case 11: suffix = "card11.png" ; break;
+           case 12: suffix = "card12.png" ; break;
+           case 13: suffix = "card13.png" ; break;
+           case 14: suffix = "card14.png" ; break;
+           case 15: suffix = "card15.png" ; break;
+           case 16: suffix = "card16.png" ; break;
+           case 17: suffix = "card17.png" ; break;
+           case 18: suffix = "card18.png" ; break;
+           case 19: suffix = "card19.png" ; break;
+           case 20: suffix = "card20.png" ; break;
+           case 21: suffix = "card21.png" ; break;
+           case 22: suffix = "card22.png" ; break;
+           case 23: suffix = "card23.png" ; break;
+           case 24: suffix = "card24.png" ; break;
+           case 25: suffix = "card25.png" ; break;
+           case 26: suffix = "card26.png" ; break;
+           case 27: suffix = "card27.png" ; break;
+           case 28: suffix = "card28.png" ; break;
+           case 29: suffix = "card29.png" ; break;
+           case 30: suffix = "card30.png" ; break;
+           case 31: suffix = "card31.png" ; break;
+           case 32: suffix = "card32.png" ; break;
+           case 33: suffix = "card33.png" ; break;
+           case 34: suffix = "card34.png" ; break;
+           case 35: suffix = "card35.png" ; break;
+           case 36: suffix = "card36.png" ; break;
+           case 37: suffix = "card37.png" ; break;
+           case 38: suffix = "card38.png" ; break;
+           case 39: suffix = "card39.png" ; break;
+           case 40: suffix = "card40.png" ; break;
+           case 41: suffix = "card41.png" ; break;
+           case 42: suffix = "card42.png" ; break;
+           case 43: suffix = "card43.png" ; break;
+           case 44: suffix = "card44.png" ; break;
+           case 45: suffix = "card45.png" ; break;
+           case 46: suffix = "card46.png" ; break;
+           case 47: suffix = "card47.png" ; break;
+           case 48: suffix = "card48.png" ; break;
+           case 49: suffix = "card49.png" ; break;
+           case 50: suffix = "card50.png" ; break;
+           case 51: suffix = "card51.png" ; break;
+           case 52: suffix = "card52.png" ; break;
+           }
+
+        path = pre+suffix;
+
+    }else {
+        if(ui->backComboBox->currentIndex() == 1){
+            path = ":/images/cards/backs/back2.png";
+
+        }else {
+            path = ":/images/cards/backs/back1.png";
+        }
+
+    }
+
+    return path;
+}
