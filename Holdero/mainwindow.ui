@@ -150,6 +150,9 @@ QComboBox:hover {
         <height>22</height>
        </size>
       </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
+      </property>
      </widget>
     </item>
     <item row="2" column="6">
@@ -216,7 +219,7 @@ QPushButton:pressed {
     <item row="1" column="0" rowspan="2" colspan="5">
      <widget class="QTextBrowser" name="logTextBrowser">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
+       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
@@ -229,7 +232,7 @@ QPushButton:pressed {
       </property>
       <property name="maximumSize">
        <size>
-        <width>980</width>
+        <width>1180</width>
         <height>16777215</height>
        </size>
       </property>
@@ -274,7 +277,7 @@ QPushButton:pressed {
       </property>
       <property name="maximumSize">
        <size>
-        <width>980</width>
+        <width>1180</width>
         <height>51</height>
        </size>
       </property>
@@ -345,7 +348,7 @@ p, li { white-space: pre-wrap; }
        <enum>QAbstractSpinBox::NoButtons</enum>
       </property>
       <property name="prefix">
-       <string> Ante is: </string>
+       <string> Ante: </string>
       </property>
       <property name="decimals">
        <number>2</number>
@@ -493,7 +496,7 @@ p, li { white-space: pre-wrap; }
       </property>
       <property name="maximumSize">
        <size>
-        <width>1149</width>
+        <width>1400</width>
         <height>600</height>
        </size>
       </property>
@@ -1691,7 +1694,7 @@ QPushButton:pressed {
        <enum>QAbstractSpinBox::NoButtons</enum>
       </property>
       <property name="prefix">
-       <string>Your Dero Balance: </string>
+       <string>Dero Balance: </string>
       </property>
       <property name="decimals">
        <number>5</number>
@@ -1705,7 +1708,7 @@ QPushButton:pressed {
      <widget class="QComboBox" name="deckComboBox">
       <property name="minimumSize">
        <size>
-        <width>150</width>
+        <width>84</width>
         <height>22</height>
        </size>
       </property>
@@ -1714,6 +1717,9 @@ QPushButton:pressed {
         <width>150</width>
         <height>22</height>
        </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
       </property>
       <item>
        <property name="text">
@@ -1731,7 +1737,7 @@ QPushButton:pressed {
      <widget class="QComboBox" name="backComboBox">
       <property name="minimumSize">
        <size>
-        <width>150</width>
+        <width>84</width>
         <height>22</height>
        </size>
       </property>
@@ -1740,6 +1746,9 @@ QPushButton:pressed {
         <width>150</width>
         <height>22</height>
        </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
       </property>
       <item>
        <property name="text">

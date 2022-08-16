@@ -680,7 +680,7 @@ QGroupBox::indicator {
        <bool>false</bool>
       </property>
       <property name="styleSheet">
-       <string notr="true"/>
+       <string notr="true">color: rgb(0, 0, 0);</string>
       </property>
       <item>
        <property name="text">
@@ -747,6 +747,9 @@ QGroupBox::indicator {
       </property>
       <property name="decimals">
        <number>2</number>
+      </property>
+      <property name="minimum">
+       <double>0.000000000000000</double>
       </property>
       <property name="maximum">
        <double>1200.000000000000000</double>
