@@ -162,6 +162,7 @@ void MainWindow::checkDecks()
     AZYPCB(pre, r);
     SIXPC(pre, r);
     SIXPCB(pre, r);
+    qInfo() << ("\033[36m ♤♡♧♢♧♡♤ Starting  Table ♤♡♧♢♧♡♤\033[0m");
 }
 
 

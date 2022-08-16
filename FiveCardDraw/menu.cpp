@@ -53,6 +53,7 @@ Menu::Menu(QWidget *parent) :
     Menu::listingAddress = "cc747db82060d99076689646e188986cc239d046c6bcbbb312a53df7f849e5d1";
     Menu::donationAddress = "dero1qyr8yjnu6cl2c5yqkls0hmxe6rry77kn24nmc5fje6hm9jltyvdd5qq4hn5pn";
     ui->autoPayRButton->setEnabled(false);
+    ui->sharedRButton->setEnabled(false);
     ui->listTableButton->setEnabled(false);
     ui->delistTableButton->setEnabled(false);
     ui->ownerGroupBox->setEnabled(false);
@@ -67,6 +68,10 @@ Menu::Menu(QWidget *parent) :
 
     if(Menu::autoPayout == true){
         ui->autoPayRButton->setChecked(true);
+    }
+
+    if(Menu::sharedDeck == true){
+        ui->sharedRButton->setChecked(true);
     }
 
     connect(ui->daemonRPCinput, SIGNAL(textChanged(QString)),

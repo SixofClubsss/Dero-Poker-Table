@@ -226,15 +226,18 @@ int Menu::checkContract()       /// Check if table is valid
       QJsonObject cbStringKeys = cbResults["stringkeys"].toObject();
       QJsonValue tableOwner = cbStringKeys.value("owner:");
       QJsonValue tableOwnerId = cbStringKeys.value("Player1 ID:");
+      QJsonValue cardsInDeck = cbStringKeys.value("Deck Count:");
 
-      if(tableOwner.isString()){                /// Checks if table has valid "owner:" key
+      if(tableOwner.isString() && cardsInDeck.toInt() >= 1){                /// Checks if table has valid "owner:" key
           ui->contractCheckBox->setChecked(true);
           ui->menuTextBrowser->setText("Connected to Contract "+Menu::contractAddress);
           QFile contractFile("contract/FiveCard.bas");
           contractFile.open(QIODevice::ReadOnly);
-              if(contractFile.exists()){
-                   ui->ownerGroupBox->setEnabled(true);
+          if(contractFile.exists()){
+              if(contractFile.size() > 18000){
+                ui->ownerGroupBox->setEnabled(true);
               }
+          }
 
       }else {
           ui->contractCheckBox->setChecked(false);
@@ -253,7 +256,7 @@ int Menu::checkContract()       /// Check if table is valid
           ui->autoPayRButton->setEnabled(true);
           ui->listTableButton->setEnabled(false);
           ui->delistTableButton->setEnabled(false);
-    }
+      }
 
     }
     return 0;

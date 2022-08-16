@@ -226,7 +226,7 @@ QComboBox:hover {
        <string> Dero Pot: </string>
       </property>
       <property name="decimals">
-       <number>2</number>
+       <number>5</number>
       </property>
       <property name="maximum">
        <double>1000000000000000000.000000000000000</double>
@@ -270,7 +270,7 @@ QComboBox:hover {
        <enum>QAbstractSpinBox::NoButtons</enum>
       </property>
       <property name="prefix">
-       <string> Ante is: </string>
+       <string> Ante: </string>
       </property>
       <property name="maximum">
        <double>1200.000000000000000</double>

@@ -730,7 +730,7 @@ QGroupBox::indicator {
        <bool>false</bool>
       </property>
       <property name="styleSheet">
-       <string notr="true"/>
+       <string notr="true">color: rgb(0, 0, 0);</string>
       </property>
       <item>
        <property name="text">
