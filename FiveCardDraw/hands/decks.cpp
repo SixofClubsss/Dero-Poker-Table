@@ -221,7 +221,7 @@ void MainWindow::AZYPCB(QString pre, rpc& r)
         findAddr = readmeStandard(findAddr);
         r.verifyNFAcreator(findAddr);
         if(rpc::assetConfirmed == true){
-            ui->deckComboBox->insertItem(ui->deckComboBox->count()+1, "AZYPCB"+add);
+            ui->deckComboBox->insertItem(ui->backComboBox->count()+1, "AZYPCB"+add);
             qInfo() << ("\033[35m♤Loading AZYPCB♡\033[0m");
             rpc::assetConfirmed = false;
             nfaBack.close();
@@ -419,7 +419,7 @@ void MainWindow::SIXPCB(QString pre, rpc& r)
         findAddr = readmeStandard(findAddr);
         r.verifyNFAcreator(findAddr);
         if(rpc::assetConfirmed == true){
-            ui->deckComboBox->insertItem(ui->deckComboBox->count()+1, "SIXPCB"+add);
+            ui->deckComboBox->insertItem(ui->backComboBox->count()+1, "SIXPCB"+add);
             qInfo() << ("\033[35m♤Loading SIXPCB♡\033[0m");
             rpc::assetConfirmed = false;
             nfaBack.close();

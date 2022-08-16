@@ -140,7 +140,7 @@ void Menu::setFonts()
     macondoRegular.setPointSize(17);
     macondoRegular.setBold(true);
     ui->menuTextBrowser->setFont(macondoRegular);
-    ui->menuTextBrowser->setText("Welcome to dReam Tables Five Card Poker\nTable v1.2.1");
+    ui->menuTextBrowser->setText("Welcome to dReam Tables Five Card Poker\nTable v1.3.0");
 
     int fontId2 = QFontDatabase::addApplicationFont(":/fonts/Ubuntu-R.ttf");
     QString fontFamily2 = QFontDatabase::applicationFontFamilies(fontId2).at(0);

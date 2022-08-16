@@ -485,15 +485,7 @@ int MainWindow::winner()     /// Owner sends payout to winner
             ui->logTextBrowser->setText("Winner TXID: "+txid.toString());
             ui->txLogTextBrowser->append("TXID: "+txid.toString()+"\n");
             blankDisplay();
-
-            if(rpc::end == 1){
-                rpc::hashOne ="null";
-                rpc::hashTwo = "null";
-                rpc::hashThree = "null";
-                rpc::hashFour = "null";
-                rpc::hashFive = "null";
-                MainWindow::displayedRes = false;
-            }
+            MainWindow::displayedRes = false;
 
         }else {
 
@@ -554,15 +546,7 @@ int MainWindow::autopayWinner(QString whoWon)     /// Autopay to winner
         if(txid.isString()){
             ui->logTextBrowser->setText("Winner TXID: "+txid.toString());
             ui->txLogTextBrowser->append("TXID: "+txid.toString()+"\n");
-
-            if(rpc::end == 1){
-//                rpc::hashOne ="null";
-//                rpc::hashTwo = "null";
-//                rpc::hashThree = "null";
-//                rpc::hashFour = "null";
-//                rpc::hashFive = "null";
-                MainWindow::displayedRes = false;
-            }
+            MainWindow::displayedRes = false;
 
         }else {
 
@@ -662,11 +646,6 @@ int MainWindow::splitWinner()     /// Owner sends split payout to winners
             ui->logTextBrowser->setText("Split Winner TXID: "+txid.toString());
             ui->txLogTextBrowser->append("TXID: "+txid.toString()+"\n");
             blankDisplay();
-
-            if(rpc::end == 1){
-                rpc::hashOne ="null";
-                rpc::hashTwo = "null";
-            }
             MainWindow::displayedRes = false;
 
         }else {

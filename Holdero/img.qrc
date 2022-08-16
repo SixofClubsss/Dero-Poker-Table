@@ -113,5 +113,6 @@
         <file>images/cards/standard/light/card52.png</file>
         <file>images/cards/backs/back1.png</file>
         <file>images/cards/backs/back2.png</file>
+        <file>contract/Holdero.enc</file>
     </qresource>
 </RCC>

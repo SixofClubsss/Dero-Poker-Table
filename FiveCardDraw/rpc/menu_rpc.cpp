@@ -438,7 +438,7 @@ int Menu::getDreams()      /// Gets dReams Tokens
     string getDreamsReadBuffer;
     char error[CURL_ERROR_SIZE];
 
-    QString parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"transfer\",\"params\":{\"transfers\":[{\"amount\":90000,\"destination\":\"dero1qyr8yjnu6cl2c5yqkls0hmxe6rry77kn24nmc5fje6hm9jltyvdd5qq4hn5pn\",\"burn\":10000}],\"scid\":\"8289c6109f41cbe1f6d5f27a419db537bf3bf30a25eff285241a36e1ae3e48a4\", \"ringsize\":2 , \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"IssueChips\"}] }}";
+    QString parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"transfer\",\"params\":{\"transfers\":[{\"amount\":200000,\"destination\":\"dero1qyr8yjnu6cl2c5yqkls0hmxe6rry77kn24nmc5fje6hm9jltyvdd5qq4hn5pn\",\"burn\":10000}],\"scid\":\"8289c6109f41cbe1f6d5f27a419db537bf3bf30a25eff285241a36e1ae3e48a4\", \"ringsize\":2 , \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"IssueChips\"}] }}";
     string addThis = parts.toStdString();
     const char *postthis = addThis.c_str();
 
