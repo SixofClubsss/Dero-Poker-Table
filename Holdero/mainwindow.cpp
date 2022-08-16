@@ -72,13 +72,6 @@ MainWindow::~MainWindow()
         keyFile.remove();
     }
 
-    QFile scriptFile("contract/createTable.sh");
-    scriptFile.open(QIODevice::ReadWrite);
-
-    if(scriptFile.exists()) {
-        scriptFile.remove();
-    }
-
     qInfo() << ("\033[36m♤♡♧♢♧♡♤♡♧♢♧♡♤♡♧♢♧♡♤♡♧♢♧♡♤♡♧♢♧♡♤\033[0m");
     qInfo() << ("\033[36m          Exiting...\033[0m");
     qInfo() << ("\033[36m♤♡♧♢♧♡♤♡♧♢♧♡♤♡♧♢♧♡♤♡♧♢♧♡♤♡♧♢♧♡♤\033[0m");
@@ -147,7 +140,6 @@ void MainWindow::setFonts()
 
 void MainWindow::checkDecks()
 {
-    qInfo() << ("\033[36m♤♡♧♢♧♡♤ Looking for NFA ♤♡♧♢♧♡♤\033[0m");
     rpc r;
     QString pre = QDir().absolutePath();
     AZYPC(pre, r);
