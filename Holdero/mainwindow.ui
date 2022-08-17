@@ -995,7 +995,7 @@ p, li { white-space: pre-wrap; }
         </widget>
        </item>
        <item row="3" column="0" colspan="3">
-        <widget class="QGroupBox" name="groupBox_2">
+        <widget class="QGroupBox" name="actionGroupBox">
          <property name="minimumSize">
           <size>
            <width>1111</width>

@@ -150,6 +150,8 @@ void MainWindow::setFonts()
     ui->handRankButton->setFont(ubuntuRegular);
     ui->dsbBlockHeight->setFont(ubuntuRegular);
     ui->txLogTextBrowser->setFont(ubuntuRegular);
+    ui->backComboBox->setFont(ubuntuRegular);
+    ui->deckComboBox->setFont(ubuntuRegular);
 }
 
 

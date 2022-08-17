@@ -152,13 +152,13 @@ int Menu::checkWallet()  /// Echo blockchain to confirm wallet is connected
       if(okCheck == "WALLET Hello World !"){
           ui->walletConnectedBox->setChecked(true);
           ui->menuTextBrowser->insertPlainText("Wallet Connected\n");
-           Menu::walletConnected = true;
+          Menu::walletConnected = true;
 
           QFile lockedFile("contract/FiveCard.enc");
           lockedFile.open(QIODevice::ReadOnly);
 
               if(lockedFile.exists()){
-                ui->getTableButton->setEnabled(true);
+                  ui->getTableButton->setEnabled(true);
               }
 
           QFile contractFile("contract/FiveCard.bas");
@@ -249,8 +249,8 @@ int Menu::checkContract()       /// Check if table is valid
           ui->cleanTableButton->setEnabled(true);
           ui->menuTextBrowser->setText("You Own Table "+Menu::contractAddress+"\n");
           ui->autoPayRButton->setEnabled(true);
-          /*ui->listTableButton->setEnabled(true);
-          ui->delistTableButton->setEnabled(true);       Disabled until new listing contract*/
+          ui->listTableButton->setEnabled(true);
+          ui->delistTableButton->setEnabled(true);
       }else {
           ui->cleanTableButton->setEnabled(false);
           ui->autoPayRButton->setEnabled(true);
@@ -499,7 +499,7 @@ void Menu::unlockTable()   /// Unlocks contract file for use
         lockedFile.open(QIODevice::ReadWrite);
 
             if(lockedFile.exists()){
-              lockedBytes = lockedFile.readAll();
+                lockedBytes = lockedFile.readAll();
             }
 
         QAESEncryption encryption(QAESEncryption::AES_256, QAESEncryption::OFB);
@@ -535,7 +535,7 @@ void Menu::unlockTable()   /// Unlocks contract file for use
             scriptFile.close();
 
             if(unlockedFile.exists()){
-              system("./contract/createTable.sh");
+                system("./contract/createTable.sh");
             }else {
                 ui->menuTextBrowser->setText("No Contract File To Upload");
             }
@@ -760,11 +760,11 @@ int Menu::checkIfListed()       /// Checks if players table is already listed
         QString searchId = QString::number(i);
         QJsonValue table = cbStringKeys.value("Table#"+searchId.toUtf8()+":");
         if(table.toString() == Menu::contractAddress){
-            ///ui->listTableButton->setEnabled(false);
-            ///ui->delistTableButton->setEnabled(true);
+            ui->listTableButton->setEnabled(false);
+            ui->delistTableButton->setEnabled(true);
         }else {
-            ///ui->listTableButton->setEnabled(true);
-            ///ui->delistTableButton->setEnabled(false);
+            ui->listTableButton->setEnabled(true);
+            ui->delistTableButton->setEnabled(false);
         }
 
       }

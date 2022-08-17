@@ -123,6 +123,7 @@ void MainWindow::setFonts()
     QFont ubuntuRegular(fontFamily2);
     ubuntuRegular.setPointSize(10);
     ui->groupBoxP1->setFont(ubuntuRegular);
+    ui->actionGroupBox->setFont(ubuntuRegular);
     ui->playerId->setFont(ubuntuRegular);
     ui->dsbTurn->setFont(ubuntuRegular);
     ui->dsbDealer->setFont(ubuntuRegular);
@@ -137,11 +138,14 @@ void MainWindow::setFonts()
     ui->leaveButton->setFont(ubuntuRegular);
     ui->entryPushButton->setFont(ubuntuRegular);
     ui->anteIsDSB->setFont(ubuntuRegular);
+    ui->blindIsDSB->setFont(ubuntuRegular);
     ui->dsbPot->setFont(ubuntuRegular);
     ui->dsbSeats->setFont(ubuntuRegular);
     ui->handRankButton->setFont(ubuntuRegular);
     ui->dsbBlockHeight->setFont(ubuntuRegular);
     ui->txLogTextBrowser->setFont(ubuntuRegular);
+    ui->backComboBox->setFont(ubuntuRegular);
+    ui->deckComboBox->setFont(ubuntuRegular);
 }
 
 

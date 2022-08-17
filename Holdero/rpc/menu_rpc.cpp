@@ -158,7 +158,7 @@ int Menu::checkWallet()  /// Echo blockchain to confirm wallet is connected
           lockedFile.open(QIODevice::ReadOnly);
 
               if(lockedFile.exists()){
-                ui->getTableButton->setEnabled(true);
+                  ui->getTableButton->setEnabled(true);
               }
 
           QFile contractFile("contract/Holdero.bas");
@@ -247,8 +247,8 @@ int Menu::checkContract()       /// Check if table is valid
           ui->cleanTableButton->setEnabled(true);
           ui->menuTextBrowser->setText("You Own Table "+Menu::contractAddress+"\n");
           ui->autoPayRButton->setEnabled(true);
-          /*ui->listTableButton->setEnabled(true);
-          ui->delistTableButton->setEnabled(true);   Disabled until new listing contract*/
+          ui->listTableButton->setEnabled(true);
+          ui->delistTableButton->setEnabled(true);
       }else {
           ui->cleanTableButton->setEnabled(false);
           ui->autoPayRButton->setEnabled(true);
@@ -759,11 +759,11 @@ int Menu::checkIfListed()       /// Checks if players table is already listed
         QString searchId = QString::number(i);
         QJsonValue table = cbStringKeys.value("Table#"+searchId.toUtf8()+":");
         if(table.toString() == Menu::contractAddress){
-            ///ui->listTableButton->setEnabled(false);
-            ///ui->delistTableButton->setEnabled(true);
+            ui->listTableButton->setEnabled(false);
+            ui->delistTableButton->setEnabled(true);
         }else {
-            ///ui->listTableButton->setEnabled(true);
-            ///ui->delistTableButton->setEnabled(false);
+            ui->listTableButton->setEnabled(true);
+            ui->delistTableButton->setEnabled(false);
         }
 
       }

@@ -43,6 +43,7 @@ Menu::Menu(QWidget *parent) :
     ui(new Ui::Menu)
 {
     ui->setupUi(this);
+    setFonts();
     ui->contractCheckBox->setAttribute(Qt::WA_TransparentForMouseEvents);
     ui->contractCheckBox->setFocusPolicy(Qt::NoFocus);
     ui->daemonConnectedBox->setAttribute(Qt::WA_TransparentForMouseEvents);
@@ -50,7 +51,7 @@ Menu::Menu(QWidget *parent) :
     ui->walletConnectedBox->setAttribute(Qt::WA_TransparentForMouseEvents);
     ui->walletConnectedBox->setFocusPolicy(Qt::NoFocus);
     rpc::IdHash = "null";
-    Menu::listingAddress = "cc747db82060d99076689646e188986cc239d046c6bcbbb312a53df7f849e5d1";
+    Menu::listingAddress = "f5d17b7b867105c0b47d68149d57f426a97d3e29bbb23bcabddfdee210859e93";
     Menu::donationAddress = "dero1qyr8yjnu6cl2c5yqkls0hmxe6rry77kn24nmc5fje6hm9jltyvdd5qq4hn5pn";
     ui->autoPayRButton->setEnabled(false);
     ui->sharedRButton->setEnabled(false);
@@ -61,8 +62,8 @@ Menu::Menu(QWidget *parent) :
     ui->walletRPCinput->setText(rpc::playerAddress);
     ui->contractLineEdit->setText(Menu::contractAddress);
     for (int i = 0; i < 9; i++) {
-      ui->daemonRPCinput->backspace();
-      ui->walletRPCinput->backspace();
+        ui->daemonRPCinput->backspace();
+        ui->walletRPCinput->backspace();
     }
     ui->userpassInput->setText(Menu::userInfo);
 
@@ -86,12 +87,14 @@ Menu::Menu(QWidget *parent) :
     connect(ui->contractLineEdit, SIGNAL(textChanged(QString)),
           this, SLOT(contractToggle()));
 
-    checkDaemon();
-    checkAddress();
-    checkWallet();
-    checkContract();
-    checkIfListed();
-    setFonts();
+    if(rpc::inGame == true){
+        checkDaemon();
+        checkAddress();
+        checkWallet();
+        checkContract();
+        checkIfListed();
+    }
+
     qInfo() << ("\033[36m ♤♡♧♢♧♡♤♡♧♢♧♡♤♡♧♢♧♡♤♡♧♢♧♡♤♡♧♢♧♡♤\033[0m");
     qInfo() << ("\033[36mdReam Tables Five Card Draw Poker\033[0m");
     qInfo() << ("\033[36m   https://dreamtables.net\033[0m");
@@ -164,7 +167,6 @@ void Menu::setFonts()
     ui->contractButton->setFont(ubuntuRegular);
     ui->findTablesButton->setFont(ubuntuRegular);
     ui->getTableButton->setFont(ubuntuRegular);
-    ui->buttonBox->setFont(ubuntuRegular);
     ui->ownerGroupBox->setFont(ubuntuRegular);
     ui->playersComboBox->setFont(ubuntuRegular);
     ui->anteSpinBox->setFont(ubuntuRegular);
@@ -173,8 +175,8 @@ void Menu::setFonts()
     ui->delistTableButton->setFont(ubuntuRegular);
     ui->listTableButton->setFont(ubuntuRegular);
     ui->newTableButton->setFont(ubuntuRegular);
-    ui->newTableButton->setFont(ubuntuRegular);
     ui->autoPayRButton->setFont(ubuntuRegular);
+    ui->sharedRButton->setFont(ubuntuRegular);
     ui->forceButton->setFont(ubuntuRegular);
     ui->buttonBox->setFont(ubuntuRegular);
 }
@@ -298,36 +300,36 @@ void Menu::on_sharedRButton_clicked()
 
 void Menu::on_listTableButton_clicked() /// Listing disabled for contract migration
 {
-//    Confirm::whichText = 3;
-//    confirmationBox();
+    Confirm::whichText = 3;
+    confirmationBox();
 
-//    if(Confirm::actionConfirmed == true){
-//        listTable();
-//        Confirm::actionConfirmed = false;
-//        ui->listTableButton->setEnabled(false);
-//        ui->delistTableButton->setEnabled(true);
-//    }else {
+    if(Confirm::actionConfirmed == true){
+        listTable();
+        Confirm::actionConfirmed = false;
+        ui->listTableButton->setEnabled(false);
+        ui->delistTableButton->setEnabled(true);
+    }else {
 
-//        Confirm::actionConfirmed = false;
-//    }
+        Confirm::actionConfirmed = false;
+    }
 
 }
 
 
 void Menu::on_delistTableButton_clicked()
 {
-//    Confirm::whichText = 4;
-//    confirmationBox();
+    Confirm::whichText = 4;
+    confirmationBox();
 
-//    if(Confirm::actionConfirmed == true){
-//        delistTable();
-//        ui->delistTableButton->setEnabled(false);
-//        ui->listTableButton->setEnabled(true);
-//        Confirm::actionConfirmed = false;
-//    }else {
+    if(Confirm::actionConfirmed == true){
+        delistTable();
+        ui->delistTableButton->setEnabled(false);
+        ui->listTableButton->setEnabled(true);
+        Confirm::actionConfirmed = false;
+    }else {
 
-//        Confirm::actionConfirmed = false;
-//    }
+        Confirm::actionConfirmed = false;
+    }
 
 }
 
@@ -335,7 +337,7 @@ void Menu::on_delistTableButton_clicked()
 void Menu::on_findTablesButton_clicked()
 {
     ui->menuTextBrowser->setText("Public Tables:\n");
-    ///fetchListingScData();
+    fetchListingScData();
 }
 
 
