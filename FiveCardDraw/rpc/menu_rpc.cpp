@@ -435,7 +435,6 @@ int Menu::cleanTable()      /// Clean table function to withdraw any funds at ta
 
 int Menu::getDreams()      /// Gets dReams Tokens
 {
-    qDebug()<<"Menu::getDreams get called from?: "<<QThread::currentThreadId();
     CURL *curlgetDreams;
     CURLcode res;
     string getDreamsReadBuffer;
