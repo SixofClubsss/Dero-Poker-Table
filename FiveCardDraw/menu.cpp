@@ -57,6 +57,8 @@ Menu::Menu(QWidget *parent) :
     ui->sharedRButton->setEnabled(false);
     ui->listTableButton->setEnabled(false);
     ui->delistTableButton->setEnabled(false);
+    ui->getTableButton->setEnabled(false);
+    ui->findTablesButton->setEnabled(false);
     ui->ownerGroupBox->setEnabled(false);
     ui->daemonRPCinput->setText(rpc::daemonAddress);
     ui->walletRPCinput->setText(rpc::playerAddress);
