@@ -87,7 +87,7 @@ void Confirm::on_buttonBox_accepted()
 
 void Confirm::getTableText()   /// Readout for Get table
 {
-    ui->confirmTextBrowser->setText("This unlocks the smart contract, automatically set up your first table and send you 33 dReams.\n\nTo help support the project, we have attached a 1 Dero donation to preform this first auto upload.\n\n"
+    ui->confirmTextBrowser->setText("This unlocks the smart contract, automatically set up your first table and send you 33 dReams.\n\nTo help support the project, we have attached a 2.1 Dero donation to unlock the Five Card Contract.\n\n"
                                     "Once the contract is unlocked you can generate as many new tables as you'd like for public/private games using the 'New Table' button inside the owner control box.\n\nYour new table ID will be saved in Tables.txt"
                                     "\n\nClick Ok to confirm");
 }

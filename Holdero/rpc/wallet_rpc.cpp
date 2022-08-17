@@ -173,7 +173,7 @@ void MainWindow::generateKey()    /// Generates player client key
 }
 
 
-int MainWindow::dealHand()      /// Ante and deals player a hand
+int MainWindow::dealHand()      /// Blinds/ante and deals player a hand
 {
     generateKey();
     CURL *curlDealHand;
