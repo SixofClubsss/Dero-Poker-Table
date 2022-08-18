@@ -1,7 +1,8 @@
 # Dero-Poker-Table
 Ui for Dero Private Poker Table.
 ![dReamTablesFooter](https://user-images.githubusercontent.com/84689659/170848755-d2cb4933-df2b-46f9-80e6-4349621871a3.png)
-Written in C++/Qt. Used Qt 5.12.8 to build the Ui. This app is for playing dReam Tables **private** poker, built on **Dero**. The poker table is a _smart contract_, it deals out the cards and takes the Dero bets. The owner of the table sets the ante/limits and seats at the table then invites players to join.
+Written in C++/Qt. Used Qt 5.12.8 to build the Ui. These apps are for playing dReam Tables **private** poker, built on [**Dero**](https://dero.io). The poker table is a _smart contract_, it deals out the cards and takes the Dero bets. The owner of the table sets the ante/limits and seats at the table then invites players to join.
+
 
 ![dReamTablesFiveCardMenu](https://user-images.githubusercontent.com/84689659/177437584-f17156f8-e125-4424-acf4-46bb6a268405.png)
 
@@ -11,12 +12,24 @@ Written in C++/Qt. Used Qt 5.12.8 to build the Ui. This app is for playing dReam
   - Sit & Go play.
   - Public listing contract and search function for public tables.
   - Auto table generate function in app.
-  - Automated or manual payouts.
+  - Automated or manual payouts. 
+  - In game [Non-Fungible-Assets](https://github.com/civilware/artificer-nfa-standard) for customization.
   
-![dReamTablesFiveCardMain](https://user-images.githubusercontent.com/84689659/177437634-a7343977-5ef2-4502-8d46-624e52161db7.png)
+![FiveCardTableMain](https://user-images.githubusercontent.com/84689659/185278305-71c68b5a-1326-4c8d-afc0-24d083a61342.png)
 
-- More to come...
+---
+- **Holdero** (*Texas Hold'em*)
+  - Up to six players at the table.
+  - Can use blinds, antes or a combination of both.
+  - Sit & Go play.
+  - Public listing contract and search function for public tables.
+  - Auto table generate function in app.
+  - Automated or manual payouts.
+  - In game [Non-Fungible-Assets](https://github.com/civilware/artificer-nfa-standard) for customization.
+  
+![HolderoMain](https://user-images.githubusercontent.com/84689659/185277836-a32fccb5-e737-402b-b87b-f8a2378fcfd3.png)
 
+More updates to come...
 
 ---
 ### Donations
@@ -58,6 +71,6 @@ To build testnet version `cd Dero-Poker-Table/Testnet-FiveCardDraw` then `qmake`
 ### Licensing
 
 dReam Tables Dero Poker Tables are free open source games.     
-The source code is published under the [GNU GPL V3 License.](https://github.com/SixofClubsss/Dero-Poker-Table/blob/main/Licenses/LICENSE)
+The source code is published under the [GNU GPL V3 License.](https://github.com/SixofClubsss/Dero-Poker-Table/blob/main/Licenses/LICENSE)     
 Copyright 2022 dReam Tables       
-Refer to the [copywrite.md](https://github.com/SixofClubsss/Dero-Poker-Table/blob/main/Licenses/copyright.md) file for artwork licensing.
+Refer to the [copywrite.md](https://github.com/SixofClubsss/Dero-Poker-Table/blob/main/Licenses/copyright.md) file for artwork licensing. 
