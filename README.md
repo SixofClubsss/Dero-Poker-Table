@@ -55,7 +55,7 @@ sudo apt install --no-install-recommends qtbase5-dev qttools5-dev libqt5svg5-dev
 **Download repo & build**
 ```
 git clone https://github.com/SixofClubsss/Dero-Poker-Table.git
-cd Dero-Poker-Table/Mainnet-Dero-FiveCardDraw
+cd Dero-Poker-Table/FiveCardDraw
 qmake
 make
 ```
@@ -64,7 +64,8 @@ make
 ```
 ./Dero-FiveCardDraw
 ```
-To build testnet version `cd Dero-Poker-Table/Testnet-FiveCardDraw` then `qmake` & `make`
+To build Holdero `cd Dero-Poker-Table/Holdero` then `qmake` & `make` the run `./Holdero`  
+To build Testnet version `cd Dero-Poker-Table/Testnet/Testnet-FiveCardDraw` then `qmake` & `make` then run `./Testnet-FiveCardDraw`  
 
 ---
 
