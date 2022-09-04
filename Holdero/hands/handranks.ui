@@ -26,18 +26,13 @@
    <string>Poker Hands by Rank</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="img.qrc">
-    <normaloff>:/images/dReamTablesDero.png</normaloff>:/images/dReamTablesDero.png</iconset>
+   <iconset resource="../img.qrc">
+    <normaloff>:/images/dReamTablesBIcon.png</normaloff>:/images/dReamTablesBIcon.png</iconset>
   </property>
   <property name="styleSheet">
-   <string notr="true">QDialog{
-	background-image: url(:/images/background.png);	
-	background-position: center;
-}
-
-QPushButton:enabled{
+   <string notr="true">QPushButton:enabled{
 	color: rgb(255, 255, 255);
-	background-color: rgba(85, 88, 93, 90);
+	background-color: rgba(85, 88, 93, 150);
     border: 2px solid #8f8f91;
     border-radius: 6px;
     min-width: 80px;
@@ -182,7 +177,7 @@ background-color: rgba(255, 255, 255, 0);</string>
   </layout>
  </widget>
  <resources>
-  <include location="img.qrc"/>
+  <include location="../img.qrc"/>
  </resources>
  <connections>
   <connection>

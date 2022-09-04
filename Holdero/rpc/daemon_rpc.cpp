@@ -239,6 +239,9 @@ int rpc::fetchScData()       /// Get SC variables
       QJsonValue Key5_jv = cbStringKeys.value("Player5Key");
       QJsonValue Key6_jv = cbStringKeys.value("Player6Key");
 
+      QJsonValue Back_jv = cbStringKeys.value("Back:");
+      QJsonValue Face_jv = cbStringKeys.value("Face:");
+
 
       rpc::seats = Seats_jv.toInt();
       rpc::count = Count_jv.toInt();
@@ -313,6 +316,9 @@ int rpc::fetchScData()       /// Get SC variables
       rpc::key4 = Key4_jv.toString();
       rpc::key5 = Key5_jv.toString();
       rpc::key6 = Key6_jv.toString();
+
+      rpc::sharedBack = Back_jv.toString();
+      rpc::sharedFace = Face_jv.toString();
 
       rpc::salt = QString::number(rpc::IV);
       QString handId = QString::number(rpc::checkPlayerId);

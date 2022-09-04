@@ -1,5 +1,4 @@
-#ifndef HANDRANKS_H
-#define HANDRANKS_H
+#include "filedownloader.h"
 /*
 dReam Tables Holdero Poker
 
@@ -23,45 +22,24 @@ Always play responsibly.
 https://dreamtables.net
 */
 
-#include "QDialog"
-#include "algorithm"
-#include "array"
-#include "menu.h"
+FileDownloader::FileDownloader(QUrl imageUrl, QObject *parent) :
+    QObject(parent)
+{
+    connect(&m_WebCtrl, SIGNAL (finished(QNetworkReply*)),
+                this, SLOT (fileDownloaded(QNetworkReply*)));
 
-
-namespace Ui {
-class HandRanks;
+    QNetworkRequest request(imageUrl);
+    m_WebCtrl.get(request);
 }
 
-class HandRanks : public QDialog
-{
-    Q_OBJECT
+FileDownloader::~FileDownloader() { }
 
-public:
-    explicit HandRanks(QWidget *parent = nullptr);
-    ~HandRanks();
-     void setRanksTheme();
-     void setFonts(QString);
+void FileDownloader::fileDownloaded(QNetworkReply* pReply) {
+    m_DownloadedData = pReply->readAll();
+    pReply->deleteLater();
+    emit downloaded();
+}
 
-private:
-    Ui::HandRanks *ui;
-};
-
-
-class Hand
-{
-public:
-    static bool hasBet;
-    static bool called;
-    static bool endSignal;
-    static bool foldOne;
-    static bool foldTwo;
-    static bool foldThree;
-    static bool foldFour;
-    static bool foldFive;
-    static bool foldSix;
-    static bool keyIsPub;
-
-};
-
-#endif // HANDRANKS_H
+QByteArray FileDownloader::downloadedData() const {
+    return m_DownloadedData;
+}

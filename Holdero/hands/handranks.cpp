@@ -32,7 +32,15 @@ HandRanks::HandRanks(QWidget *parent) :
     ui(new Ui::HandRanks)
 {
     ui->setupUi(this);
-    setFonts();
+    QPalette palette;
+    if(Menu::theme.isNull()){
+        QPixmap bkgnd(":/images/background.png");
+        palette.setBrush(QPalette::Window, bkgnd);
+        this->setPalette(palette);
+    }else {
+         setRanksTheme();
+    }
+    setFonts(Menu::os);
 }
 
 
@@ -42,12 +50,28 @@ HandRanks::~HandRanks()
 }
 
 
-void HandRanks::setFonts()
+void HandRanks::setRanksTheme()
 {
+    QPalette palette;
+    palette.setBrush(QPalette::Window, Menu::theme);
+    this->setPalette(palette);
+}
+
+
+void HandRanks::setFonts(QString os)
+{
+    int ubR;
+
+    if(os == "macos" || os == "osx" || os == "darwin"){
+        ubR = 16;
+    }else {
+        ubR = 12;
+    }
 
     int fontId1 = QFontDatabase::addApplicationFont(":/fonts/Ubuntu-R.ttf");
     QString fontFamily1 = QFontDatabase::applicationFontFamilies(fontId1).at(0);
     QFont ubuntuRegular(fontFamily1);
+    ubuntuRegular.setPointSize(ubR);
     ui->hrTextBrowser->setFont(ubuntuRegular);
     ui->buttonBox->setFont(ubuntuRegular);
 
@@ -655,7 +679,10 @@ void MainWindow::findBest(int r, int fR[5], int h[5])     /// Finds best combina
             int temp[5] = {swap[0], swap[1], swap[2], swap[3], hole[0]};
             std::copy(temp, temp + 5, swap);
         }else if (swap[0] == 2 && swap[1] == 3 && swap[2] == 4 && swap[3] == 5 && swap[4] == 14 && hole[1] == 6){
-            int temp[5] = {swap[0], swap[1], swap[2], hole[3], hole[1]};
+            int temp[5] = {swap[0], swap[1], swap[2], swap[3], hole[1]};
+            std::copy(temp, temp + 5, swap);
+        }else if (hand[0] == swap[0]+1 && hand[1] == swap[1]+1 && hand[2] == swap[2]+1 && hand[3] == swap[3]+1 && hand[4] == swap[4]+1){
+            int temp[5] = {hand[0], hand[1], hand[2], hand[3], hand[4]};
             std::copy(temp, temp + 5, swap);
         }
 

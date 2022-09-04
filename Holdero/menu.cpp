@@ -28,14 +28,19 @@ https://dreamtables.net
 #include "rpc/rpc.h"
 
 
+QImage Menu::theme;
+QString Menu::os;
 QString Menu::userInfo;
 QString Menu::passInfo;
 QString Menu::contractAddress;
 QString Menu::listingAddress;
 QString Menu::donationAddress;
+int Menu::themeIndex;
+bool Menu::loading;
 bool Menu::mainnet;
 bool Menu::autoPayout;
 bool Menu::sharedDeck;
+bool Menu::themeChanged;
 
 
 Menu::Menu(QWidget *parent) :
@@ -43,7 +48,17 @@ Menu::Menu(QWidget *parent) :
     ui(new Ui::Menu)
 {
     ui->setupUi(this);
-    setFonts();
+    Menu::os = QSysInfo::productType();
+    QPalette palette;
+    if(Menu::theme.isNull()){
+        QPixmap bkgnd(":/images/background.png");
+        palette.setBrush(QPalette::Window, bkgnd);
+        this->setPalette(palette);
+    }else {
+        setMenuTheme();
+    }
+
+    setFonts(Menu::os);
     ui->contractCheckBox->setAttribute(Qt::WA_TransparentForMouseEvents);
     ui->contractCheckBox->setFocusPolicy(Qt::NoFocus);
     ui->daemonConnectedBox->setAttribute(Qt::WA_TransparentForMouseEvents);
@@ -54,12 +69,12 @@ Menu::Menu(QWidget *parent) :
     Menu::listingAddress = "86fcb674b399d20538112bb5317a86c39ba991de7defc89d380d18ff940fd8f3";
     Menu::donationAddress = "dero1qyr8yjnu6cl2c5yqkls0hmxe6rry77kn24nmc5fje6hm9jltyvdd5qq4hn5pn";
     ui->autoPayRButton->setEnabled(false);
-    ui->sharedRButton->setEnabled(false);
     ui->listTableButton->setEnabled(false);
     ui->delistTableButton->setEnabled(false);
     ui->getTableButton->setEnabled(false);
     ui->findTablesButton->setEnabled(false);
     ui->ownerGroupBox->setEnabled(false);
+    ui->themeComboBox->setCurrentIndex(Menu::themeIndex);
     ui->daemonRPCinput->setText(rpc::daemonAddress);
     ui->walletRPCinput->setText(rpc::playerAddress);
     ui->contractLineEdit->setText(Menu::contractAddress);
@@ -108,6 +123,12 @@ Menu::Menu(QWidget *parent) :
 
 Menu::~Menu()
 {
+    if(Menu::loading == true){
+        QTime dieTime = QTime::currentTime().addSecs(6);
+        while (QTime::currentTime() < dieTime)
+        QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+    }
+
     delete ui;
 }
 
@@ -143,20 +164,31 @@ void Menu::contractToggle()
 }
 
 
-void Menu::setFonts()
+void Menu::setFonts(QString os)
 {
+    int mcR;
+    int ubR;
+
+    if(os == "macos" || os == "osx" || os == "darwin"){
+        mcR = 23;
+        ubR = 13;
+        ui->themeComboBox->setEnabled(false);
+    }else {
+        mcR = 17;
+        ubR = 10;
+    }
+
     int fontId = QFontDatabase::addApplicationFont(":/fonts/Macondo-Regular.ttf");
     QString fontFamily = QFontDatabase::applicationFontFamilies(fontId).at(0);
     QFont macondoRegular(fontFamily);
-    macondoRegular.setPointSize(17);
-    macondoRegular.setBold(true);
+    macondoRegular.setPointSize(mcR);
     ui->menuTextBrowser->setFont(macondoRegular);
-    ui->menuTextBrowser->setText("Welcome to dReam Tables Holdero Poker\nTable v1.0.0");
+    ui->menuTextBrowser->setText("Welcome to dReam Tables Holdero Poker\nTable v1.0.1");
 
     int fontId2 = QFontDatabase::addApplicationFont(":/fonts/Ubuntu-R.ttf");
     QString fontFamily2 = QFontDatabase::applicationFontFamilies(fontId2).at(0);
     QFont ubuntuRegular(fontFamily2);
-    ubuntuRegular.setPointSize(10);
+    ubuntuRegular.setPointSize(ubR);
     ui->playerGroupBox->setFont(ubuntuRegular);
     ui->userpassInput->setFont(ubuntuRegular);
     ui->daemonRPCinput->setFont(ubuntuRegular);
@@ -181,7 +213,27 @@ void Menu::setFonts()
     ui->newTableButton->setFont(ubuntuRegular);
     ui->autoPayRButton->setFont(ubuntuRegular);
     ui->sharedRButton->setFont(ubuntuRegular);
+    ui->forceButton->setFont(ubuntuRegular);
+    ui->themeComboBox->setFont(ubuntuRegular);
     ui->buttonBox->setFont(ubuntuRegular);
+}
+
+
+void Menu::checkThemes()
+{
+    qInfo() << ("\033[36m♤♡♧ Looking for NFA Themes  ♧♡♤\033[0m");
+    rpc r;
+    QString pre = QDir().absolutePath();
+    AZYDS(pre, r);
+    qInfo() << ("\033[36m♤♡♧♢♧♡♤♡♧♢♧♡♤♡♧♢♧♡♤♡♧♢♧♡♤♡♧♢♧♡♤\033[0m");
+}
+
+
+void Menu::setMenuTheme()
+{
+    QPalette palette;
+    palette.setBrush(QPalette::Window, Menu::theme);
+    this->setPalette(palette);
 }
 
 
@@ -205,7 +257,8 @@ void Menu::on_walletRPCbutton_clicked()
     loginInfo();
     rpc::playerAddress = ui->walletRPCinput->text()+"/json_rpc";
     checkAddress();
-    checkWallet();   
+    checkWallet();
+    checkThemes();
 }
 
 
@@ -232,7 +285,7 @@ void Menu::on_getTableButton_clicked()
             delay();
             fetchInfo();
             ui->getTableButton->setEnabled(false);
-            ui->menuTextBrowser->setText("Check Tables.txt for table Id");
+
             Confirm::actionConfirmed = false;
     }else {
 
@@ -247,22 +300,25 @@ void Menu::on_newTableButton_clicked()
     confirmationBox();
 
     if(Confirm::actionConfirmed == true){
-        QFile scriptFile("contract/createTable.sh");
-        scriptFile.open(QIODevice::ReadWrite);
-        QByteArray userPass = rpc::rpcLogin.c_str();
-        QByteArray tableOwner = rpc::playerAddress.toUtf8();
-        tableOwner.chop(9);
-
-        if(scriptFile.exists()){
-          scriptFile.resize(0);
-          scriptFile.write("curl -u "+userPass+"  --request POST --data-binary  @contract/Holdero.bas "+tableOwner+"/install_sc >> contract/Tables.txt");
+        QFile unlockedFile("contract/Holdero.bas");
+        unlockedFile.open(QIODevice::ReadWrite);
+        if(unlockedFile.exists()){
+            if(Menu::os == "windows"){
+                if(!QDir::setCurrent(QDir::currentPath()+QStringLiteral("/contract"))){
+                    ui->menuTextBrowser->setText("Could Not Navigate to /contract");
+                }else {
+                    windowsUpload(unlockedFile.exists());
+                    QDir dir = QDir::currentPath();
+                    dir.cdUp();
+                    QDir::setCurrent(dir.path());
+                }
+            }else {
+                unixUpload(unlockedFile.exists());
+            }
+        }else {
+            ui->menuTextBrowser->setText("No Contract File To Upload");
         }
 
-        scriptFile.setPermissions(QFile::ReadOwner|QFile::WriteOwner|QFile::ExeOwner|QFile::ReadGroup|QFile::ExeGroup|QFile::ReadOther|QFile::ExeOther);
-        scriptFile.close();
-
-        system("./contract/createTable.sh >> contract/Tables.txt");
-        ui->menuTextBrowser->setText("Check Tables.txt for table Id");
         Confirm::actionConfirmed = false;
     }else {
 
@@ -294,6 +350,17 @@ void Menu::on_sharedRButton_clicked()
 {
     if(ui->sharedRButton->isChecked()){
         Menu::sharedDeck = true;
+        MainWindow::shared0 = false;
+        MainWindow::shared1 = false;
+        MainWindow::shared2 = false;
+        MainWindow::shared3 = false;
+        MainWindow::shared4 = false;
+        MainWindow::shared5 = false;
+        MainWindow::shared6 = false;
+        MainWindow::shared7 = false;
+        if(rpc::oneId == rpc::IdHash){
+            ownerShare();
+        }
     }else {
         Menu::sharedDeck = false;
     }
@@ -361,6 +428,74 @@ void Menu::on_forceButton_clicked()
 
 void Menu::on_blindSpinBox_valueChanged(double arg1)
 {
-    QString bb = QString::number(ui->blindSpinBox->value()*2);
+    QString bb = QString::number(arg1*2);
     ui->blindSpinBox->setPrefix("Big Blind: "+bb+" / Small Blind: ");
+}
+
+
+void Menu::loadThemeImage()
+{
+    Menu::theme.loadFromData(tImgCtrl->downloadedData());
+    setMenuTheme();
+    Menu::loading = false;
+    Menu::themeChanged = true;
+}
+
+
+void Menu::on_themeComboBox_currentTextChanged(const QString &arg1)
+{
+    QUrl imageUrl;
+
+    if(arg1 == "Main Theme"){
+        Menu::theme.load(":/images/background.png");
+        setMenuTheme();
+        Menu::themeChanged = true;
+        Menu::themeIndex = 0;
+        qInfo() << ("\033[36m♤♡♧♢ Loading Standard Theme♢♧♡♤\033[0m");
+    }
+
+    if(arg1 == "AZYDS0001"){
+        qInfo() << ("\033[36m♤♡♧♢♧♡♤Loading AZYDS0001♤♡♧♢♧♡♤\033[0m");
+        Menu::loading = true;
+        Menu::themeIndex = 1;
+        imageUrl = "https://raw.githubusercontent.com/Azylem/AZYDS0001/main/AZYDS0001-EnterTheMachine-DS.png";
+        tImgCtrl = new FileDownloader(imageUrl, this);
+        connect(tImgCtrl, SIGNAL (downloaded()), this, SLOT (loadThemeImage()));
+    }
+
+    if(arg1 == "AZYDS0002"){
+        qInfo() << ("\033[36m♤♡♧♢♧♡♤Loading AZYDS0002♤♡♧♢♧♡♤\033[0m");
+        Menu::loading = true;
+        Menu::themeIndex = 2;
+        imageUrl = "https://raw.githubusercontent.com/Azylem/AZYDS0002/main/AZYDS0002-CriticalMass-DS.png";
+        tImgCtrl = new FileDownloader(imageUrl, this);
+        connect(tImgCtrl, SIGNAL (downloaded()), this, SLOT (loadThemeImage()));
+    }
+
+    if(arg1 == "AZYDS0003"){
+        qInfo() << ("\033[36m♤♡♧♢♧♡♤Loading AZYDS0003♤♡♧♢♧♡♤\033[0m");
+        Menu::loading = true;
+        Menu::themeIndex = 3;
+        imageUrl = "https://raw.githubusercontent.com/Azylem/AZYDS0003/main/AZYDS0003-GateReactor-DS.png";
+        tImgCtrl = new FileDownloader(imageUrl, this);
+        connect(tImgCtrl, SIGNAL (downloaded()), this, SLOT (loadThemeImage()));
+    }
+
+    if(arg1 == "AZYDS0004"){
+        qInfo() << ("\033[36m♤♡♧♢♧♡♤Loading AZYDS0004♤♡♧♢♧♡♤\033[0m");
+        Menu::loading = true;
+        Menu::themeIndex = 4;
+        imageUrl = "https://raw.githubusercontent.com/Azylem/AZYDS0004/main/AZYDS0004-MaximumSimplicity-DS.png";
+        tImgCtrl = new FileDownloader(imageUrl, this);
+        connect(tImgCtrl, SIGNAL (downloaded()), this, SLOT (loadThemeImage()));
+    }
+
+    if(arg1 == "AZYDS0005"){
+        qInfo() << ("\033[36m♤♡♧♢♧♡♤Loading AZYDS0005♤♡♧♢♧♡♤\033[0m");
+        Menu::loading = true;
+        Menu::themeIndex = 5;
+        imageUrl = "https://raw.githubusercontent.com/Azylem/AZYDS0005/main/AZYDS0005-ConstructReality-DS.png";
+        tImgCtrl = new FileDownloader(imageUrl, this);
+        connect(tImgCtrl, SIGNAL (downloaded()), this, SLOT (loadThemeImage()));
+    }
 }

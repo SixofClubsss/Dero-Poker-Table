@@ -21,12 +21,15 @@
 
 
 QT += core gui
+QT += network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
-
 LIBS += -lcurl
+
+# CONFIG += c++11 static for windows
+# LIBS += -llibcurl for windows
 
 # CONFIG += link_pkgconfig
 # PKGCONFIG += curl
@@ -55,7 +58,8 @@ SOURCES += \
     menu.cpp \
     rpc/daemon_rpc.cpp \
     rpc/menu_rpc.cpp \
-    rpc/wallet_rpc.cpp
+    rpc/wallet_rpc.cpp \
+    shared/filedownloader.cpp
 
 HEADERS += \
     aes/qaesencryption.h \
@@ -63,7 +67,8 @@ HEADERS += \
     hands/handranks.h \
     mainwindow.h \
     menu.h \
-    rpc/rpc.h
+    rpc/rpc.h \
+    shared/filedownloader.h
 
 FORMS += \
     confirm.ui \

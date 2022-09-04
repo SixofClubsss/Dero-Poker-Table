@@ -33,15 +33,13 @@
   </property>
   <property name="windowIcon">
    <iconset resource="img.qrc">
-    <normaloff>:/images/dReamTablesDero.png</normaloff>:/images/dReamTablesDero.png</iconset>
+    <normaloff>:/images/dReamTablesBIcon.png</normaloff>:/images/dReamTablesBIcon.png</iconset>
+  </property>
+  <property name="autoFillBackground">
+   <bool>false</bool>
   </property>
   <property name="styleSheet">
-   <string notr="true">QDialog{
-	background-image: url(:/images/background.png);	
-	background-position: center;
-}
-
-QLineEdit {
+   <string notr="true">QLineEdit {
     color: rgb(255, 255, 255);
     border-style: inset;
     border-width: 1px;
@@ -53,7 +51,7 @@ QLineEdit {
 
 QPushButton:enabled{
 	color: rgb(255, 255, 255);
-	background-color: rgba(85, 88, 93, 90);
+	background-color: rgba(85, 88, 93, 150);
     border: 2px solid #8f8f91;
     border-radius: 6px;
     min-width: 80px;
@@ -143,9 +141,11 @@ QComboBox::drop-down {
 }
 
 QComboBox QAbstractItemView {
-	color: rgb(255, 255, 255);
+	/*color: rgba(255, 255, 255, 0);*/
     border: 2px solid darkgray;
-	background-color: rgba(255, 255, 255, 150);
+	background-color: rgb(255, 255, 255);
+    min-width: 120px;
+
 }
 
 QComboBox:hover {
@@ -168,7 +168,30 @@ QComboBox:hover {
       </size>
      </property>
      <property name="styleSheet">
-      <string notr="true"/>
+      <string notr="true">QPushButton:enabled{
+	color: rgb(255, 255, 255);
+	background-color: rgba(85, 88, 93, 225);
+    border: 2px solid #8f8f91;
+    border-radius: 6px;
+    min-width: 80px;
+}
+
+QPushButton:hover {
+	background-color: rgba(79, 186, 196, 150);
+}
+
+QPushButton:pressed {
+	background-color: rgb(56, 47, 165);
+}
+
+QPushButton:!enabled{
+    border: 2px solid;
+	border-color: rgba(143, 143, 145, 90);
+    border-radius: 6px;
+	color: rgba(0, 0, 0, 0);
+    border-radius: 6px;
+    min-width: 80px;
+}</string>
      </property>
      <property name="text">
       <string>Search Tables</string>
@@ -196,7 +219,29 @@ QComboBox:hover {
       <enum>Qt::RightToLeft</enum>
      </property>
      <property name="styleSheet">
-      <string notr="true"/>
+      <string notr="true">QPushButton:enabled{
+	color: rgb(255, 255, 255);
+	background-color: rgba(85, 88, 93, 225);
+    border: 2px solid #8f8f91;
+    border-radius: 6px;
+}
+
+QPushButton:hover {
+	background-color: rgba(79, 186, 196, 150);
+}
+
+QPushButton:pressed {
+	background-color: rgb(56, 47, 165);
+}
+
+QPushButton:!enabled{
+    border: 2px solid;
+	border-color: rgba(143, 143, 145, 90);
+    border-radius: 6px;
+	color: rgba(0, 0, 0, 0);
+    border-radius: 6px;
+    min-width: 80px;
+}</string>
      </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -227,7 +272,30 @@ QComboBox:hover {
       <enum>Qt::StrongFocus</enum>
      </property>
      <property name="styleSheet">
-      <string notr="true"/>
+      <string notr="true">QPushButton:enabled{
+	color: rgb(255, 255, 255);
+	background-color: rgba(85, 88, 93, 225);
+    border: 2px solid #8f8f91;
+    border-radius: 6px;
+    min-width: 80px;
+}
+
+QPushButton:hover {
+	background-color: rgba(79, 186, 196, 150);
+}
+
+QPushButton:pressed {
+	background-color: rgb(56, 47, 165);
+}
+
+QPushButton:!enabled{
+    border: 2px solid;
+	border-color: rgba(143, 143, 145, 90);
+    border-radius: 6px;
+	color: rgba(0, 0, 0, 0);
+    border-radius: 6px;
+    min-width: 80px;
+}</string>
      </property>
      <property name="text">
       <string>Unlock</string>
@@ -263,7 +331,7 @@ QComboBox:hover {
     border-width: 2px;
     border-radius: 6px;
     padding: 3px;
-	background-color: rgb(25, 25, 25);
+    background-color: rgba(85, 88, 93, 150);
     color: rgb(255, 255, 255);</string>
      </property>
     </widget>
@@ -286,7 +354,7 @@ QComboBox:hover {
       <string notr="true">QGroupBox {
     border: 2px solid gray;
     border-radius: 5px;
-	background-color: rgba(0, 0, 0, 120);
+	background-color: rgba(0, 0, 0, 180);
 }
 
 QGroupBox::title {
@@ -394,7 +462,13 @@ QGroupBox::indicator {
          <enum>Qt::RightToLeft</enum>
         </property>
         <property name="styleSheet">
-         <string notr="true">color: rgb(255, 255, 255);</string>
+         <string notr="true">QCheckBox{
+color: rgb(255, 255, 255);
+}
+
+QCheckBox::indicator::checked{ 
+	color: rgb(0, 0, 0);
+}</string>
         </property>
         <property name="text">
          <string>Valid Table</string>
@@ -575,7 +649,7 @@ QGroupBox::indicator {
       <string notr="true">QGroupBox {
     border: 2px solid gray;
     border-radius: 5px;
-	background-color: rgba(0, 0, 0, 150);
+	background-color: rgba(0, 0, 0, 180);
 }
 
 QGroupBox::title {
@@ -598,7 +672,7 @@ QGroupBox::indicator {
      <widget class="QRadioButton" name="autoPayRButton">
       <property name="geometry">
        <rect>
-        <x>538</x>
+        <x>536</x>
         <y>10</y>
         <width>150</width>
         <height>22</height>
@@ -675,6 +749,9 @@ QGroupBox::indicator {
         <width>84</width>
         <height>22</height>
        </size>
+      </property>
+      <property name="toolTip">
+       <string>How many players at the table</string>
       </property>
       <property name="autoFillBackground">
        <bool>false</bool>
@@ -892,6 +969,27 @@ QGroupBox::indicator {
        <double>0.000000000000000</double>
       </property>
      </widget>
+     <widget class="QComboBox" name="themeComboBox">
+      <property name="geometry">
+       <rect>
+        <x>91</x>
+        <y>16</y>
+        <width>241</width>
+        <height>24</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
+      </property>
+      <property name="maxVisibleItems">
+       <number>12</number>
+      </property>
+      <item>
+       <property name="text">
+        <string>Main Theme</string>
+       </property>
+      </item>
+     </widget>
     </widget>
    </item>
    <item row="0" column="2">
@@ -947,7 +1045,9 @@ QGroupBox::indicator {
       </size>
      </property>
      <property name="styleSheet">
-      <string notr="true">color: rgb(255, 255, 255);</string>
+      <string notr="true">color: rgb(255, 255, 255);
+
+</string>
      </property>
      <property name="text">
       <string>Shared Decks</string>

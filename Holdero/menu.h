@@ -23,8 +23,10 @@ Always play responsibly.
 https://dreamtables.net
 */
 
+#include "mainwindow.h"
 #include "rpc/rpc.h"
 #include "aes/qaesencryption.h"
+#include "shared/filedownloader.h"
 #include "QDialog"
 #include "QFile"
 #include "QImage"
@@ -40,21 +42,32 @@ class Menu : public QDialog
 public:
     explicit Menu(QWidget *parent = nullptr);
     ~Menu();
+    FileDownloader *tImgCtrl;
+    static QImage theme;
+    static QString os;
     static QString userInfo;
     static QString passInfo;
     static QString contractAddress;
     static QString listingAddress;
     static QString donationAddress;
+    static int themeIndex;
+    static bool loading;
+    static bool themeChanged;
     static bool daemonConnected;
     static bool walletConnected;
     static bool mainnet;
     static bool dReams;
     static bool autoPayout;
     static bool sharedDeck;
-    void setFonts();
+    void AZYDS(QString, rpc&);
+    void setFonts(QString);
+    void checkThemes();
+    void setMenuTheme();
     void loginInfo();
     void delay();
     void unlockTable();
+    void unixUpload(bool);
+    void windowsUpload(bool);
     int getDreams();
     int checkDaemon();
     int checkWallet();
@@ -68,6 +81,7 @@ public:
     int listTable();
     int delistTable();
     int forceStart();
+    int ownerShare();
 
 
 private slots:
@@ -106,6 +120,11 @@ private slots:
     void on_blindSpinBox_valueChanged(double);
 
     void on_sharedRButton_clicked();
+
+    void loadThemeImage();
+
+    void on_themeComboBox_currentTextChanged(const QString &arg1);
+
 
 private:
     Ui::Menu *ui;

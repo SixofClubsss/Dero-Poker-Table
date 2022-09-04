@@ -37,7 +37,8 @@ public:
     ~Confirm();
     static bool actionConfirmed;
     static int whichText;
-    void setFonts();
+    void setConfirmTheme();
+    void setFonts(QString);
     void getTableText();
     void newTableText();
     void listTableText();

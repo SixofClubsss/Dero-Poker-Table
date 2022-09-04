@@ -232,12 +232,12 @@ int MainWindow::dealHand()      /// Blinds/ante and deals player a hand
       QJsonValue dealTxid = cbResults.value("txid");
 
       if(dealTxid.isString()){
-          ui->logTextBrowser->setText("Deal Five Cards TXID: "+dealTxid.toString());
+          ui->logTextBrowser->setText("Deal Hand TXID: "+dealTxid.toString());
           ui->txLogTextBrowser->append("TXID: "+dealTxid.toString()+"\n");
           Hand::keyIsPub = false;
       }else {
 
-          ui->logTextBrowser->setText("Error No Deal Five Cards TXID");
+          ui->logTextBrowser->setText("Error No Deal Hand TXID");
           MainWindow::skipCount = 5;
       }
 
@@ -356,7 +356,6 @@ int MainWindow::check()      /// Check also used to fold on bet
           ui->logTextBrowser->setText("Check/Fold TXID: "+checkTxid.toString());
           ui->txLogTextBrowser->append("TXID: "+checkTxid.toString()+"\n");
       }else {
-
           ui->logTextBrowser->setText("Error No Check/Fold TXID");
           MainWindow::skipCount = 5;
        }
@@ -417,7 +416,6 @@ int MainWindow::winner()     /// Owner sends payout to winner
             ui->txLogTextBrowser->append("TXID: "+txid.toString()+"\n");
             blankDisplay();
         }else {
-
             ui->logTextBrowser->setText("Error No Winner TXID");
             MainWindow::skipCount = 5;
         }
@@ -477,7 +475,6 @@ int MainWindow::autopayWinner(QString whoWon)     /// Owner sends payout to winn
             ui->txLogTextBrowser->append("TXID: "+txid.toString()+"\n");
             MainWindow::displayedRes = false;
         }else {
-
             ui->logTextBrowser->setText("Error Couldn't Pay Winner");
             MainWindow::skipCount = 5;
         }
@@ -487,7 +484,7 @@ int MainWindow::autopayWinner(QString whoWon)     /// Owner sends payout to winn
 }
 
 
-int MainWindow::splitWinner()     /// Owner sends split payout to winners
+int MainWindow::splitWinner(int p1Fold, int p2Fold, int p3Fold, int p4Fold, int p5Fold, int p6Fold)     /// Owner sends split payout to winners
 {
     CURL *curlSplit;
     CURLcode res;
@@ -497,32 +494,32 @@ int MainWindow::splitWinner()     /// Owner sends split payout to winners
     int ways = 0;
     QString splitWinners[6] = {"Zero", "Zero", "Zero", "Zero", "Zero", "Zero"};
 
-    if(p1HighCardArr[0] > 0){
+    if(p1HighCardArr[0] > 0 && p1Fold != 1){
         ways = 1;
         splitWinners[0] = "Player1";
     }
 
-    if(p2HighCardArr[0] > 0){
+    if(p2HighCardArr[0] > 0 && p2Fold != 1){
         ++ways;
         splitWinners[1] = "Player2";
     }
 
-    if(p3HighCardArr[0] > 0){
+    if(p3HighCardArr[0] > 0 && p3Fold != 1){
         ++ways;
         splitWinners[2] = "Player3";
     }
 
-    if(p4HighCardArr[0] > 0){
+    if(p4HighCardArr[0] > 0 && p4Fold != 1){
         ++ways;
         splitWinners[3] = "Player4";
     }
 
-    if(p5HighCardArr[0] > 0){
+    if(p5HighCardArr[0] > 0 && p5Fold != 1){
         ++ways;
         splitWinners[4] = "Player5";
     }
 
-    if(p6HighCardArr[0] > 0){
+    if(p6HighCardArr[0] > 0 && p6Fold != 1){
         ++ways;
         splitWinners[5] = "Player6";
     }
@@ -530,7 +527,7 @@ int MainWindow::splitWinner()     /// Owner sends split payout to winners
     std::sort(splitWinners, splitWinners + 6);
     QString stringWays = QString::number(ways);
 
-    QString parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"transfer\",\"params\":{\"transfers\": [{\"destination\":\"dero1qyr8yjnu6cl2c5yqkls0hmxe6rry77kn24nmc5fje6hm9jltyvdd5qq4hn5pn\"}], \"fees\":500 , \"scid\":\""+Menu::contractAddress+"\",\"ringsize\":2, \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"SplitWinner\"},"
+    QString parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"transfer\",\"params\":{\"transfers\": [{\"destination\":\"dero1qyr8yjnu6cl2c5yqkls0hmxe6rry77kn24nmc5fje6hm9jltyvdd5qq4hn5pn\"}], \"fees\":600 , \"scid\":\""+Menu::contractAddress+"\",\"ringsize\":2, \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"SplitWinner\"},"
                      "{\"name\":\"div\",\"datatype\":\"U\",\"value\":"+stringWays+"}, {\"name\":\"split1\",\"datatype\":\"S\",\"value\":\""+splitWinners[0]+"\"}, {\"name\":\"split2\",\"datatype\":\"S\",\"value\":\""+splitWinners[1]+"\"}, {\"name\":\"split3\",\"datatype\":\"S\",\"value\":\""+splitWinners[2]+"\"}, {\"name\":\"split4\",\"datatype\":\"S\",\"value\":\""+splitWinners[3]+"\"}, {\"name\":\"split5\",\"datatype\":\"S\",\"value\":\""+splitWinners[4]+"\"}, {\"name\":\"split6\",\"datatype\":\"S\",\"value\":\""+splitWinners[5]+"\"}]}}";
 
     string addThis = parts.toStdString();
@@ -644,4 +641,3 @@ int MainWindow::revealKey()      /// Stores client key on chain for other player
     }
     return 0;
 }
-

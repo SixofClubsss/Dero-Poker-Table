@@ -22,6 +22,7 @@ https://dreamtables.net
 */
 
 #include "mainwindow.h"
+#include "menu.h"
 #include "confirm.h"
 #include "ui_confirm.h"
 
@@ -35,7 +36,15 @@ Confirm::Confirm(QWidget *parent) :
     ui(new Ui::Confirm)
 {
     ui->setupUi(this);
-    setFonts();
+    QPalette palette;
+    if(Menu::theme.isNull()){
+        QPixmap bkgnd(":/images/background.png");
+        palette.setBrush(QPalette::Window, bkgnd);
+        this->setPalette(palette);
+    }else {
+         setConfirmTheme();
+    }
+    setFonts(Menu::os);
     Confirm::actionConfirmed = false;
 
     if(Confirm::whichText == 1){           /// Confirm menu will look at which button was clicked
@@ -63,19 +72,38 @@ Confirm::~Confirm()
     delete ui;
 }
 
-void Confirm::setFonts()
+
+void Confirm::setConfirmTheme()
 {
+    QPalette palette;
+    palette.setBrush(QPalette::Window, Menu::theme);
+    this->setPalette(palette);
+}
+
+
+void Confirm::setFonts(QString os)
+{ 
+    int ubR1;
+    int ubR2;
+
+    if(os == "macos" || os == "osx" || os == "darwin"){
+        ubR1 = 16;
+        ubR2 = 13;
+    }else {
+        ubR1 = 12;
+        ubR2 = 10;
+    }
 
     int fontId1 = QFontDatabase::addApplicationFont(":/fonts/Ubuntu-R.ttf");
     QString fontFamily1 = QFontDatabase::applicationFontFamilies(fontId1).at(0);
     QFont ubuntuRegular12(fontFamily1);
-    ubuntuRegular12.setPointSize(12);
+    ubuntuRegular12.setPointSize(ubR1);
     ui->confirmTextBrowser->setFont(ubuntuRegular12);
 
     int fontId2 = QFontDatabase::addApplicationFont(":/fonts/Ubuntu-R.ttf");
     QString fontFamily2 = QFontDatabase::applicationFontFamilies(fontId2).at(0);
     QFont ubuntuRegular(fontFamily2);
-    ubuntuRegular.setPointSize(10);
+    ubuntuRegular.setPointSize(ubR2);
     ui->buttonBox->setFont(ubuntuRegular);
 }
 

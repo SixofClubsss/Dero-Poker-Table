@@ -140,6 +140,9 @@ public:
     static QString hashOne;
     static QString hashTwo;
 
+    static QString sharedFace;
+    static QString sharedBack;
+
     int getBalance();
     int getHeight();
     int fetchScData();
