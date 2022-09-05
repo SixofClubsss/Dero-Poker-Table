@@ -106,7 +106,7 @@ MainWindow::~MainWindow()
     qInfo() << ("\033[36m ♤♡♧♢♧♡♤♡♧♢♧♡♤♡♧♢♧♡♤♡♧♢♧♡♤♡♧♢♧♡♤\033[0m");
     qInfo() << ("\033[36m           Exiting...\033[0m");
     qInfo() << ("\033[36m ♤♡♧♢♧♡♤♡♧♢♧♡♤♡♧♢♧♡♤♡♧♢♧♡♤♡♧♢♧♡♤\033[0m");
-
+    delete trayIcon;
     Worker::workThread.quit();
     delete ui;
 }
