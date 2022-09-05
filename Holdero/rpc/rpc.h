@@ -59,7 +59,6 @@ public:
     static QString salt;
     static QString playerAddress;
     static QString daemonAddress;
-
     static QString IdHash;
     static int seats;
     static int count;

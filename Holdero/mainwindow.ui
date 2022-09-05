@@ -24,11 +24,7 @@
     <normaloff>:/images/dReamTablesIcon.png</normaloff>:/images/dReamTablesIcon.png</iconset>
   </property>
   <property name="styleSheet">
-   <string notr="true">QMainWindow{
-	/*background-image: url(:/images/background.png);*/
-}
-
-QGroupBox {
+   <string notr="true">QGroupBox {
     border: 2px solid gray;
     border-radius: 5px;
 }
@@ -125,7 +121,7 @@ QComboBox::drop-down {
 }
 
 QComboBox QAbstractItemView {
-	color: rgb(255, 255, 255);
+	color: rgb(0, 0, 0);
     border: 2px solid darkgray;
 	background-color: rgba(255, 255, 255, 150);
 }
@@ -242,6 +238,9 @@ QPushButton:pressed {
         <width>150</width>
         <height>22</height>
        </size>
+      </property>
+      <property name="toolTip">
+       <string>Card face selection</string>
       </property>
       <property name="styleSheet">
        <string notr="true">color: rgb(0, 0, 0);</string>
@@ -763,6 +762,9 @@ QPushButton:pressed {
         <height>20</height>
        </size>
       </property>
+      <property name="toolTip">
+       <string>Leave game</string>
+      </property>
       <property name="layoutDirection">
        <enum>Qt::RightToLeft</enum>
       </property>
@@ -1258,6 +1260,9 @@ QPushButton:pressed {
          <property name="focusPolicy">
           <enum>Qt::NoFocus</enum>
          </property>
+         <property name="toolTip">
+          <string>Whos turn</string>
+         </property>
          <property name="styleSheet">
           <string notr="true">QDoubleSpinBox{
     background-color: rgba(85, 88, 93, 180);
@@ -1320,6 +1325,9 @@ QPushButton:pressed {
             <property name="focusPolicy">
              <enum>Qt::NoFocus</enum>
             </property>
+            <property name="toolTip">
+             <string>Your player Id</string>
+            </property>
             <property name="styleSheet">
              <string notr="true">QDoubleSpinBox{
     background-color: rgba(85, 88, 93, 180);
@@ -1371,6 +1379,9 @@ QPushButton:pressed {
               <height>20</height>
              </size>
             </property>
+            <property name="toolTip">
+             <string>Check/fold</string>
+            </property>
             <property name="text">
              <string>Check</string>
             </property>
@@ -1406,6 +1417,9 @@ QPushButton:pressed {
             <property name="focusPolicy">
              <enum>Qt::StrongFocus</enum>
             </property>
+            <property name="toolTip">
+             <string>Bet amount</string>
+            </property>
             <property name="styleSheet">
              <string notr="true">QDoubleSpinBox::down-button:!enabled {
 	color: rgb(255, 0, 0);
@@ -1439,6 +1453,9 @@ QPushButton:pressed {
               <height>20</height>
              </size>
             </property>
+            <property name="toolTip">
+             <string>Place bet</string>
+            </property>
             <property name="text">
              <string>Bet</string>
             </property>
@@ -1470,6 +1487,9 @@ QPushButton:pressed {
               <width>84</width>
               <height>20</height>
              </size>
+            </property>
+            <property name="toolTip">
+             <string>Place blinds and deal hand</string>
             </property>
             <property name="layoutDirection">
              <enum>Qt::LeftToRight</enum>
@@ -1599,6 +1619,9 @@ p, li { white-space: pre-wrap; }
         <height>22</height>
        </size>
       </property>
+      <property name="toolTip">
+       <string>Manual payout receiver</string>
+      </property>
       <property name="styleSheet">
        <string notr="true">color: rgb(0, 0, 0);</string>
       </property>
@@ -1618,6 +1641,9 @@ p, li { white-space: pre-wrap; }
         <height>20</height>
        </size>
       </property>
+      <property name="toolTip">
+       <string>Owner manual payout</string>
+      </property>
       <property name="text">
        <string>Pay Winner</string>
       </property>
@@ -1636,6 +1662,9 @@ p, li { white-space: pre-wrap; }
         <width>150</width>
         <height>22</height>
        </size>
+      </property>
+      <property name="toolTip">
+       <string>Card back selection</string>
       </property>
       <property name="styleSheet">
        <string notr="true">color: rgb(0, 0, 0);</string>
@@ -1754,6 +1783,9 @@ p, li { white-space: pre-wrap; }
         <height>20</height>
        </size>
       </property>
+      <property name="toolTip">
+       <string>Join game</string>
+      </property>
       <property name="layoutDirection">
        <enum>Qt::RightToLeft</enum>
       </property>
@@ -1775,6 +1807,20 @@ p, li { white-space: pre-wrap; }
    </property>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>entryPushButton</tabstop>
+  <tabstop>leaveButton</tabstop>
+  <tabstop>menuButton</tabstop>
+  <tabstop>handRankButton</tabstop>
+  <tabstop>dealHandPushButton</tabstop>
+  <tabstop>betButton</tabstop>
+  <tabstop>betSpinBox</tabstop>
+  <tabstop>checkButton</tabstop>
+  <tabstop>payoutPushButton</tabstop>
+  <tabstop>winnerComboBox</tabstop>
+  <tabstop>backComboBox</tabstop>
+  <tabstop>deckComboBox</tabstop>
+ </tabstops>
  <resources>
   <include location="img.qrc"/>
  </resources>

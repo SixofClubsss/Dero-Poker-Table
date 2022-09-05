@@ -77,7 +77,6 @@ public:
     static bool startUpSkip;
     static bool displayedRes;
     static int skipCount;
-    static int whichDeck;
     void offset();
     void setFonts(QString);
     void checkDecks();

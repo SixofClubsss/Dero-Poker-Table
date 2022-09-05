@@ -2150,7 +2150,6 @@ QString MainWindow::displayStandard(int card)   /// Gets suffix for standard car
         }
 
         switch (card){
-           case 0: suffix = "card1.png"; break;
            case 1: suffix = "card1.png"; break;
            case 2: suffix = "card2.png"; break;
            case 3: suffix = "card3.png"; break;
@@ -2233,7 +2232,6 @@ void MainWindow::displayShared(int card, int where)   /// Gets shared card image
 
     if(card > 0){
         switch (card){
-        case 0: suffix = "card1.png"; break;
         case 1: suffix = "card1.png"; break;
         case 2: suffix = "card2.png"; break;
         case 3: suffix = "card3.png"; break;

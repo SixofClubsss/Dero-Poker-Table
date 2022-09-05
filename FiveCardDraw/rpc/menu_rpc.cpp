@@ -324,7 +324,7 @@ int Menu::setTable()      /// Owner set table player limit and ante
     char error[CURL_ERROR_SIZE];
 
     QString playerLimit = QString::number(ui->playersComboBox->currentIndex());
-    QString anteAmount = QString::number(ui->anteSpinBox->value()*100000);
+    QString anteAmount = QString::number(ui->anteSpinBox->value()*100000, 'g', 10);
     QString parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"transfer\",\"params\":{\"transfers\":[{\"destination\":\"dero1qyr8yjnu6cl2c5yqkls0hmxe6rry77kn24nmc5fje6hm9jltyvdd5qq4hn5pn\"}] , \"fees\":500 , \"scid\":\""+Menu::contractAddress+"\", \"ringsize\":2 , \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"SetTable\"},{\"name\":\"seats\",\"datatype\":\"U\",\"value\":"+playerLimit+" },{\"name\":\"ante\",\"datatype\":\"U\",\"value\":"+anteAmount+" }, {\"name\":\"address\",\"datatype\":\"H\",\"value\":\""+rpc::IdHash+"\" }] }}";
     string addThis = parts.toStdString();
     const char *postthis = addThis.c_str();
@@ -382,7 +382,7 @@ int Menu::cleanTable()      /// Clean table function to withdraw any funds at ta
     char error[CURL_ERROR_SIZE];
 
     QString playerLimit = QString::number(ui->playersComboBox->currentIndex());
-    QString amount = QString::number(ui->anteSpinBox->value()*100000);
+    QString amount = QString::number(ui->anteSpinBox->value()*100000, 'g', 10);
     QString parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"transfer\",\"params\":{\"transfers\": [{\"destination\":\"dero1qyr8yjnu6cl2c5yqkls0hmxe6rry77kn24nmc5fje6hm9jltyvdd5qq4hn5pn\"}], \"fees\":500 ,\"scid\":\""+Menu::contractAddress+"\", \"ringsize\":2, \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"CleanTable\"},{\"name\":\"amount\",\"datatype\":\"U\",\"value\":"+amount+" }] }}";
     string addThis = parts.toStdString();
     const char *postthis = addThis.c_str();

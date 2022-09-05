@@ -137,11 +137,6 @@ void MainWindow::setFonts(QString os)
         mcR2 = 24;
         mcR3 = 18;
         ubR = 13;
-    }else if(os == "windows"){
-        mcR1 = 24;
-        mcR2 = 20;
-        mcR3 = 10;
-        ubR = 10;
     }else {
         mcR1 = 24;
         mcR2 = 20;
@@ -195,6 +190,7 @@ void MainWindow::setFonts(QString os)
     ui->backComboBox->setFont(ubuntuRegular);
     ui->deckComboBox->setFont(ubuntuRegular);
 }
+
 
 void MainWindow::checkDecks()
 {
@@ -251,7 +247,6 @@ void MainWindow::buttonDelay()  /// When any button has been pressed disabled al
     ui->dealHandPushButton->setEnabled(false);
     ui->checkButton->setEnabled(false);
     ui->betButton->setEnabled(false);
-
     ui->payoutPushButton->setEnabled(false);
     ui->winnerComboBox->setEnabled(false);
     ui->turnReadOut->setStyleSheet( "QTextBrowser{border-color: rgb(128, 128, 128); border-style: inset; border-width: 2px; border-radius: 6px; padding: 3px; background-color: rgba(85, 88, 93, 90); color: rgb(255, 255, 255);};" );
@@ -423,8 +418,10 @@ void MainWindow::createActions()    /// Tray actions
     revealAction = new QAction(tr("&Reveal Key"), this);
     connect(revealAction, SIGNAL(triggered()), this, SLOT(manualReveal()));
 
-    quitAction = new QAction(tr("&Quit"), this);
-    connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
+    if(Menu::os != "macos" && Menu::os != "osx" && Menu::os != "darwin"){
+        quitAction = new QAction(tr("&Quit"), this);
+        connect(quitAction, SIGNAL(triggered()), this, SLOT(closeAllWindows()));
+    }
 }
 
 
@@ -446,8 +443,10 @@ void MainWindow::createTrayIcon()
     trayIconMenu->addAction(minimizeAction);
     trayIconMenu->addAction(maximizeAction);
     trayIconMenu->addAction(revealAction);
-    trayIconMenu->addSeparator();
-    trayIconMenu->addAction(quitAction);
+    if(Menu::os != "macos" && Menu::os != "osx" && Menu::os != "darwin"){
+        trayIconMenu->addSeparator();
+        trayIconMenu->addAction(quitAction);
+    }
 
     trayIcon = new QSystemTrayIcon(tIcon);
     trayIcon->setContextMenu(trayIconMenu);

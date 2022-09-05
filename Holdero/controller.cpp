@@ -43,7 +43,6 @@ bool MainWindow::clicked;
 bool MainWindow::startUpSkip;
 bool MainWindow::displayedRes;
 int MainWindow::skipCount;
-int MainWindow::whichDeck;
 
 bool Hand::hasBet;
 bool Hand::called;
@@ -126,11 +125,11 @@ QString rpc::hashTwotwo;
 QString rpc::hashThreeone;
 QString rpc::hashThreetwo;
 
-QString rpc::hashFourone ;
-QString rpc::hashFourtwo ;
+QString rpc::hashFourone;
+QString rpc::hashFourtwo;
 
-QString rpc::hashFiveone ;
-QString rpc::hashFivetwo ;
+QString rpc::hashFiveone;
+QString rpc::hashFivetwo;
 
 QString rpc::hashSixone;
 QString rpc::hashSixtwo;
@@ -390,26 +389,18 @@ void MainWindow::setPlayerId(QString oneId, QString twoId, QString threeId, QStr
 {
     if(oneId == rpc::IdHash){
        ui->playerId->setValue(1);
-    }
-
-    if(twoId == rpc::IdHash){
+    }else if (twoId == rpc::IdHash){
        ui->playerId->setValue(2);
-    }
-
-    if(threeId == rpc::IdHash){
+    }else if (threeId == rpc::IdHash){
        ui->playerId->setValue(3);
-    }
-
-    if(fourId == rpc::IdHash){
+    }else if (fourId == rpc::IdHash){
        ui->playerId->setValue(4);
-    }
-
-    if(fiveId == rpc::IdHash){
+    }else if (fiveId == rpc::IdHash){
        ui->playerId->setValue(5);
-    }
-
-    if(sixId == rpc::IdHash){
+    }else if (sixId == rpc::IdHash){
        ui->playerId->setValue(6);
+    }else {
+        ui->playerId->setValue(0);
     }
 }
 
@@ -524,13 +515,13 @@ void MainWindow::localPlayerControl(int bet, double wager, double ante, double r
 {
     if(ui->dsbTurn->value() == ui->playerId->value()){   /// Local players turn button control
         if(rpc::end != 1 || rpc::revealBool != 1){
-        ui->dealHandPushButton->setEnabled(true);
-        ui->leaveButton->setEnabled(true);
+            ui->dealHandPushButton->setEnabled(true);
+            ui->leaveButton->setEnabled(true);
         }
 
         if(rpc::revealBool == 1){
-        ui->dealHandPushButton->setEnabled(false);
-        ui->leaveButton->setEnabled(false);
+            ui->dealHandPushButton->setEnabled(false);
+            ui->leaveButton->setEnabled(false);
         }
 
         if(bet >= 1 || rpc::turnBool == 1 || rpc::riverBool == 1){                          /// Sets buttons when in bet
@@ -922,9 +913,9 @@ int MainWindow::card(QString hash)  /// Gets local cards and decrypt with local 
     for (int i = 1; i < 53; i++) {
          QString finder = QString::number(i);
          QString pcSeed = rpc::clientKey;
-         QString add2 = rpc::contractSeed;
-         QString ee = rpc::clientKey+finder+add2;
-         QString card = QString(QCryptographicHash::hash((ee.toUtf8()),QCryptographicHash::Sha256).toHex());
+         QString scSeed = rpc::contractSeed;
+         QString add = rpc::clientKey+finder+scSeed;
+         QString card = QString(QCryptographicHash::hash((add.toUtf8()),QCryptographicHash::Sha256).toHex());
 
          if(card == hash){
              return i;
@@ -951,9 +942,9 @@ int MainWindow::keyCard(QString hash, int who)  /// Gets other player cards and 
     for (int i = 1; i < 53; i++) {
 
          QString finder = QString::number(i);
-         QString add2 = rpc::contractSeed;
-         QString ee = keyCheck+finder+add2;
-         QString card = QString(QCryptographicHash::hash((ee.toUtf8()),QCryptographicHash::Sha256).toHex());
+         QString scSeed = rpc::contractSeed;
+         QString add = keyCheck+finder+scSeed;
+         QString card = QString(QCryptographicHash::hash((add.toUtf8()),QCryptographicHash::Sha256).toHex());
 
          if(card == hash){
              return i;
@@ -971,8 +962,8 @@ void MainWindow::pEndTextLine(QString t, QString h1, QString h2, int p, int r)
     int ps2;
 
     if(Menu::os == "macos" || Menu::os == "osx" || Menu::os == "darwin" || Menu::os == "arch"){
-        ps1 = 51;
-        ps2 = 66;
+        ps1 = 45;
+        ps2 = 72;
     }else if(Menu::os == "windows"){
         ps1 = 30;
         ps2 = 51;
@@ -1240,7 +1231,7 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
                 less3();
             }
 
-            if((p4Rank != winningRank[0]) || (winningRank[0] == 9 && p4HighPair != highestPair[5]) || (winningRank[0] == 8 && p4HighPair != highestPair[5]) || (winningRank[0] == 7 && p4HighPair != highestPair[5]) || (winningRank[0] == 4 && p4HighTrip != highestTrip[5]) || (winningRank[0] == 3 && p4HighTrip != highestTrip[5])){
+            if(p4Rank != winningRank[0] || (winningRank[0] == 9 && p4HighPair != highestPair[5]) || (winningRank[0] == 8 && p4HighPair != highestPair[5]) || (winningRank[0] == 7 && p4HighPair != highestPair[5]) || (winningRank[0] == 4 && p4HighTrip != highestTrip[5]) || (winningRank[0] == 3 && p4HighTrip != highestTrip[5])){
                 less4();
             }
 
@@ -1558,7 +1549,6 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
                 ui->turnReadOut->setText("Push, Split pot");
                 compareLoop();
                 if(rpc::oneId == rpc::IdHash){
-                    ui->winnerComboBox->insertItem(ui->winnerComboBox->count()+1, "Split");
 
                     if(Menu::autoPayout == true && rpc::paidOut == false && rpc::pot != 0){     /// Contract not set up for split pot situation, owner will split
                         rpc::paidOut = true;
@@ -2116,7 +2106,7 @@ void MainWindow::displayTurnCard(int card)   ///  Displays turn card
             displayShared(card, 6);
         }
     }else {
-        if(Menu::sharedDeck == false|| ui->playerId->value() == 0){
+        if(Menu::sharedDeck == false || ui->playerId->value() == 0){
             if(ui->backComboBox->currentIndex() > 1){
                 ui->turnCardLabel->setPixmap(QPixmap::fromImage(displayCustom(0)));
             }else {

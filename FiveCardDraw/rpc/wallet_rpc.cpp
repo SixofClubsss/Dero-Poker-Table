@@ -176,7 +176,7 @@ int MainWindow::dealFiveCardHand()      /// Ante and deals player a hand
     string dealReadBuffer;
     char error[CURL_ERROR_SIZE];
 
-    QString anteAmount = QString::number(ui->anteIsDSB->value()*100000);
+    QString anteAmount = QString::number(ui->anteIsDSB->value()*100000, 'g', 10);
     QString parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"transfer\",\"params\":{\"transfers\":[{\"amount\":500 , \"destination\":\"dero1qyr8yjnu6cl2c5yqkls0hmxe6rry77kn24nmc5fje6hm9jltyvdd5qq4hn5pn\", \"burn\":"+anteAmount+"}] , \"fees\":600 , \"scid\":\""+Menu::contractAddress+"\", \"ringsize\":2 , \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"DealFiveCardHand\"} , {\"name\":\"pcSeed\",\"datatype\":\"H\",\"value\":\""+rpc::clientKey+"\"}] }}";
     string addThis = parts.toStdString();
     const char *postthis = addThis.c_str();
@@ -236,7 +236,7 @@ int MainWindow::bet()      /// Place bet also for call and raise
     string betReadBuffer;
     char error[CURL_ERROR_SIZE];
 
-    QString dAmount = QString::number(ui->betSpinBox->value()*100000);
+    QString dAmount = QString::number(ui->betSpinBox->value()*100000, 'g', 10);
     QString parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"transfer\",\"params\":{\"transfers\":[{\"destination\":\"dero1qyr8yjnu6cl2c5yqkls0hmxe6rry77kn24nmc5fje6hm9jltyvdd5qq4hn5pn\", \"burn\":"+dAmount+"}] , \"fees\":300, \"scid\":\""+Menu::contractAddress+"\", \"ringsize\":2 , \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"Bet\"}] }}";
     string addThis = parts.toStdString();
     const char *postthis = addThis.c_str();

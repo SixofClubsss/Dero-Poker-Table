@@ -430,6 +430,8 @@ void Menu::on_blindSpinBox_valueChanged(double arg1)
 {
     QString bb = QString::number(arg1*2);
     ui->blindSpinBox->setPrefix("Big Blind: "+bb+" / Small Blind: ");
+    QString s1 = QString::number(arg1*100000, 'g', 10);
+    qInfo() << s1;
 }
 
 
