@@ -31,7 +31,12 @@ https://dreamtables.net
 #include "QFont"
 #include "QFontDatabase"
 #include "QImageReader"
+#include "QAction"
+#include "QMenu"
+#include "QSystemTrayIcon"
 #include "rpc/rpc.h"
+#include "handranks.h"
+#include "shared/filedownloader.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -45,12 +50,32 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    QIcon tIcon;
+    QIcon bIcon;
+    QMenu *trayIconMenu;
+    QSystemTrayIcon *trayIcon;
+    FileDownloader *b_ImgCtrl;
+    FileDownloader *c1_ImgCtrl;
+    FileDownloader *c2_ImgCtrl;
+    FileDownloader *c3_ImgCtrl;
+    FileDownloader *c4_ImgCtrl;
+    FileDownloader *c5_ImgCtrl;
+    static QString faceUrl;
+    static QString backUrl;
+    static bool notified;
+    static bool emptyBool;
+    static bool shared0;
+    static bool shared1;
+    static bool shared2;
+    static bool shared3;
+    static bool shared4;
+    static bool shared5;
     static bool clicked;
     static bool startUpSkip;
     static bool displayedRes;
     static int skipCount;
     void offset();
-    void setFonts();
+    void setFonts(QString);
     void checkDecks();
     void AZYPC(QString, rpc&);
     void AZYPCB(QString, rpc&);
@@ -86,7 +111,7 @@ public:
     void clearHighlight();
     int winner();
     int autopayWinner(QString whoWon);
-    int splitWinner();
+    int splitWinner(int p1Fold, int p2Fold, int p3Fold, int p4Fold, int p5Fold, int p6Fold);
     void setOpenClosed(int seats, double ante, double dealer);
     void setPlayerStatus(int p1Out, QString oneId, QString twoId, QString threeId, QString fourId, QString fiveId, QString sixId);
     void highlightWhosTurn(int turn, int seats);
@@ -106,9 +131,17 @@ public:
     void clearFoldedDisplay(int p1Fold, int p2Fold, int p3Fold, int p4Fold, int p5Fold, int p6Fold);
     void localEnd(QString oneId, int seats, int p1Fold, int p2Fold, int p3Fold, int p4Fold, int p5Fold, int p6Fold);
     int revealKey();
+    void displayShared(int, int);
+
+signals:
+    void turnSignal();
+
+    void revealSignal();
 
 
 private slots:
+    void setMainTheme();
+
     void buttonCatch();
 
     void controller();
@@ -135,9 +168,38 @@ private slots:
 
     void on_handRankButton_clicked();
 
+    void loadBackImage();
+
+    void loadCardImage1();
+
+    void loadCardImage2();
+
+    void loadCardImage3();
+
+    void loadCardImage4();
+
+    void loadCardImage5();
+
+    void revealNotify();
+
+    void turnNotify();
+
+    void manualReveal();
+
+    void on_deckComboBox_currentTextChanged(const QString &arg1);
+
+    void on_backComboBox_currentTextChanged(const QString &arg1);
+
 private:
     Ui::MainWindow *ui;
+    QAction *minimizeAction;
+    QAction *maximizeAction;
+    QAction *revealAction;
+    QAction *quitAction;
 
+    void createIcons();
+    void createActions();
+    void createTrayIcon();
     void compareLoop();
     void compare1_2();
     void compare1_3();
@@ -175,6 +237,7 @@ private:
     void less3();
     void less2();
     void less1();
+    void pEndTextLine(QString t, int h1, int h2,  int h3, int h4, int h5, int r);
 
     int arrSplit[2];
     int suitSplit1[2];
@@ -184,24 +247,31 @@ private:
     int suitSplit5[2];
     int p1Rank;
     int p1HighPair = 0;
+    int p1HighTrip = 0;
     int p1HighCardArr[5];
     int p2Rank;
     int p2HighPair = 0;
+    int p2HighTrip = 0;
     int p2HighCardArr[5];
     int p3Rank;
     int p3HighPair = 0;
+    int p3HighTrip = 0;
     int p3HighCardArr[5];
     int p4Rank;
     int p4HighPair = 0;
+    int p4HighTrip = 0;
     int p4HighCardArr[5];
     int p5Rank;
     int p5HighPair = 0;
+    int p5HighTrip = 0;
     int p5HighCardArr[5];
     int p6Rank;
     int p6HighPair = 0;
+    int p6HighTrip = 0;
     int p6HighCardArr[5];
     int getArray(int card);
     int getHighPair(int h[5]);
+    int getHighTrip(int h[5]);
     int makeHand();
     QString handToText(int rank);
 

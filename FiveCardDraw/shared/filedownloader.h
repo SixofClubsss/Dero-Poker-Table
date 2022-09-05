@@ -1,7 +1,7 @@
-#ifndef CONFIRM_H
-#define CONFIRM_H
+#ifndef FILEDOWNLOADER_H
+#define FILEDOWNLOADER_H
 /*
-dReam Tables Five Card Draw Poker
+dReam Tables Holdero Poker
 
 Copyright (C) 2022  dReam Tables
 
@@ -23,33 +23,33 @@ Always play responsibly.
 https://dreamtables.net
 */
 
-#include "QDialog"
+#include "QObject"
+#include "QByteArray"
+#include "QNetworkAccessManager"
+#include "QNetworkRequest"
+#include "QNetworkReply"
 
 
-namespace Ui { class Confirm; }
-
-class Confirm : public QDialog
+class FileDownloader : public QObject
 {
     Q_OBJECT
-
 public:
-    explicit Confirm(QWidget *parent = nullptr);
-    ~Confirm();
-    static bool actionConfirmed;
-    static int whichText;
-    void setConfirmTheme();
-    void setFonts(QString);
-    void getTableText();
-    void newTableText();
-    void listTableText();
-    void delistTableText();
-    void forceStartText();
+    explicit FileDownloader(QUrl imageUrl, QObject *parent = 0);
+    virtual ~FileDownloader();
+    QByteArray downloadedData() const;
+
+
+signals:
+    void downloaded();
+
 
 private slots:
-    void on_buttonBox_accepted();
+    void fileDownloaded(QNetworkReply* pReply);
+
 
 private:
-    Ui::Confirm *ui;
+    QNetworkAccessManager m_WebCtrl;
+    QByteArray m_DownloadedData;
 };
 
-#endif // CONFIRM_H
+#endif // FILEDOWNLOADER_H

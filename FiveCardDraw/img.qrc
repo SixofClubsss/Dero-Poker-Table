@@ -114,5 +114,6 @@
         <file>images/cards/standard/dark/card52.png</file>
         <file>images/cards/backs/back1.png</file>
         <file>images/cards/backs/back2.png</file>
+        <file>images/dReamTablesBIcon.png</file>
     </qresource>
 </RCC>

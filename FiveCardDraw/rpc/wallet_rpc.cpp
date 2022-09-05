@@ -78,7 +78,6 @@ int MainWindow::playerEntry()      /// Player registry (sit down at table)
           ui->winnerComboBox->setEnabled(false);
           MainWindow::skipCount = 3;
       }else {
-
           ui->logTextBrowser->setText("Error No Entry TXID");      /// No TXID was recieved
           MainWindow::skipCount = 5;
       }
@@ -139,8 +138,9 @@ int MainWindow::playerLeave()      /// Player leave table
           ui->txLogTextBrowser->append("TXID: "+leaveTxid.toString()+"\n");
           ui->entryPushButton->setEnabled(false);
           ui->winnerComboBox->setEnabled(false);
-          if(ui->playerId->value() != 1)
-          ui->playerId->setValue(0);
+          if(ui->playerId->value() != 1){
+            ui->playerId->setValue(0);
+          }
       }else {
           ui->logTextBrowser->setText("Error No Leave TXID");
           MainWindow::skipCount = 5;
@@ -177,7 +177,7 @@ int MainWindow::dealFiveCardHand()      /// Ante and deals player a hand
     char error[CURL_ERROR_SIZE];
 
     QString anteAmount = QString::number(ui->anteIsDSB->value()*100000);
-    QString parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"transfer\",\"params\":{\"transfers\":[{\"amount\":500 , \"destination\":\"dero1qyr8yjnu6cl2c5yqkls0hmxe6rry77kn24nmc5fje6hm9jltyvdd5qq4hn5pn\", \"burn\":"+anteAmount+"}] , \"fees\":500 , \"scid\":\""+Menu::contractAddress+"\", \"ringsize\":2 , \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"DealFiveCardHand\"} , {\"name\":\"pcSeed\",\"datatype\":\"H\",\"value\":\""+rpc::clientKey+"\"}] }}";
+    QString parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"transfer\",\"params\":{\"transfers\":[{\"amount\":500 , \"destination\":\"dero1qyr8yjnu6cl2c5yqkls0hmxe6rry77kn24nmc5fje6hm9jltyvdd5qq4hn5pn\", \"burn\":"+anteAmount+"}] , \"fees\":600 , \"scid\":\""+Menu::contractAddress+"\", \"ringsize\":2 , \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"DealFiveCardHand\"} , {\"name\":\"pcSeed\",\"datatype\":\"H\",\"value\":\""+rpc::clientKey+"\"}] }}";
     string addThis = parts.toStdString();
     const char *postthis = addThis.c_str();
 
@@ -220,7 +220,6 @@ int MainWindow::dealFiveCardHand()      /// Ante and deals player a hand
           ui->txLogTextBrowser->append("TXID: "+dealTxid.toString()+"\n");
           Hand::keyIsPub = false;
       }else {
-
           ui->logTextBrowser->setText("Error No Deal Five Cards TXID");
           MainWindow::skipCount = 5;
       }
@@ -281,7 +280,6 @@ int MainWindow::bet()      /// Place bet also for call and raise
           ui->txLogTextBrowser->append("TXID: "+betTxid.toString()+"\n");
           Hand::hasBet = true;
       }else {
-
           ui->logTextBrowser->setText("Error No Bet TXID");
           MainWindow::skipCount = 5;
       }
@@ -340,7 +338,6 @@ int MainWindow::check()      /// Check also used to fold on bet
           ui->logTextBrowser->setText("Check/Fold TXID: "+checkTxid.toString());
           ui->txLogTextBrowser->append("TXID: "+checkTxid.toString()+"\n");
       }else {
-
           ui->logTextBrowser->setText("Error No Check/Fold TXID");
           MainWindow::skipCount = 5;
        }
@@ -416,7 +413,7 @@ int MainWindow::drawCards() /// Get new cards at draw
         QJsonObject cbResults = cbObj["result"].toObject();
         QJsonValue drawTxid = cbResults.value("txid");
 
-        if (drawTxid.isString()){
+        if(drawTxid.isString()){
             ui->logTextBrowser->setText("Draw Card TXID: " + drawTxid.toString());
             ui->txLogTextBrowser->append("TXID: " + drawTxid.toString() + "\n");
             ui->localPlayerCard1->setStyleSheet( "QLabel{ border: 0px; };" );
@@ -424,8 +421,13 @@ int MainWindow::drawCards() /// Get new cards at draw
             ui->localPlayerCard3->setStyleSheet( "QLabel{ border: 0px; };" );
             ui->localPlayerCard4->setStyleSheet( "QLabel{ border: 0px; };" );
             ui->localPlayerCard5->setStyleSheet( "QLabel{ border: 0px; };" );
+            MainWindow::shared0 = false;
+            MainWindow::shared1 = false;
+            MainWindow::shared2 = false;
+            MainWindow::shared3 = false;
+            MainWindow::shared4 = false;
+            MainWindow::shared5 = false;
         }else {
-
             ui->logTextBrowser->setText("Error No Draw Card TXID");
             MainWindow::skipCount = 5;
         }
@@ -486,9 +488,7 @@ int MainWindow::winner()     /// Owner sends payout to winner
             ui->txLogTextBrowser->append("TXID: "+txid.toString()+"\n");
             blankDisplay();
             MainWindow::displayedRes = false;
-
         }else {
-
             ui->logTextBrowser->setText("Error No Winner TXID");
             MainWindow::skipCount = 5;
         }
@@ -547,9 +547,7 @@ int MainWindow::autopayWinner(QString whoWon)     /// Autopay to winner
             ui->logTextBrowser->setText("Winner TXID: "+txid.toString());
             ui->txLogTextBrowser->append("TXID: "+txid.toString()+"\n");
             MainWindow::displayedRes = false;
-
         }else {
-
             ui->logTextBrowser->setText("Error Couldn't Pay Winner");
             MainWindow::skipCount = 5;
         }
@@ -559,7 +557,7 @@ int MainWindow::autopayWinner(QString whoWon)     /// Autopay to winner
 }
 
 
-int MainWindow::splitWinner()     /// Owner sends split payout to winners
+int MainWindow::splitWinner(int p1Fold, int p2Fold, int p3Fold, int p4Fold, int p5Fold, int p6Fold)     /// Owner sends split payout to winners
 {
     CURL *curlSplit;
     CURLcode res;
@@ -569,32 +567,32 @@ int MainWindow::splitWinner()     /// Owner sends split payout to winners
     int ways = 0;
     QString splitWinners[6] = {"Zero", "Zero", "Zero", "Zero", "Zero", "Zero"};
 
-    if(p1HighCardArr[0] > 0){
+    if(p1HighCardArr[0] > 0 && p1Fold != 1){
         ways = 1;
         splitWinners[0] = "Player1";
     }
 
-    if(p2HighCardArr[0] > 0){
+    if(p2HighCardArr[0] > 0 && p2Fold != 1){
         ++ways;
         splitWinners[1] = "Player2";
     }
 
-    if(p3HighCardArr[0] > 0){
+    if(p3HighCardArr[0] > 0 && p3Fold != 1){
         ++ways;
         splitWinners[2] = "Player3";
     }
 
-    if(p4HighCardArr[0] > 0){
+    if(p4HighCardArr[0] > 0 && p4Fold != 1){
         ++ways;
         splitWinners[3] = "Player4";
     }
 
-    if(p5HighCardArr[0] > 0){
+    if(p5HighCardArr[0] > 0 && p5Fold != 1){
         ++ways;
         splitWinners[4] = "Player5";
     }
 
-    if(p6HighCardArr[0] > 0){
+    if(p6HighCardArr[0] > 0 && p6Fold != 1){
         ++ways;
         splitWinners[5] = "Player6";
     }
@@ -602,7 +600,7 @@ int MainWindow::splitWinner()     /// Owner sends split payout to winners
     std::sort(splitWinners, splitWinners + 6);
     QString stringWays = QString::number(ways);
 
-    QString parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"transfer\",\"params\":{\"transfers\": [{\"destination\":\"dero1qyr8yjnu6cl2c5yqkls0hmxe6rry77kn24nmc5fje6hm9jltyvdd5qq4hn5pn\"}], \"fees\":500 , \"scid\":\""+Menu::contractAddress+"\",\"ringsize\":2, \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"SplitWinner\"},"
+    QString parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"transfer\",\"params\":{\"transfers\": [{\"destination\":\"dero1qyr8yjnu6cl2c5yqkls0hmxe6rry77kn24nmc5fje6hm9jltyvdd5qq4hn5pn\"}], \"fees\":600 , \"scid\":\""+Menu::contractAddress+"\",\"ringsize\":2, \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"SplitWinner\"},"
                      "{\"name\":\"div\",\"datatype\":\"U\",\"value\":"+stringWays+"}, {\"name\":\"split1\",\"datatype\":\"S\",\"value\":\""+splitWinners[0]+"\"}, {\"name\":\"split2\",\"datatype\":\"S\",\"value\":\""+splitWinners[1]+"\"}, {\"name\":\"split3\",\"datatype\":\"S\",\"value\":\""+splitWinners[2]+"\"}, {\"name\":\"split4\",\"datatype\":\"S\",\"value\":\""+splitWinners[3]+"\"}, {\"name\":\"split5\",\"datatype\":\"S\",\"value\":\""+splitWinners[4]+"\"}, {\"name\":\"split6\",\"datatype\":\"S\",\"value\":\""+splitWinners[5]+"\"}]}}";
 
     string addThis = parts.toStdString();
@@ -647,9 +645,7 @@ int MainWindow::splitWinner()     /// Owner sends split payout to winners
             ui->txLogTextBrowser->append("TXID: "+txid.toString()+"\n");
             blankDisplay();
             MainWindow::displayedRes = false;
-
         }else {
-
             ui->logTextBrowser->setText("Split Error No Winner TXID");
             MainWindow::skipCount = 5;
         }
@@ -709,7 +705,6 @@ int MainWindow::revealKey()      /// Stores client key on db for other players t
           ui->txLogTextBrowser->append("TXID: "+keyTxid.toString()+"\n");
           Hand::keyIsPub = true;
       }else {
-
           ui->logTextBrowser->setText("Error No Reveal TXID");
           MainWindow::skipCount = 5;
       }

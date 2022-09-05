@@ -24,6 +24,7 @@ https://dreamtables.net
 */
 
 #include "QDialog"
+#include "menu.h"
 
 
 namespace Ui {
@@ -37,10 +38,27 @@ class HandRanks : public QDialog
 public:
     explicit HandRanks(QWidget *parent = nullptr);
     ~HandRanks();
-     void setFonts();
+    void setRanksTheme();
+    void setFonts(QString);
 
 private:
     Ui::HandRanks *ui;
+};
+
+
+class Hand
+{
+public:
+    static bool hasBet;
+    static bool endSignal;
+    static bool foldOne;
+    static bool foldTwo;
+    static bool foldThree;
+    static bool foldFour;
+    static bool foldFive;
+    static bool foldSix;
+    static bool keyIsPub;
+
 };
 
 #endif // HANDRANKS_H

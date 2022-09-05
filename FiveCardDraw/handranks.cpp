@@ -31,7 +31,15 @@ HandRanks::HandRanks(QWidget *parent) :
     ui(new Ui::HandRanks)
 {
     ui->setupUi(this);
-    setFonts();
+    QPalette palette;
+    if(Menu::theme.isNull()){
+        QPixmap bkgnd(":/images/background.png");
+        palette.setBrush(QPalette::Window, bkgnd);
+        this->setPalette(palette);
+    }else {
+         setRanksTheme();
+    }
+    setFonts(Menu::os);
 }
 
 
@@ -41,12 +49,28 @@ HandRanks::~HandRanks()
 }
 
 
-void HandRanks::setFonts()
+void HandRanks::setRanksTheme()
 {
+    QPalette palette;
+    palette.setBrush(QPalette::Window, Menu::theme);
+    this->setPalette(palette);
+}
+
+
+void HandRanks::setFonts(QString os)
+{
+    int ubR;
+
+    if(os == "macos" || os == "osx" || os == "darwin"){
+        ubR = 16;
+    }else {
+        ubR = 12;
+    }
 
     int fontId1 = QFontDatabase::addApplicationFont(":/fonts/Ubuntu-R.ttf");
     QString fontFamily1 = QFontDatabase::applicationFontFamilies(fontId1).at(0);
     QFont ubuntuRegular(fontFamily1);
+    ubuntuRegular.setPointSize(ubR);
     ui->hrTextBrowser->setFont(ubuntuRegular);
     ui->buttonBox->setFont(ubuntuRegular);
 
@@ -237,6 +261,24 @@ int MainWindow::getHighPair(int h[5])    /// Make high pair from hand
     }
 
     return highPair;
+}
+
+
+int MainWindow::getHighTrip(int h[5])    /// Make high pair from hand
+{
+
+    int hand[5] = {h[0], h[1], h[2], h[3], h[4]};
+    int highTrip = 0;
+
+    for (int i = 0; i < 3; ++i){
+        if(hand[i] == hand[i+1] && hand[i] == hand[i+2]){
+            if(hand[i] > highTrip){
+                highTrip = hand[i];
+            }
+        }
+    }
+
+    return highTrip;
 }
 
 

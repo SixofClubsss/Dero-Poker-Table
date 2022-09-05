@@ -148,28 +148,15 @@ public:
     static QString key5;
     static QString key6;
 
+    static QString sharedFace;
+    static QString sharedBack;
+
     int getBalance();
     int getHeight();
     int fetchScData();
     int getDreams();
     int verifyNFAcreator(QString);
     int verifyAsset(QString);
-
-};
-
-
-class Hand
-{
-public:
-    static bool hasBet;
-    static bool endSignal;
-    static bool foldOne;
-    static bool foldTwo;
-    static bool foldThree;
-    static bool foldFour;
-    static bool foldFive;
-    static bool foldSix;
-    static bool keyIsPub;
 
 };
 

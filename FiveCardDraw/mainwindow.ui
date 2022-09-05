@@ -21,21 +21,17 @@
   </property>
   <property name="windowIcon">
    <iconset resource="img.qrc">
-    <normaloff>:/images/pokerLogo.png</normaloff>:/images/pokerLogo.png</iconset>
+    <normaloff>:/images/dReamTablesIcon.png</normaloff>:/images/dReamTablesIcon.png</iconset>
   </property>
   <property name="styleSheet">
-   <string notr="true">QMainWindow{
-	background-image: url(:/images/background.png);	
-}
-
-QGroupBox {
+   <string notr="true">QGroupBox {
     border: 2px solid gray;
     border-radius: 5px;
 }
 
 QPushButton:enabled{
 	color: rgb(255, 255, 255);
-	background-color: rgba(85, 88, 93, 90);
+	background-color: rgba(85, 88, 93, 150);
     border: 2px solid #8f8f91;
     border-radius: 6px;
     min-width: 80px;
@@ -102,7 +98,7 @@ QDoubleSpinBox:!enabled{
 
 QComboBox::enabled {
 	color: rgb(0, 0, 0);
-	background-color: rgba(255, 255, 255, 150);
+	background-color: rgba(255, 255, 255, 180);
     border: 2px solid #8f8f91;
     border-radius: 6px;
     min-width: 80px;
@@ -125,10 +121,12 @@ QComboBox::drop-down {
 }
 
 QComboBox QAbstractItemView {
-	color: rgb(255, 255, 255);
+	color: rgb(0, 0, 0);
     border: 2px solid darkgray;
 	background-color: rgba(255, 255, 255, 150);
+    min-width: 120px;
 }
+
 
 QComboBox:hover {
 	background-color: rgba(79, 186, 196, 150);
@@ -155,7 +153,7 @@ QComboBox:hover {
       </property>
       <property name="styleSheet">
        <string notr="true">QDoubleSpinBox{
-    background-color: rgba(85, 88, 93, 180);
+    background-color: rgba(85, 88, 93, 225);
     border-style: inset;
     border-width: 1px;
     border-radius: 6px;
@@ -208,7 +206,7 @@ QComboBox:hover {
       </property>
       <property name="styleSheet">
        <string notr="true">QDoubleSpinBox{
-    background-color: rgba(85, 88, 93, 180);
+    background-color: rgba(85, 88, 93, 225);
     border-style: outset;
     border-width: 1px;
     border-radius: 6px;
@@ -255,7 +253,7 @@ QComboBox:hover {
       </property>
       <property name="styleSheet">
        <string notr="true">QDoubleSpinBox{
-    background-color: rgba(85, 88, 93, 180);
+    background-color: rgba(85, 88, 93, 225);
     border-style: inset;
     border-width: 1px;
     border-radius: 6px;
@@ -300,7 +298,7 @@ QComboBox:hover {
       <property name="styleSheet">
        <string notr="true">QPushButton:enabled{
 	color: rgb(255, 255, 255);
-	background-color: rgba(0, 0, 0, 45);
+	background-color: rgba(0, 0, 0, 180);
     border: 2px solid #8f8f91;
     border-radius: 6px;
     min-width: 80px;
@@ -332,6 +330,9 @@ QPushButton:pressed {
         <width>94</width>
         <height>20</height>
        </size>
+      </property>
+      <property name="toolTip">
+       <string extracomment="Join game"/>
       </property>
       <property name="layoutDirection">
        <enum>Qt::RightToLeft</enum>
@@ -376,7 +377,7 @@ QPushButton:pressed {
     border-width: 2px;
     border-radius: 6px;
     padding: 3px;
-    background-color: rgba(85, 88, 93, 90);
+    background-color: rgba(85, 88, 93, 150);
     color: rgb(255, 255, 255);
 }
 </string>
@@ -634,6 +635,9 @@ QPushButton:pressed {
         <height>20</height>
        </size>
       </property>
+      <property name="toolTip">
+       <string extracomment="Leave game"/>
+      </property>
       <property name="layoutDirection">
        <enum>Qt::RightToLeft</enum>
       </property>
@@ -662,7 +666,7 @@ QPushButton:pressed {
       <property name="styleSheet">
        <string notr="true">QPushButton:enabled{
 	color: rgb(255, 255, 255);
-	background-color: rgba(0, 0, 0, 45);
+	background-color: rgba(0, 0, 0, 180);
     border: 2px solid #8f8f91;
     border-radius: 6px;
     min-width: 80px;
@@ -713,8 +717,7 @@ QPushButton:pressed {
     padding: 3px;
     background-color: rgba(85, 88, 93, 90);
     color: rgb(255, 255, 255);
-}
-</string>
+}</string>
       </property>
       <property name="html">
        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
@@ -838,6 +841,9 @@ p, li { white-space: pre-wrap; }
            <height>20</height>
           </size>
          </property>
+         <property name="toolTip">
+          <string extracomment="Ante and deal cards"/>
+         </property>
          <property name="text">
           <string>Deal Hand</string>
          </property>
@@ -892,6 +898,9 @@ p, li { white-space: pre-wrap; }
            <height>20</height>
           </size>
          </property>
+         <property name="toolTip">
+          <string extracomment="Draw new cards"/>
+         </property>
          <property name="text">
           <string>Draw</string>
          </property>
@@ -910,6 +919,9 @@ p, li { white-space: pre-wrap; }
            <width>150</width>
            <height>20</height>
           </size>
+         </property>
+         <property name="toolTip">
+          <string extracomment="Check of fold"/>
          </property>
          <property name="text">
           <string>Check</string>
@@ -974,6 +986,9 @@ p, li { white-space: pre-wrap; }
          </property>
          <property name="focusPolicy">
           <enum>Qt::NoFocus</enum>
+         </property>
+         <property name="toolTip">
+          <string extracomment="Whos turn"/>
          </property>
          <property name="styleSheet">
           <string notr="true">QDoubleSpinBox{
@@ -1094,6 +1109,9 @@ p, li { white-space: pre-wrap; }
            <height>20</height>
           </size>
          </property>
+         <property name="toolTip">
+          <string extracomment="Place bet"/>
+         </property>
          <property name="text">
           <string>Bet</string>
          </property>
@@ -1155,6 +1173,9 @@ p, li { white-space: pre-wrap; }
          <property name="focusPolicy">
           <enum>Qt::NoFocus</enum>
          </property>
+         <property name="toolTip">
+          <string extracomment="Your player Id"/>
+         </property>
          <property name="styleSheet">
           <string notr="true">QDoubleSpinBox{
     background-color: rgba(85, 88, 93, 180);
@@ -1190,6 +1211,9 @@ p, li { white-space: pre-wrap; }
          <property name="focusPolicy">
           <enum>Qt::StrongFocus</enum>
          </property>
+         <property name="toolTip">
+          <string extracomment="Bet amount"/>
+         </property>
          <property name="styleSheet">
           <string notr="true">QDoubleSpinBox::down-button:!enabled {
 	color: rgb(255, 0, 0);
@@ -1219,6 +1243,9 @@ p, li { white-space: pre-wrap; }
          </property>
          <property name="focusPolicy">
           <enum>Qt::WheelFocus</enum>
+         </property>
+         <property name="toolTip">
+          <string extracomment="Select which cards to draw"/>
          </property>
          <property name="styleSheet">
           <string notr="true">color: rgb(0, 0, 0);</string>
@@ -1329,7 +1356,7 @@ p, li { white-space: pre-wrap; }
        <enum>Qt::NoFocus</enum>
       </property>
       <property name="styleSheet">
-       <string notr="true">    background-color: rgba(85, 88, 93, 90);
+       <string notr="true">    background-color: rgba(85, 88, 93, 150);
     color: rgb(255, 255, 255);
     border-color: rgb(128, 128, 128);
     border-style: inset;
@@ -1383,6 +1410,9 @@ p, li { white-space: pre-wrap; }
         <height>20</height>
        </size>
       </property>
+      <property name="toolTip">
+       <string extracomment="Owner manual payout"/>
+      </property>
       <property name="text">
        <string>Pay Winner</string>
       </property>
@@ -1401,6 +1431,9 @@ p, li { white-space: pre-wrap; }
         <width>100</width>
         <height>22</height>
        </size>
+      </property>
+      <property name="toolTip">
+       <string extracomment="Receiver of manual payout"/>
       </property>
       <property name="styleSheet">
        <string notr="true">color: rgb(0, 0, 0);</string>
@@ -1431,7 +1464,7 @@ p, li { white-space: pre-wrap; }
       </property>
       <property name="styleSheet">
        <string notr="true">QDoubleSpinBox{
-    background-color: rgba(85, 88, 93, 180);
+    background-color: rgba(85, 88, 93, 225);
     border-style: inset;
     border-width: 1px;
     border-radius: 6px;
@@ -1446,7 +1479,7 @@ p, li { white-space: pre-wrap; }
        <enum>QAbstractSpinBox::NoButtons</enum>
       </property>
       <property name="prefix">
-       <string>Your Dero Balance: </string>
+       <string>Dero Balance: </string>
       </property>
       <property name="decimals">
        <number>5</number>
@@ -1469,6 +1502,9 @@ p, li { white-space: pre-wrap; }
         <width>107</width>
         <height>22</height>
        </size>
+      </property>
+      <property name="toolTip">
+       <string extracomment="Card back selection"/>
       </property>
       <property name="styleSheet">
        <string notr="true">color: rgb(0, 0, 0);</string>
@@ -1499,6 +1535,9 @@ p, li { white-space: pre-wrap; }
         <height>22</height>
        </size>
       </property>
+      <property name="toolTip">
+       <string extracomment="Card face selection"/>
+      </property>
       <property name="styleSheet">
        <string notr="true">color: rgb(0, 0, 0);</string>
       </property>
@@ -1527,7 +1566,7 @@ p, li { white-space: pre-wrap; }
       </property>
       <property name="styleSheet">
        <string notr="true">QDoubleSpinBox{
-    background-color: rgba(85, 88, 93, 180);
+    background-color: rgba(85, 88, 93, 225);
     border-style: inset;
     border-width: 1px;
     border-radius: 6px;
@@ -1568,6 +1607,22 @@ p, li { white-space: pre-wrap; }
    </property>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>entryPushButton</tabstop>
+  <tabstop>leaveButton</tabstop>
+  <tabstop>menuButton</tabstop>
+  <tabstop>handRankButton</tabstop>
+  <tabstop>drawPushButton</tabstop>
+  <tabstop>drawComboBox</tabstop>
+  <tabstop>dealHandPushButton</tabstop>
+  <tabstop>betButton</tabstop>
+  <tabstop>betSpinBox</tabstop>
+  <tabstop>checkButton</tabstop>
+  <tabstop>payoutPushButton</tabstop>
+  <tabstop>winnerComboBox</tabstop>
+  <tabstop>backComboBox</tabstop>
+  <tabstop>deckComboBox</tabstop>
+ </tabstops>
  <resources>
   <include location="img.qrc"/>
  </resources>

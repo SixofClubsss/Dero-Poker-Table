@@ -31,7 +31,6 @@ bool Menu::walletConnected;
 bool Menu::dReams;
 
 
-
 void Menu::loginInfo()   /// Used to get wallet login info for wallet functions
 {
     Menu::userInfo = ui->userpassInput->text();
@@ -520,30 +519,73 @@ void Menu::unlockTable()   /// Unlocks contract file for use
             unlockedFile.close();
             ///lockedFile.remove();
 
-            QFile scriptFile("contract/createTable.sh");
-            scriptFile.open(QIODevice::ReadWrite);
-
-            QByteArray userPass = rpc::rpcLogin.c_str();
-            QByteArray tableOwner = rpc::playerAddress.toUtf8();
-            tableOwner.chop(9);
-
-            if(scriptFile.exists()){
-              scriptFile.write("curl -u "+userPass+"  --request POST --data-binary  @contract/FiveCard.bas "+tableOwner+"/install_sc >> contract/Tables.txt");
-            }
-
-            scriptFile.setPermissions(QFile::ReadOwner|QFile::WriteOwner|QFile::ExeOwner|QFile::ReadGroup|QFile::ExeGroup|QFile::ReadOther|QFile::ExeOther);
-            scriptFile.close();
-
-            if(unlockedFile.exists()){
-                system("./contract/createTable.sh");
+            if(Menu::os == "windows"){
+                if(!QDir::setCurrent(QDir::currentPath()+QStringLiteral("/contract"))){
+                    ui->menuTextBrowser->setText("Could Not Navigate to /contract");
+                }else {
+                    windowsUpload(unlockedFile.exists());
+                    QDir dir = QDir::currentPath();
+                    dir.cdUp();
+                    QDir::setCurrent(dir.path());
+                }
             }else {
-                ui->menuTextBrowser->setText("No Contract File To Upload");
+                unixUpload(unlockedFile.exists());
             }
 
         }
 
     }
 
+}
+
+
+void Menu::unixUpload(bool u)
+{
+    if(u){
+        QFile scriptFile("contract/createTable.sh");
+        scriptFile.open(QIODevice::ReadWrite);
+
+        if(scriptFile.exists()){
+            scriptFile.resize(0);
+            QByteArray userPass = rpc::rpcLogin.c_str();
+            QByteArray tableOwner = rpc::playerAddress.toUtf8();
+            tableOwner.chop(9);
+            scriptFile.write("curl -u "+userPass+"  --request POST --data-binary  @contract/FiveCard.bas "+tableOwner+"/install_sc >> contract/Tables.txt");
+            scriptFile.setPermissions(QFile::ReadOwner|QFile::WriteOwner|QFile::ExeOwner|QFile::ReadGroup|QFile::ExeGroup|QFile::ReadOther|QFile::ExeOther);
+            scriptFile.close();
+            system("./contract/createTable.sh");
+            ui->menuTextBrowser->setText("Check Tables.txt for Table Id");
+        }else {
+            ui->menuTextBrowser->setText("Could Not Upload");
+        }
+    }else {
+        ui->menuTextBrowser->setText("No Contract File To Upload");
+    }
+}
+
+
+void Menu::windowsUpload(bool u)
+{
+    if(u){
+        QFile scriptFile("createTable.cmd");
+        scriptFile.open(QIODevice::ReadWrite);
+
+        if(scriptFile.exists()){
+            scriptFile.resize(0);
+            QByteArray userPass = rpc::rpcLogin.c_str();
+            QByteArray tableOwner = rpc::playerAddress.toUtf8();
+            tableOwner.chop(9);
+            scriptFile.write("curl -u "+userPass+"  --request POST --data-binary  @FiveCard.bas "+tableOwner+"/install_sc >> Tables.txt");
+            scriptFile.setPermissions(QFile::ReadOwner|QFile::WriteOwner|QFile::ExeOwner|QFile::ReadGroup|QFile::ExeGroup|QFile::ReadOther|QFile::ExeOther);
+            scriptFile.close();
+            system("createTable.cmd");
+            ui->menuTextBrowser->setText("Check Tables.txt for Table Id");
+        }else {
+            ui->menuTextBrowser->setText("Could Not Upload");
+        }
+    }else {
+        ui->menuTextBrowser->setText("No Contract File To Upload");
+    }
 }
 
 
@@ -883,6 +925,62 @@ int Menu::forceStart()      /// Owner can start the game with empty seats
           ui->menuTextBrowser->setText("Game Start TXID: "+forceStartTxid.toString());
       }else {
           ui->menuTextBrowser->setText("Error No Start Table TXID");
+      }
+
+    }
+    return 0;
+}
+
+
+int Menu::ownerShare()      /// Owner can start the game with empty seats
+{
+    CURL *curlShare;
+    CURLcode res;
+    string forceReadBuffer;
+    char error[CURL_ERROR_SIZE];
+
+    QString parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"scinvoke\",\"params\":{\"scid\":\""+Menu::contractAddress+"\" , \"ringsize\":2, \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"Deck\"}, {\"name\":\"face\",\"datatype\":\"S\",\"value\":\""+MainWindow::faceUrl+"\"}, {\"name\":\"back\",\"datatype\":\"S\",\"value\":\""+MainWindow::backUrl+"\"}] }}";
+    string addThis = parts.toStdString();
+    const char *postthis = addThis.c_str();
+
+    string pStr = rpc::playerAddress.toStdString();
+    const char *stCh = pStr.c_str();
+
+    const char *loginCh = rpc::rpcLogin.c_str();
+
+    curlShare = curl_easy_init();
+
+    if(curlShare) {
+      struct curl_slist *headers = NULL;
+      /// Add request headers
+      headers = curl_slist_append(headers, "Accept: application/json");
+      headers = curl_slist_append(headers, "Content-Type: application/json");
+      headers = curl_slist_append(headers, "charset: utf-8");
+      /// cUrl options
+      curl_easy_setopt(curlShare, CURLOPT_HTTPHEADER, headers);
+      curl_easy_setopt(curlShare, CURLOPT_URL, stCh);
+      curl_easy_setopt(curlShare, CURLOPT_VERBOSE, 0L);
+      curl_easy_setopt(curlShare, CURLOPT_CONNECTTIMEOUT, 4L);
+      curl_easy_setopt(curlShare, CURLOPT_ERRORBUFFER, error);
+      curl_easy_setopt(curlShare, CURLOPT_USERPWD, loginCh);
+      curl_easy_setopt(curlShare, CURLOPT_POSTFIELDS, postthis);
+      curl_easy_setopt(curlShare, CURLOPT_POSTFIELDSIZE, (long)strlen(postthis));
+      curl_easy_setopt(curlShare, CURLOPT_WRITEFUNCTION, WriteCallback);
+      curl_easy_setopt(curlShare, CURLOPT_WRITEDATA, &forceReadBuffer);
+
+      res = curl_easy_perform(curlShare);
+      curl_easy_cleanup(curlShare);
+
+      QByteArray br = forceReadBuffer.c_str();
+      QJsonDocument cbDoc = QJsonDocument::fromJson(br);
+      QJsonObject cbObj = cbDoc.object();
+      QJsonObject cbResults = cbObj["result"].toObject();
+      QJsonValue forceStartTxid = cbResults.value("txid");
+
+      if(forceStartTxid.isString()){
+          ui->menuTextBrowser->setText("Share Deck TXID: "+forceStartTxid.toString());
+      }else {
+          ui->menuTextBrowser->setText("Error No Share TXID");
       }
 
     }

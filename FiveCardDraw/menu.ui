@@ -33,15 +33,10 @@
   </property>
   <property name="windowIcon">
    <iconset resource="img.qrc">
-    <normaloff>:/images/dReamTablesDero.png</normaloff>:/images/dReamTablesDero.png</iconset>
+    <normaloff>:/images/dReamTablesBIcon.png</normaloff>:/images/dReamTablesBIcon.png</iconset>
   </property>
   <property name="styleSheet">
-   <string notr="true">QDialog{
-	background-image: url(:/images/background.png);	
-	background-position: center;
-}
-
-QLineEdit {
+   <string notr="true">QLineEdit {
     color: rgb(255, 255, 255);
     border-style: inset;
     border-width: 1px;
@@ -53,7 +48,7 @@ QLineEdit {
 
 QPushButton:enabled{
 	color: rgb(255, 255, 255);
-	background-color: rgba(85, 88, 93, 90);
+	background-color: rgba(85, 88, 93, 150);
     border: 2px solid #8f8f91;
     border-radius: 6px;
     min-width: 80px;
@@ -143,9 +138,11 @@ QComboBox::drop-down {
 }
 
 QComboBox QAbstractItemView {
-	color: rgb(255, 255, 255);
+	color: rgb(0, 0, 0);
     border: 2px solid darkgray;
-	background-color: rgba(255, 255, 255, 150);
+	background-color: rgb(255, 255, 255);
+    min-width: 120px;
+
 }
 
 QComboBox:hover {
@@ -220,7 +217,7 @@ QComboBox:hover {
     border-width: 2px;
     border-radius: 6px;
     padding: 3px;
-	background-color: rgb(25, 25, 25);
+    background-color: rgba(85, 88, 93, 150);
     color: rgb(255, 255, 255);</string>
      </property>
     </widget>
@@ -243,7 +240,7 @@ QComboBox:hover {
       <string notr="true">QGroupBox {
     border: 2px solid gray;
     border-radius: 5px;
-	background-color: rgba(0, 0, 0, 120);
+	background-color: rgba(0, 0, 0, 180);
 }
 
 QGroupBox::title {
@@ -386,6 +383,9 @@ QGroupBox::indicator {
           <width>615</width>
           <height>24</height>
          </size>
+        </property>
+        <property name="toolTip">
+         <string extracomment="Enter rpc login info"/>
         </property>
         <property name="styleSheet">
          <string notr="true"/>
@@ -531,10 +531,13 @@ QGroupBox::indicator {
      <property name="focusPolicy">
       <enum>Qt::StrongFocus</enum>
      </property>
+     <property name="toolTip">
+      <string extracomment="Unlock contract"/>
+     </property>
      <property name="styleSheet">
       <string notr="true">QPushButton:enabled{
 	color: rgb(255, 255, 255);
-	background-color: rgba(0, 0, 0, 120);
+	background-color: rgba(0, 0, 0, 150);
     border: 2px solid #8f8f91;
     border-radius: 6px;
     min-width: 80px;
@@ -576,10 +579,13 @@ QPushButton:!enabled{
        <height>20</height>
       </size>
      </property>
+     <property name="toolTip">
+      <string extracomment="Search public table listings"/>
+     </property>
      <property name="styleSheet">
       <string notr="true">QPushButton:enabled{
 	color: rgb(255, 255, 255);
-	background-color: rgba(0, 0, 0, 120);
+	background-color: rgba(0, 0, 0, 150);
     border: 2px solid #8f8f91;
     border-radius: 6px;
     min-width: 80px;
@@ -625,7 +631,7 @@ QPushButton:!enabled{
       <string notr="true">QGroupBox {
     border: 2px solid gray;
     border-radius: 5px;
-	background-color: rgba(0, 0, 0, 150);
+	background-color: rgba(0, 0, 0, 180);
 }
 
 QGroupBox::title {
@@ -648,7 +654,7 @@ QGroupBox::indicator {
      <widget class="QRadioButton" name="autoPayRButton">
       <property name="geometry">
        <rect>
-        <x>538</x>
+        <x>536</x>
         <y>10</y>
         <width>150</width>
         <height>22</height>
@@ -659,6 +665,9 @@ QGroupBox::indicator {
         <width>150</width>
         <height>22</height>
        </size>
+      </property>
+      <property name="toolTip">
+       <string extracomment="Enable automatic payouts"/>
       </property>
       <property name="styleSheet">
        <string notr="true">color: rgb(255, 255, 255);</string>
@@ -682,6 +691,9 @@ QGroupBox::indicator {
         <height>20</height>
        </size>
       </property>
+      <property name="toolTip">
+       <string extracomment="Generate new table"/>
+      </property>
       <property name="styleSheet">
        <string notr="true"/>
       </property>
@@ -704,6 +716,9 @@ QGroupBox::indicator {
         <height>20</height>
        </size>
       </property>
+      <property name="toolTip">
+       <string extracomment="Adds table to public listings"/>
+      </property>
       <property name="styleSheet">
        <string notr="true"/>
       </property>
@@ -725,6 +740,9 @@ QGroupBox::indicator {
         <width>84</width>
         <height>22</height>
        </size>
+      </property>
+      <property name="toolTip">
+       <string extracomment="How many players at table"/>
       </property>
       <property name="autoFillBackground">
        <bool>false</bool>
@@ -789,6 +807,9 @@ QGroupBox::indicator {
         <height>20</height>
        </size>
       </property>
+      <property name="toolTip">
+       <string extracomment="Game ante and minimum bet"/>
+      </property>
       <property name="buttonSymbols">
        <enum>QAbstractSpinBox::UpDownArrows</enum>
       </property>
@@ -820,6 +841,9 @@ QGroupBox::indicator {
         <height>20</height>
        </size>
       </property>
+      <property name="toolTip">
+       <string extracomment="Set table players and ante"/>
+      </property>
       <property name="styleSheet">
        <string notr="true"/>
       </property>
@@ -842,6 +866,9 @@ QGroupBox::indicator {
         <height>20</height>
        </size>
       </property>
+      <property name="toolTip">
+       <string extracomment="Shuffle deck"/>
+      </property>
       <property name="styleSheet">
        <string notr="true"/>
       </property>
@@ -863,6 +890,9 @@ QGroupBox::indicator {
         <width>84</width>
         <height>20</height>
        </size>
+      </property>
+      <property name="toolTip">
+       <string extracomment="Removes table public listing"/>
       </property>
       <property name="styleSheet">
        <string notr="true"/>
@@ -892,9 +922,33 @@ QGroupBox::indicator {
         <height>20</height>
        </size>
       </property>
+      <property name="toolTip">
+       <string extracomment="Starts game with open seats"/>
+      </property>
       <property name="text">
        <string>Force Start</string>
       </property>
+     </widget>
+     <widget class="QComboBox" name="themeComboBox">
+      <property name="geometry">
+       <rect>
+        <x>101</x>
+        <y>10</y>
+        <width>230</width>
+        <height>24</height>
+       </rect>
+      </property>
+      <property name="toolTip">
+       <string extracomment="Choose app theme"/>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);</string>
+      </property>
+      <item>
+       <property name="text">
+        <string>Main Theme</string>
+       </property>
+      </item>
      </widget>
     </widget>
    </item>
@@ -919,7 +973,30 @@ QGroupBox::indicator {
       <enum>Qt::RightToLeft</enum>
      </property>
      <property name="styleSheet">
-      <string notr="true"/>
+      <string notr="true">QPushButton:enabled{
+	color: rgb(255, 255, 255);
+	background-color: rgba(0, 0, 0, 150);
+    border: 2px solid #8f8f91;
+    border-radius: 6px;
+    min-width: 80px;
+}
+
+QPushButton:hover {
+	background-color: rgba(79, 186, 196, 150);
+}
+
+QPushButton:pressed {
+	background-color: rgb(56, 47, 165);
+}
+
+QPushButton:!enabled{
+    border: 2px solid;
+	border-color: rgba(143, 143, 145, 90);
+    border-radius: 6px;
+	color: rgba(0, 0, 0, 0);
+    border-radius: 6px;
+    min-width: 80px;
+}</string>
      </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -940,6 +1017,9 @@ QGroupBox::indicator {
        <height>22</height>
       </size>
      </property>
+     <property name="toolTip">
+      <string extracomment="Enable shared decks"/>
+     </property>
      <property name="styleSheet">
       <string notr="true">color: rgb(255, 255, 255);</string>
      </property>
@@ -953,6 +1033,29 @@ QGroupBox::indicator {
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>userpassInput</tabstop>
+  <tabstop>daemonRPCinput</tabstop>
+  <tabstop>daemonRPCbutton</tabstop>
+  <tabstop>walletRPCinput</tabstop>
+  <tabstop>walletRPCbutton</tabstop>
+  <tabstop>contractLineEdit</tabstop>
+  <tabstop>contractButton</tabstop>
+  <tabstop>getTableButton</tabstop>
+  <tabstop>findTablesButton</tabstop>
+  <tabstop>sharedRButton</tabstop>
+  <tabstop>themeComboBox</tabstop>
+  <tabstop>autoPayRButton</tabstop>
+  <tabstop>newTableButton</tabstop>
+  <tabstop>listTableButton</tabstop>
+  <tabstop>delistTableButton</tabstop>
+  <tabstop>forceButton</tabstop>
+  <tabstop>cleanTableButton</tabstop>
+  <tabstop>setTableButton</tabstop>
+  <tabstop>anteSpinBox</tabstop>
+  <tabstop>playersComboBox</tabstop>
+  <tabstop>buttonBox</tabstop>
+ </tabstops>
  <resources>
   <include location="img.qrc"/>
  </resources>
