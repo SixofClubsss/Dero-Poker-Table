@@ -107,7 +107,8 @@ QDoubleSpinBox::down-button {
      subcontrol-position: bottom right;
 }
 
-QDoubleSpinBox:!enabled{;
+QDoubleSpinBox:!enabled{
+	color: rgba(0, 0, 0, 0);
 	background-color: rgba(0, 0, 0, 0);
     border-style: inset;
     border-width: 1px;
@@ -414,6 +415,9 @@ QGroupBox::indicator {
           <height>24</height>
          </size>
         </property>
+        <property name="toolTip">
+         <string>Enter rpc login info</string>
+        </property>
         <property name="styleSheet">
          <string notr="true"/>
         </property>
@@ -468,8 +472,9 @@ QGroupBox::indicator {
          <enum>Qt::RightToLeft</enum>
         </property>
         <property name="styleSheet">
-         <string notr="true">color: rgb(255, 255, 255);
-</string>
+         <string notr="true">QCheckBox {
+	color: rgb(255, 255, 255);
+}</string>
         </property>
         <property name="text">
          <string>Valid Table</string>
@@ -494,7 +499,9 @@ QGroupBox::indicator {
          <enum>Qt::RightToLeft</enum>
         </property>
         <property name="styleSheet">
-         <string notr="true">color: rgb(255, 255, 255);</string>
+         <string notr="true">QCheckBox {
+	color: rgb(255, 255, 255);
+}</string>
         </property>
         <property name="text">
          <string>Connected</string>
@@ -594,7 +601,9 @@ QGroupBox::indicator {
          <enum>Qt::RightToLeft</enum>
         </property>
         <property name="styleSheet">
-         <string notr="true">color: rgb(255, 255, 255);</string>
+         <string notr="true">QCheckBox {
+	color: rgb(255, 255, 255);
+}</string>
         </property>
         <property name="text">
          <string>Connected</string>
@@ -689,7 +698,13 @@ QGroupBox::indicator {
        <string>Enable auto payouts</string>
       </property>
       <property name="styleSheet">
-       <string notr="true">color: rgb(255, 255, 255);</string>
+       <string notr="true">QRadioButton {
+	color: rgb(255, 255, 255);
+}
+
+QRadioButton:!enabled {
+	color: rgba(0, 0, 0, 0);
+}</string>
       </property>
       <property name="text">
        <string>Auto Payout Enabled</string>
@@ -767,7 +782,9 @@ QGroupBox::indicator {
        <bool>false</bool>
       </property>
       <property name="styleSheet">
-       <string notr="true">color: rgb(0, 0, 0);</string>
+       <string notr="true">QComboBox{
+	color: rgb(0, 0, 0);
+}</string>
       </property>
       <item>
        <property name="text">
@@ -1010,7 +1027,9 @@ QGroupBox::indicator {
        <string>Set app theme</string>
       </property>
       <property name="styleSheet">
-       <string notr="true">color: rgb(0, 0, 0);</string>
+       <string notr="true">QComboBox {
+	color: rgb(0, 0, 0);
+}</string>
       </property>
       <property name="maxVisibleItems">
        <number>12</number>
@@ -1079,9 +1098,9 @@ QGroupBox::indicator {
       <string>Enable shared deck</string>
      </property>
      <property name="styleSheet">
-      <string notr="true">color: rgb(255, 255, 255);
-
-</string>
+      <string notr="true">QRadioButton {
+	color: rgb(255, 255, 255);
+}</string>
      </property>
      <property name="text">
       <string>Shared Decks</string>

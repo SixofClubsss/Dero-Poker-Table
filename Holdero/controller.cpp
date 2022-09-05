@@ -1550,7 +1550,7 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
                 compareLoop();
                 if(rpc::oneId == rpc::IdHash){
 
-                    if(Menu::autoPayout == true && rpc::paidOut == false && rpc::pot != 0){     /// Contract not set up for split pot situation, owner will split
+                    if(Menu::autoPayout == true && rpc::paidOut == false && rpc::pot != 0){
                         rpc::paidOut = true;
                         payoutDelay(30);
                         splitWinner(p1Fold, p2Fold, p3Fold, p4Fold, p5Fold, p6Fold);

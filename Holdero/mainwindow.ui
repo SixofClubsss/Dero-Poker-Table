@@ -243,7 +243,9 @@ QPushButton:pressed {
        <string>Card face selection</string>
       </property>
       <property name="styleSheet">
-       <string notr="true">color: rgb(0, 0, 0);</string>
+       <string notr="true">QComboBox{
+	color: rgb(0, 0, 0);
+}</string>
       </property>
       <item>
        <property name="text">
@@ -1620,10 +1622,12 @@ p, li { white-space: pre-wrap; }
        </size>
       </property>
       <property name="toolTip">
-       <string>Manual payout receiver</string>
+       <string>Manual payout reciever</string>
       </property>
       <property name="styleSheet">
-       <string notr="true">color: rgb(0, 0, 0);</string>
+       <string notr="true">QComboBox{
+	color: rgb(0, 0, 0);
+}</string>
       </property>
      </widget>
     </item>
@@ -1667,7 +1671,9 @@ p, li { white-space: pre-wrap; }
        <string>Card back selection</string>
       </property>
       <property name="styleSheet">
-       <string notr="true">color: rgb(0, 0, 0);</string>
+       <string notr="true">QComboBox{
+	color: rgb(0, 0, 0);
+}</string>
       </property>
       <item>
        <property name="text">

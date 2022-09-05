@@ -104,7 +104,8 @@ QDoubleSpinBox::down-button {
      subcontrol-position: bottom right;
 }
 
-QDoubleSpinBox:!enabled{;
+QDoubleSpinBox:!enabled{
+	color: rgba(0, 0, 0, 0);
 	background-color: rgba(0, 0, 0, 0);
     border-style: inset;
     border-width: 1px;
@@ -279,7 +280,9 @@ QGroupBox::indicator {
          <enum>Qt::RightToLeft</enum>
         </property>
         <property name="styleSheet">
-         <string notr="true">color: rgb(255, 255, 255);</string>
+         <string notr="true">QCheckBox {
+	color: rgb(255, 255, 255);
+}</string>
         </property>
         <property name="text">
          <string>Connected</string>
@@ -310,7 +313,9 @@ QGroupBox::indicator {
          <enum>Qt::RightToLeft</enum>
         </property>
         <property name="styleSheet">
-         <string notr="true">color: rgb(255, 255, 255);</string>
+         <string notr="true">QCheckBox {
+	color: rgb(255, 255, 255);
+}</string>
         </property>
         <property name="text">
          <string>Connected</string>
@@ -385,7 +390,7 @@ QGroupBox::indicator {
          </size>
         </property>
         <property name="toolTip">
-         <string extracomment="Enter rpc login info"/>
+         <string>Enter rpc login info</string>
         </property>
         <property name="styleSheet">
          <string notr="true"/>
@@ -482,7 +487,9 @@ QGroupBox::indicator {
          <enum>Qt::RightToLeft</enum>
         </property>
         <property name="styleSheet">
-         <string notr="true">color: rgb(255, 255, 255);</string>
+         <string notr="true">QCheckBox {
+	color: rgb(255, 255, 255);
+}</string>
         </property>
         <property name="text">
          <string>Valid Table</string>
@@ -532,7 +539,7 @@ QGroupBox::indicator {
       <enum>Qt::StrongFocus</enum>
      </property>
      <property name="toolTip">
-      <string extracomment="Unlock contract"/>
+      <string>Unlock contract</string>
      </property>
      <property name="styleSheet">
       <string notr="true">QPushButton:enabled{
@@ -580,7 +587,7 @@ QPushButton:!enabled{
       </size>
      </property>
      <property name="toolTip">
-      <string extracomment="Search public table listings"/>
+      <string>Search public table listings</string>
      </property>
      <property name="styleSheet">
       <string notr="true">QPushButton:enabled{
@@ -667,10 +674,16 @@ QGroupBox::indicator {
        </size>
       </property>
       <property name="toolTip">
-       <string extracomment="Enable automatic payouts"/>
+       <string>Enable automatic payouts</string>
       </property>
       <property name="styleSheet">
-       <string notr="true">color: rgb(255, 255, 255);</string>
+       <string notr="true">QRadioButton {
+	color: rgb(255, 255, 255);
+}
+
+QRadioButton:!enabled {
+	color: rgba(0, 0, 0, 0);
+}</string>
       </property>
       <property name="text">
        <string>Auto Payout Enabled</string>
@@ -692,7 +705,7 @@ QGroupBox::indicator {
        </size>
       </property>
       <property name="toolTip">
-       <string extracomment="Generate new table"/>
+       <string>Generate new table</string>
       </property>
       <property name="styleSheet">
        <string notr="true"/>
@@ -717,7 +730,7 @@ QGroupBox::indicator {
        </size>
       </property>
       <property name="toolTip">
-       <string extracomment="Adds table to public listings"/>
+       <string>Add table to public listings</string>
       </property>
       <property name="styleSheet">
        <string notr="true"/>
@@ -742,13 +755,15 @@ QGroupBox::indicator {
        </size>
       </property>
       <property name="toolTip">
-       <string extracomment="How many players at table"/>
+       <string>How many players at table</string>
       </property>
       <property name="autoFillBackground">
        <bool>false</bool>
       </property>
       <property name="styleSheet">
-       <string notr="true">color: rgb(0, 0, 0);</string>
+       <string notr="true">QComboBox{
+	color: rgb(0, 0, 0);
+}</string>
       </property>
       <item>
        <property name="text">
@@ -808,7 +823,7 @@ QGroupBox::indicator {
        </size>
       </property>
       <property name="toolTip">
-       <string extracomment="Game ante and minimum bet"/>
+       <string>Game ante and minimum bet</string>
       </property>
       <property name="buttonSymbols">
        <enum>QAbstractSpinBox::UpDownArrows</enum>
@@ -842,7 +857,7 @@ QGroupBox::indicator {
        </size>
       </property>
       <property name="toolTip">
-       <string extracomment="Set table players and ante"/>
+       <string>Set table players and ante</string>
       </property>
       <property name="styleSheet">
        <string notr="true"/>
@@ -867,7 +882,7 @@ QGroupBox::indicator {
        </size>
       </property>
       <property name="toolTip">
-       <string extracomment="Shuffle deck"/>
+       <string>Shuffle deck</string>
       </property>
       <property name="styleSheet">
        <string notr="true"/>
@@ -892,7 +907,7 @@ QGroupBox::indicator {
        </size>
       </property>
       <property name="toolTip">
-       <string extracomment="Removes table public listing"/>
+       <string>Remove table public listing</string>
       </property>
       <property name="styleSheet">
        <string notr="true"/>
@@ -923,7 +938,7 @@ QGroupBox::indicator {
        </size>
       </property>
       <property name="toolTip">
-       <string extracomment="Starts game with open seats"/>
+       <string>Starts game with open seats</string>
       </property>
       <property name="text">
        <string>Force Start</string>
@@ -939,10 +954,12 @@ QGroupBox::indicator {
        </rect>
       </property>
       <property name="toolTip">
-       <string extracomment="Choose app theme"/>
+       <string>Choose app theme</string>
       </property>
       <property name="styleSheet">
-       <string notr="true">color: rgb(0, 0, 0);</string>
+       <string notr="true">QComboBox {
+	color: rgb(0, 0, 0);
+}</string>
       </property>
       <item>
        <property name="text">
@@ -1013,15 +1030,23 @@ QPushButton:!enabled{
     <widget class="QRadioButton" name="sharedRButton">
      <property name="minimumSize">
       <size>
-       <width>150</width>
+       <width>108</width>
+       <height>22</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>108</width>
        <height>22</height>
       </size>
      </property>
      <property name="toolTip">
-      <string extracomment="Enable shared decks"/>
+      <string>Enable shared decks</string>
      </property>
      <property name="styleSheet">
-      <string notr="true">color: rgb(255, 255, 255);</string>
+      <string notr="true">QRadioButton {
+	color: rgb(255, 255, 255);
+}</string>
      </property>
      <property name="text">
       <string>Shared Decks</string>
