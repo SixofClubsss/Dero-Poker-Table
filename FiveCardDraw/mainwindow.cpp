@@ -521,10 +521,8 @@ void MainWindow::createActions()    /// Tray actions
     revealAction = new QAction(tr("&Reveal Key"), this);
     connect(revealAction, SIGNAL(triggered()), this, SLOT(manualReveal()));
 
-    if(Menu::os != "macos" && Menu::os != "osx" && Menu::os != "darwin"){
-        quitAction = new QAction(tr("&Quit"), this);
-        connect(quitAction, SIGNAL(triggered()), this, SLOT(closeAllWindows()));
-    }
+    quitAction = new QAction(tr("&Quit"), this);
+    connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
 }
 
 
@@ -546,10 +544,8 @@ void MainWindow::createTrayIcon()
     trayIconMenu->addAction(minimizeAction);
     trayIconMenu->addAction(maximizeAction);
     trayIconMenu->addAction(revealAction);
-    if(Menu::os != "macos" && Menu::os != "osx" && Menu::os != "darwin"){
-        trayIconMenu->addSeparator();
-        trayIconMenu->addAction(quitAction);
-    }
+    trayIconMenu->addSeparator();
+    trayIconMenu->addAction(quitAction);
 
     trayIcon = new QSystemTrayIcon(tIcon);
     trayIcon->setContextMenu(trayIconMenu);
