@@ -22,7 +22,6 @@ https://dreamtables.net
 */
 
 #include "mainwindow.h"
-#include "rpc/rpc.h"
 #include "menu.h"
 
 

@@ -22,8 +22,7 @@ https://dreamtables.net
 */
 
 #include "mainwindow.h"
-#include "./ui_mainwindow.h"
-#include "rpc/rpc.h"
+#include "ui_mainwindow.h"
 #include "menu.h"
 
 
@@ -75,7 +74,6 @@ int MainWindow::playerEntry()      /// Player registry (sit down at table)
           ui->logTextBrowser->setText("Player Entry TXID: "+entryTxid.toString());  /// Displays TXID and adds TXID to session log
           ui->txLogTextBrowser->append("TXID: "+entryTxid.toString()+"\n");
           ui->entryPushButton->setEnabled(false);
-          ui->winnerComboBox->setEnabled(false);
           MainWindow::skipCount = 3;
       }else {
           ui->logTextBrowser->setText("Error No Entry TXID");      /// No TXID was recieved
@@ -137,7 +135,6 @@ int MainWindow::playerLeave()      /// Player leave table
           ui->logTextBrowser->setText("Player Leave TXID: "+leaveTxid.toString());
           ui->txLogTextBrowser->append("TXID: "+leaveTxid.toString()+"\n");
           ui->entryPushButton->setEnabled(false);
-          ui->winnerComboBox->setEnabled(false);
           if(ui->playerId->value() != 1){
             ui->playerId->setValue(0);
           }
@@ -421,12 +418,6 @@ int MainWindow::drawCards() /// Get new cards at draw
             ui->localPlayerCard3->setStyleSheet( "QLabel{ border: 0px; };" );
             ui->localPlayerCard4->setStyleSheet( "QLabel{ border: 0px; };" );
             ui->localPlayerCard5->setStyleSheet( "QLabel{ border: 0px; };" );
-            MainWindow::shared0 = false;
-            MainWindow::shared1 = false;
-            MainWindow::shared2 = false;
-            MainWindow::shared3 = false;
-            MainWindow::shared4 = false;
-            MainWindow::shared5 = false;
         }else {
             ui->logTextBrowser->setText("Error No Draw Card TXID");
             MainWindow::skipCount = 5;
@@ -437,15 +428,14 @@ int MainWindow::drawCards() /// Get new cards at draw
 }
 
 
-int MainWindow::winner()     /// Owner sends payout to winner
+int MainWindow::payWinner()     /// Owner sends payout to winner
 {
     CURL *curlWinner;
     CURLcode res;
     string winnerReadBuffer;
     char error[CURL_ERROR_SIZE];
 
-    QString winner = ui->winnerComboBox->currentText();
-    QString parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"transfer\",\"params\":{\"transfers\": [{\"destination\":\"dero1qyr8yjnu6cl2c5yqkls0hmxe6rry77kn24nmc5fje6hm9jltyvdd5qq4hn5pn\"}], \"fees\":500 , \"scid\":\""+Menu::contractAddress+"\",\"ringsize\":2, \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"Winner\"},{\"name\":\"whoWon\",\"datatype\":\"S\",\"value\":\""+winner+"\" }]}}";
+    QString parts = "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"transfer\",\"params\":{\"transfers\": [{\"destination\":\"dero1qyr8yjnu6cl2c5yqkls0hmxe6rry77kn24nmc5fje6hm9jltyvdd5qq4hn5pn\"}], \"fees\":500 , \"scid\":\""+Menu::contractAddress+"\",\"ringsize\":2, \"sc_rpc\":[{\"name\":\"entrypoint\",\"datatype\":\"S\",\"value\":\"Winner\"},{\"name\":\"whoWon\",\"datatype\":\"S\",\"value\":\""+MainWindow::winner+"\" }]}}";
     string addThis = parts.toStdString();
     const char *postthis = addThis.c_str();
 

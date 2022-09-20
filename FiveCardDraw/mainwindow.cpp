@@ -22,10 +22,8 @@ https://dreamtables.net
 */
 
 #include "mainwindow.h"
-#include "./ui_mainwindow.h"
+#include "ui_mainwindow.h"
 #include "menu.h"
-#include "rpc/rpc.h"
-#include "handranks.h"
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -58,7 +56,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->p5CheckBox->setFocusPolicy(Qt::NoFocus);
     ui->p6CheckBox->setAttribute(Qt::WA_TransparentForMouseEvents);
     ui->p6CheckBox->setFocusPolicy(Qt::NoFocus);
-    ui->logTextBrowser->setText("dReam Tables, Built on Dero\n\nFive Card Table v1.3.1");
+    ui->logTextBrowser->setText("dReam Tables, Built on Dero\n\nFive Card Table v1.4.0");
     MainWindow::skipCount = 0;
     ui->entryPushButton->setEnabled(false);
     ui->dealHandPushButton->setEnabled(false);
@@ -68,7 +66,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->checkButton->setEnabled(false);
     ui->leaveButton->setEnabled(false);
     ui->payoutPushButton->setEnabled(false);
-    ui->winnerComboBox->setEnabled(false);
     MainWindow::clicked = false;
     blankDisplay();
     generateKey();
@@ -179,7 +176,6 @@ void MainWindow::setFonts(QString os)
     ui->drawPushButton->setFont(ubuntuRegular);
     ui->drawComboBox->setFont(ubuntuRegular);
     ui->payoutPushButton->setFont(ubuntuRegular);
-    ui->winnerComboBox->setFont(ubuntuRegular);
     ui->balanceDoubleSpinBox->setFont(ubuntuRegular);
     ui->menuButton->setFont(ubuntuRegular);
     ui->leaveButton->setFont(ubuntuRegular);
@@ -192,6 +188,7 @@ void MainWindow::setFonts(QString os)
     ui->txLogTextBrowser->setFont(ubuntuRegular);
     ui->backComboBox->setFont(ubuntuRegular);
     ui->deckComboBox->setFont(ubuntuRegular);
+    ui->deckButton->setFont(ubuntuRegular);
 }
 
 
@@ -228,7 +225,7 @@ void MainWindow::refresh()      /// Controller refresh rate
         MainWindow::skipCount = 0;
     }else {
         MainWindow::skipCount++;
-        if(MainWindow::skipCount >= 9){
+        if(MainWindow::skipCount >= 8){
             MainWindow::clicked = false;
             MainWindow::skipCount = 0;
         }
@@ -254,9 +251,8 @@ void MainWindow::buttonDelay()  /// When any button has been pressed disabled al
     ui->drawPushButton->setEnabled(false);
     ui->drawComboBox->setEnabled(false);
     ui->payoutPushButton->setEnabled(false);
-    ui->winnerComboBox->setEnabled(false);
     ui->turnReadOut->setStyleSheet( "QTextBrowser{border-color: rgb(128, 128, 128); border-style: inset; border-width: 2px; border-radius: 6px; padding: 3px; background-color: rgba(85, 88, 93, 90); color: rgb(255, 255, 255);};" );
-    ui->groupBoxP1->setStyleSheet( "QGroupBox{ border: 2px solid gray; border-radius: 5px; background-color: rgba(0, 0, 0, 150);};" );
+    ui->groupBoxP1->setStyleSheet( "QGroupBox{ border: 3px solid gray; border-radius: 60px; background-color: rgba(0, 0, 0, 150);};" );
     ui->turnReadOut->setText("Wait For Block");
 }
 
@@ -295,7 +291,11 @@ void MainWindow::on_payoutPushButton_clicked()
 {
     buttonCatch();
     Hand::endSignal = false;
-    winner();
+    if(Hand::push == true){
+        splitWinner(rpc::p1Fold, rpc::p2Fold, rpc::p3Fold, rpc::p4Fold, rpc::p5Fold, rpc::p6Fold);
+    }else {
+        payWinner();
+    }
 }
 
 
@@ -332,10 +332,15 @@ void MainWindow::on_handRankButton_clicked()
 void MainWindow::clearHighlight()
 {
     ui->localPlayerCard1->setStyleSheet( "QLabel{ border: 0px; };" );
+    ui->localPlayerCard1->setGeometry(10, 12, 150, 209);
     ui->localPlayerCard2->setStyleSheet( "QLabel{ border: 0px; };" );
+    ui->localPlayerCard2->setGeometry(80, 12, 150, 209);
     ui->localPlayerCard3->setStyleSheet( "QLabel{ border: 0px; };" );
+    ui->localPlayerCard3->setGeometry(160, 12, 150, 209);
     ui->localPlayerCard4->setStyleSheet( "QLabel{ border: 0px; };" );
+    ui->localPlayerCard4->setGeometry(250, 12, 150, 209);
     ui->localPlayerCard5->setStyleSheet( "QLabel{ border: 0px; };" );
+    ui->localPlayerCard5->setGeometry(340, 12, 150, 209);
 
 }
 
@@ -347,155 +352,172 @@ void MainWindow::highlightCards()
     if(rpc::draw == 1 && Hand::endSignal == false){
         if(ui->deckComboBox->currentIndex() > 1){
             switch(ui->drawComboBox->currentIndex()){
-            case 1: ui->localPlayerCard1->setStyleSheet( "QLabel{ border: 2px solid gray; border-radius: 5px; };" );  break;
+            case 1: ui->localPlayerCard1->setStyleSheet( "QLabel{ border: 2px solid gray; border-radius: 5px; };" );
+                    ui->localPlayerCard1->setGeometry(10, 5, 150, 209);
+                break;
 
-            case 2: ui->localPlayerCard2->setStyleSheet( "QLabel{ border: 2px solid gray; border-radius: 5px; };" );  break;
+            case 2: ui->localPlayerCard2->setStyleSheet( "QLabel{ border: 2px solid gray; border-radius: 5px; };" );
+                    ui->localPlayerCard2->setGeometry(80, 5, 150, 209);
+                break;
 
-            case 3: ui->localPlayerCard3->setStyleSheet( "QLabel{ border: 2px solid gray; border-radius: 5px; };" );  break;
+            case 3: ui->localPlayerCard3->setStyleSheet( "QLabel{ border: 2px solid gray; border-radius: 5px; };" );
+                    ui->localPlayerCard3->setGeometry(160, 5, 150, 209);
+                break;
 
-            case 4: ui->localPlayerCard4->setStyleSheet( "QLabel{ border: 2px solid gray; border-radius: 5px; };" );  break;
+            case 4: ui->localPlayerCard4->setStyleSheet( "QLabel{ border: 2px solid gray; border-radius: 5px; };" );
+                    ui->localPlayerCard4->setGeometry(250, 5, 150, 209);
+                break;
 
-            case 5: ui->localPlayerCard5->setStyleSheet( "QLabel{ border: 2px solid gray; border-radius: 5px; };" );  break;
+            case 5: ui->localPlayerCard5->setStyleSheet( "QLabel{ border: 2px solid gray; border-radius: 5px; };" );
+                    ui->localPlayerCard5->setGeometry(340, 5, 150, 209);
+                break;
 
             case 6: ui->localPlayerCard1->setStyleSheet( "QLabel{ border: 2px solid gray; border-radius: 5px; };" );
-                    ui->localPlayerCard2->setStyleSheet( "QLabel{ border: 2px solid gray; border-radius: 5px; };" );  break;
+                    ui->localPlayerCard2->setStyleSheet( "QLabel{ border: 2px solid gray; border-radius: 5px; };" );
+                    ui->localPlayerCard1->setGeometry(10, 5, 150, 209);
+                    ui->localPlayerCard2->setGeometry(80, 5, 150, 209);
+                break;
 
             case 7: ui->localPlayerCard1->setStyleSheet( "QLabel{ border: 2px solid gray; border-radius: 5px; };" );
-                    ui->localPlayerCard3->setStyleSheet( "QLabel{ border: 2px solid gray; border-radius: 5px; };" );  break;
+                    ui->localPlayerCard3->setStyleSheet( "QLabel{ border: 2px solid gray; border-radius: 5px; };" );
+                    ui->localPlayerCard1->setGeometry(10, 5, 150, 209);
+                    ui->localPlayerCard3->setGeometry(160, 5, 150, 209);
+                break;
 
             case 8: ui->localPlayerCard1->setStyleSheet( "QLabel{ border: 2px solid gray; border-radius: 5px; };" );
-                    ui->localPlayerCard4->setStyleSheet( "QLabel{ border: 2px solid gray; border-radius: 5px; };" );  break;
+                    ui->localPlayerCard4->setStyleSheet( "QLabel{ border: 2px solid gray; border-radius: 5px; };" );
+                    ui->localPlayerCard1->setGeometry(10, 5, 150, 209);
+                    ui->localPlayerCard4->setGeometry(250, 5, 150, 209);
+                break;
 
             case 9: ui->localPlayerCard1->setStyleSheet( "QLabel{ border: 2px solid gray; border-radius: 5px; };" );
-                    ui->localPlayerCard5->setStyleSheet( "QLabel{ border: 2px solid gray; border-radius: 5px; };" );  break;
+                    ui->localPlayerCard5->setStyleSheet( "QLabel{ border: 2px solid gray; border-radius: 5px; };" );
+                    ui->localPlayerCard1->setGeometry(10, 5, 150, 209);
+                    ui->localPlayerCard5->setGeometry(340, 5, 150, 209);
+                break;
 
             case 10: ui->localPlayerCard2->setStyleSheet( "QLabel{ border: 2px solid gray; border-radius: 5px; };" );
-                     ui->localPlayerCard3->setStyleSheet( "QLabel{ border: 2px solid gray; border-radius: 5px; };" );  break;
+                     ui->localPlayerCard3->setStyleSheet( "QLabel{ border: 2px solid gray; border-radius: 5px; };" );
+                     ui->localPlayerCard2->setGeometry(80, 5, 150, 209);
+                     ui->localPlayerCard3->setGeometry(160, 5, 150, 209);
+                break;
 
             case 11: ui->localPlayerCard2->setStyleSheet( "QLabel{ border: 2px solid gray; border-radius: 5px; };" );
-                     ui->localPlayerCard4->setStyleSheet( "QLabel{ border: 2px solid gray; border-radius: 5px; };" );  break;
+                     ui->localPlayerCard4->setStyleSheet( "QLabel{ border: 2px solid gray; border-radius: 5px; };" );
+                     ui->localPlayerCard2->setGeometry(80, 5, 150, 209);
+                     ui->localPlayerCard4->setGeometry(250, 5, 150, 209);
+                break;
 
             case 12: ui->localPlayerCard2->setStyleSheet( "QLabel{ border: 2px solid gray; border-radius: 5px; };" );
-                     ui->localPlayerCard5->setStyleSheet( "QLabel{ border: 2px solid gray; border-radius: 5px; };" );  break;
+                     ui->localPlayerCard5->setStyleSheet( "QLabel{ border: 2px solid gray; border-radius: 5px; };" );
+                     ui->localPlayerCard2->setGeometry(80, 5, 150, 209);
+                     ui->localPlayerCard5->setGeometry(340, 5, 150, 209);
+                break;
 
             case 13: ui->localPlayerCard3->setStyleSheet( "QLabel{ border: 2px solid gray; border-radius: 5px; };" );
-                     ui->localPlayerCard4->setStyleSheet( "QLabel{ border: 2px solid gray; border-radius: 5px; };" );  break;
+                     ui->localPlayerCard4->setStyleSheet( "QLabel{ border: 2px solid gray; border-radius: 5px; };" );
+                     ui->localPlayerCard3->setGeometry(160, 5, 150, 209);
+                     ui->localPlayerCard4->setGeometry(250, 5, 150, 209);
+                break;
 
             case 14: ui->localPlayerCard3->setStyleSheet( "QLabel{ border: 2px solid gray; border-radius: 5px; };" );
-                     ui->localPlayerCard5->setStyleSheet( "QLabel{ border: 2px solid gray; border-radius: 5px; };" );  break;
+                     ui->localPlayerCard5->setStyleSheet( "QLabel{ border: 2px solid gray; border-radius: 5px; };" );
+                     ui->localPlayerCard3->setGeometry(160, 5, 150, 209);
+                     ui->localPlayerCard5->setGeometry(340, 5, 150, 209);
+                break;
 
             case 15: ui->localPlayerCard4->setStyleSheet( "QLabel{ border: 2px solid gray; border-radius: 5px; };" );
-                     ui->localPlayerCard5->setStyleSheet( "QLabel{ border: 2px solid gray; border-radius: 5px; };" );  break;
+                     ui->localPlayerCard5->setStyleSheet( "QLabel{ border: 2px solid gray; border-radius: 5px; };" );
+                     ui->localPlayerCard4->setGeometry(250, 5, 150, 209);
+                     ui->localPlayerCard5->setGeometry(340, 5, 150, 209);
+                break;
             }
         }else {
             switch(ui->drawComboBox->currentIndex()){
-            case 1: ui->localPlayerCard1->setStyleSheet( "QLabel{ border: 1px solid gray; border-radius: 5px; };" );  break;
+            case 1: ui->localPlayerCard1->setStyleSheet( "QLabel{ border: 1px solid gray; border-radius: 5px; };" );
+                    ui->localPlayerCard1->setGeometry(10, 5, 150, 209);
+                break;
 
-            case 2: ui->localPlayerCard2->setStyleSheet( "QLabel{ border: 1px solid gray; border-radius: 5px; };" );  break;
+            case 2: ui->localPlayerCard2->setStyleSheet( "QLabel{ border: 1px solid gray; border-radius: 5px; };" );
+                    ui->localPlayerCard2->setGeometry(80, 5, 150, 209);
+                break;
 
-            case 3: ui->localPlayerCard3->setStyleSheet( "QLabel{ border: 1px solid gray; border-radius: 5px; };" );  break;
+            case 3: ui->localPlayerCard3->setStyleSheet( "QLabel{ border: 1px solid gray; border-radius: 5px; };" );
+                    ui->localPlayerCard3->setGeometry(160, 5, 150, 209);
+                break;
 
-            case 4: ui->localPlayerCard4->setStyleSheet( "QLabel{ border: 1px solid gray; border-radius: 5px; };" );  break;
+            case 4: ui->localPlayerCard4->setStyleSheet( "QLabel{ border: 1px solid gray; border-radius: 5px; };" );
+                    ui->localPlayerCard4->setGeometry(250, 5, 150, 209);
+                break;
 
-            case 5: ui->localPlayerCard5->setStyleSheet( "QLabel{ border: 1px solid gray; border-radius: 5px; };" );  break;
+            case 5: ui->localPlayerCard5->setStyleSheet( "QLabel{ border: 1px solid gray; border-radius: 5px; };" );
+                    ui->localPlayerCard5->setGeometry(340, 5, 150, 209);
+                break;
 
             case 6: ui->localPlayerCard1->setStyleSheet( "QLabel{ border: 1px solid gray; border-radius: 5px; };" );
-                    ui->localPlayerCard2->setStyleSheet( "QLabel{ border: 1px solid gray; border-radius: 5px; };" );  break;
+                    ui->localPlayerCard2->setStyleSheet( "QLabel{ border: 1px solid gray; border-radius: 5px; };" );
+                    ui->localPlayerCard1->setGeometry(10, 5, 150, 209);
+                    ui->localPlayerCard2->setGeometry(80, 5, 150, 209);
+                break;
 
             case 7: ui->localPlayerCard1->setStyleSheet( "QLabel{ border: 1px solid gray; border-radius: 5px; };" );
-                    ui->localPlayerCard3->setStyleSheet( "QLabel{ border: 1px solid gray; border-radius: 5px; };" );  break;
+                    ui->localPlayerCard3->setStyleSheet( "QLabel{ border: 1px solid gray; border-radius: 5px; };" );
+                    ui->localPlayerCard1->setGeometry(10, 5, 150, 209);
+                    ui->localPlayerCard3->setGeometry(160, 5, 150, 209);
+                break;
 
             case 8: ui->localPlayerCard1->setStyleSheet( "QLabel{ border: 1px solid gray; border-radius: 5px; };" );
-                    ui->localPlayerCard4->setStyleSheet( "QLabel{ border: 1px solid gray; border-radius: 5px; };" );  break;
+                    ui->localPlayerCard4->setStyleSheet( "QLabel{ border: 1px solid gray; border-radius: 5px; };" );
+                    ui->localPlayerCard1->setGeometry(10, 5, 150, 209);
+                    ui->localPlayerCard4->setGeometry(250, 5, 150, 209);
+                break;
 
             case 9: ui->localPlayerCard1->setStyleSheet( "QLabel{ border: 1px solid gray; border-radius: 5px; };" );
-                    ui->localPlayerCard5->setStyleSheet( "QLabel{ border: 1px solid gray; border-radius: 5px; };" );  break;
+                    ui->localPlayerCard5->setStyleSheet( "QLabel{ border: 1px solid gray; border-radius: 5px; };" );
+                    ui->localPlayerCard1->setGeometry(10, 5, 150, 209);
+                    ui->localPlayerCard5->setGeometry(340, 5, 150, 209);
+                break;
 
             case 10: ui->localPlayerCard2->setStyleSheet( "QLabel{ border: 1px solid gray; border-radius: 5px; };" );
-                        ui->localPlayerCard3->setStyleSheet( "QLabel{ border: 1px solid gray; border-radius: 5px; };" );  break;
+                     ui->localPlayerCard3->setStyleSheet( "QLabel{ border: 1px solid gray; border-radius: 5px; };" );
+                     ui->localPlayerCard2->setGeometry(80, 5, 150, 209);
+                     ui->localPlayerCard3->setGeometry(160, 5, 150, 209);
+                break;
 
             case 11: ui->localPlayerCard2->setStyleSheet( "QLabel{ border: 1px solid gray; border-radius: 5px; };" );
-                     ui->localPlayerCard4->setStyleSheet( "QLabel{ border: 1px solid gray; border-radius: 5px; };" );  break;
+                     ui->localPlayerCard4->setStyleSheet( "QLabel{ border: 1px solid gray; border-radius: 5px; };" );
+                     ui->localPlayerCard2->setGeometry(80, 5, 150, 209);
+                     ui->localPlayerCard4->setGeometry(250, 5, 150, 209);
+                break;
 
             case 12: ui->localPlayerCard2->setStyleSheet( "QLabel{ border: 1px solid gray; border-radius: 5px; };" );
-                     ui->localPlayerCard5->setStyleSheet( "QLabel{ border: 1px solid gray; border-radius: 5px; };" );  break;
+                     ui->localPlayerCard5->setStyleSheet( "QLabel{ border: 1px solid gray; border-radius: 5px; };" );
+                     ui->localPlayerCard2->setGeometry(80, 5, 150, 209);
+                     ui->localPlayerCard5->setGeometry(340, 5, 150, 209);
+                break;
 
             case 13: ui->localPlayerCard3->setStyleSheet( "QLabel{ border: 1px solid gray; border-radius: 5px; };" );
-                     ui->localPlayerCard4->setStyleSheet( "QLabel{ border: 1px solid gray; border-radius: 5px; };" );  break;
+                     ui->localPlayerCard4->setStyleSheet( "QLabel{ border: 1px solid gray; border-radius: 5px; };" );
+                     ui->localPlayerCard3->setGeometry(160, 5, 150, 209);
+                     ui->localPlayerCard4->setGeometry(250, 5, 150, 209);
+                break;
 
             case 14: ui->localPlayerCard3->setStyleSheet( "QLabel{ border: 1px solid gray; border-radius: 5px; };" );
-                     ui->localPlayerCard5->setStyleSheet( "QLabel{ border: 1px solid gray; border-radius: 5px; };" );  break;
+                     ui->localPlayerCard5->setStyleSheet( "QLabel{ border: 1px solid gray; border-radius: 5px; };" );
+                     ui->localPlayerCard3->setGeometry(160, 5, 150, 209);
+                     ui->localPlayerCard5->setGeometry(340, 5, 150, 209);
+                break;
 
             case 15: ui->localPlayerCard4->setStyleSheet( "QLabel{ border: 1px solid gray; border-radius: 5px; };" );
-                     ui->localPlayerCard5->setStyleSheet( "QLabel{ border: 1px solid gray; border-radius: 5px; };" );  break;
+                     ui->localPlayerCard5->setStyleSheet( "QLabel{ border: 1px solid gray; border-radius: 5px; };" );
+                     ui->localPlayerCard4->setGeometry(250, 5, 150, 209);
+                     ui->localPlayerCard5->setGeometry(340, 5, 150, 209);
+                break;
             }
 
         }
 
     }
-
-}
-
-
-void MainWindow::loadBackImage()    /// Load images for shared cards
-{
-    QPixmap image;
-    image.loadFromData(b_ImgCtrl->downloadedData());
-    ui->localPlayerCard1->setPixmap(image);
-    ui->localPlayerCard2->setPixmap(image);
-    ui->localPlayerCard3->setPixmap(image);
-    ui->localPlayerCard4->setPixmap(image);
-    ui->localPlayerCard5->setPixmap(image);
-    MainWindow::shared0 = true;
-
-}
-
-
-void MainWindow::loadCardImage1()
-{
-    QPixmap image;
-    image.loadFromData(c1_ImgCtrl->downloadedData());
-    ui->localPlayerCard1->setPixmap(image);
-    MainWindow::shared1 = true;
-}
-
-
-void MainWindow::loadCardImage2()
-{
-    QPixmap image;
-    image.loadFromData(c2_ImgCtrl->downloadedData());
-    ui->localPlayerCard2->setPixmap(image);
-    MainWindow::shared2 = true;
-
-}
-
-
-void MainWindow::loadCardImage3()
-{
-    QPixmap image;
-    image.loadFromData(c3_ImgCtrl->downloadedData());
-    ui->localPlayerCard3->setPixmap(image);
-    MainWindow::shared3 = true;
-
-}
-
-
-void MainWindow::loadCardImage4()
-{
-    QPixmap image;
-    image.loadFromData(c4_ImgCtrl->downloadedData());
-    ui->localPlayerCard4->setPixmap(image);
-    MainWindow::shared4 = true;
-
-}
-
-
-void MainWindow::loadCardImage5()
-{
-    QPixmap image;
-    image.loadFromData(c5_ImgCtrl->downloadedData());
-    ui->localPlayerCard5->setPixmap(image);
-    MainWindow::shared5 = true;
 
 }
 
@@ -596,4 +618,12 @@ void MainWindow::on_backComboBox_currentTextChanged(const QString &arg1)
             MainWindow::backUrl = "https://raw.githubusercontent.com/SixofClubsss/"+arg1+"/main/"+arg1+".png";
         }
     }
+}
+
+
+void MainWindow::on_deckButton_clicked()
+{
+    ViewDeck vd;
+    vd.setModal(true);
+    vd.exec();
 }

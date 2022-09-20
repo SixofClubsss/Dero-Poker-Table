@@ -35,8 +35,9 @@ https://dreamtables.net
 #include "QMenu"
 #include "QSystemTrayIcon"
 #include "rpc/rpc.h"
-#include "handranks.h"
+#include "hands/handranks.h"
 #include "shared/filedownloader.h"
+#include "hands/viewdeck.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -64,16 +65,11 @@ public:
     static QString backUrl;
     static bool notified;
     static bool emptyBool;
-    static bool shared0;
-    static bool shared1;
-    static bool shared2;
-    static bool shared3;
-    static bool shared4;
-    static bool shared5;
     static bool clicked;
     static bool startUpSkip;
     static bool displayedRes;
     static int skipCount;
+    static QString winner;
     void offset();
     void setFonts(QString);
     void checkDecks();
@@ -102,6 +98,7 @@ public:
     QString backSelect(int);
     QImage displayCustom(int);
     QString displayStandard(int);
+    QImage displayShared(int);
     void displayCardOne(int);
     void displayCardTwo(int);
     void displayCardThree(int);
@@ -109,7 +106,7 @@ public:
     void displayCardFive(int);
     void blankDisplay();
     void clearHighlight();
-    int winner();
+    int payWinner();
     int autopayWinner(QString whoWon);
     int splitWinner(int p1Fold, int p2Fold, int p3Fold, int p4Fold, int p5Fold, int p6Fold);
     void setOpenClosed(int seats, double ante, double dealer);
@@ -131,7 +128,7 @@ public:
     void clearFoldedDisplay(int p1Fold, int p2Fold, int p3Fold, int p4Fold, int p5Fold, int p6Fold);
     void localEnd(QString oneId, int seats, int p1Fold, int p2Fold, int p3Fold, int p4Fold, int p5Fold, int p6Fold);
     int revealKey();
-    void displayShared(int, int);
+
 
 signals:
     void turnSignal();
@@ -168,18 +165,6 @@ private slots:
 
     void on_handRankButton_clicked();
 
-    void loadBackImage();
-
-    void loadCardImage1();
-
-    void loadCardImage2();
-
-    void loadCardImage3();
-
-    void loadCardImage4();
-
-    void loadCardImage5();
-
     void revealNotify();
 
     void turnNotify();
@@ -189,6 +174,8 @@ private slots:
     void on_deckComboBox_currentTextChanged(const QString &arg1);
 
     void on_backComboBox_currentTextChanged(const QString &arg1);
+
+    void on_deckButton_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -274,6 +261,55 @@ private:
     int getHighTrip(int h[5]);
     int makeHand();
     QString handToText(int rank);
+
+    void deltTo();
+    void blankResult1();
+    void displayResult1(int a, int b, int c, int d, int e);
+    void displayResultCard1_a(int);
+    void displayResultCard1_b(int);
+    void displayResultCard1_c(int);
+    void displayResultCard1_d(int);
+    void displayResultCard1_e(int);
+
+    void blankResult2();
+    void displayResult2(int a, int b, int c, int d, int e);
+    void displayResultCard2_a(int);
+    void displayResultCard2_b(int);
+    void displayResultCard2_c(int);
+    void displayResultCard2_d(int);
+    void displayResultCard2_e(int);
+
+    void blankResult3();
+    void displayResult3(int a, int b, int c, int d, int e);
+    void displayResultCard3_a(int);
+    void displayResultCard3_b(int);
+    void displayResultCard3_c(int);
+    void displayResultCard3_d(int);
+    void displayResultCard3_e(int);
+
+    void blankResult4();
+    void displayResult4(int a, int b, int c, int d, int e);
+    void displayResultCard4_a(int);
+    void displayResultCard4_b(int);
+    void displayResultCard4_c(int);
+    void displayResultCard4_d(int);
+    void displayResultCard4_e(int);
+
+    void blankResult5();
+    void displayResult5(int a, int b, int c, int d, int e);
+    void displayResultCard5_a(int);
+    void displayResultCard5_b(int);
+    void displayResultCard5_c(int);
+    void displayResultCard5_d(int);
+    void displayResultCard5_e(int);
+
+    void blankResult6();
+    void displayResult6(int a, int b, int c, int d, int e);
+    void displayResultCard6_a(int);
+    void displayResultCard6_b(int);
+    void displayResultCard6_c(int);
+    void displayResultCard6_d(int);
+    void displayResultCard6_e(int);
 
 };
 

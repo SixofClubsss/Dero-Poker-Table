@@ -25,7 +25,7 @@ https://dreamtables.net
 #include "confirm.h"
 #include "menu.h"
 #include "ui_menu.h"
-#include "rpc/rpc.h"
+
 
 QImage Menu::theme;
 QString Menu::os;
@@ -72,6 +72,7 @@ Menu::Menu(QWidget *parent) :
     ui->delistTableButton->setEnabled(false);
     ui->getTableButton->setEnabled(false);
     ui->findTablesButton->setEnabled(false);
+    ui->sharedRButton->setEnabled(false);
     ui->ownerGroupBox->setEnabled(false);
     ui->daemonRPCinput->setText(rpc::daemonAddress);
     ui->walletRPCinput->setText(rpc::playerAddress);
@@ -108,6 +109,7 @@ Menu::Menu(QWidget *parent) :
         checkWallet();
         checkContract();
         checkIfListed();
+        ui->sharedRButton->setEnabled(true);
     }
 
     qInfo() << ("\033[36m ♤♡♧♢♧♡♤♡♧♢♧♡♤♡♧♢♧♡♤♡♧♢♧♡♤♡♧♢♧♡♤\033[0m");
@@ -180,7 +182,7 @@ void Menu::setFonts(QString os)
     QFont macondoRegular(fontFamily);
     macondoRegular.setPointSize(mcR);
     ui->menuTextBrowser->setFont(macondoRegular);
-    ui->menuTextBrowser->setText("Welcome to dReam Tables Five Card Poker\nTable v1.3.1");
+    ui->menuTextBrowser->setText("Welcome to dReam Tables Five Card Poker\nTable v1.4.0");
 
     int fontId2 = QFontDatabase::addApplicationFont(":/fonts/Ubuntu-R.ttf");
     QString fontFamily2 = QFontDatabase::applicationFontFamilies(fontId2).at(0);
@@ -210,7 +212,9 @@ void Menu::setFonts(QString os)
     ui->autoPayRButton->setFont(ubuntuRegular);
     ui->sharedRButton->setFont(ubuntuRegular);
     ui->forceButton->setFont(ubuntuRegular);
+    ui->themeComboBox->setFont(ubuntuRegular);
     ui->buttonBox->setFont(ubuntuRegular);
+
 }
 
 
@@ -253,6 +257,7 @@ void Menu::on_walletRPCbutton_clicked()
     rpc::playerAddress = ui->walletRPCinput->text()+"/json_rpc";
     checkAddress();
     checkWallet();
+    checkThemes();
 }
 
 
@@ -345,15 +350,12 @@ void Menu::on_sharedRButton_clicked()
 {
     if(ui->sharedRButton->isChecked()){
         Menu::sharedDeck = true;
-        MainWindow::shared0 = false;
-        MainWindow::shared1 = false;
-        MainWindow::shared2 = false;
-        MainWindow::shared3 = false;
-        MainWindow::shared4 = false;
-        MainWindow::shared5 = false;
         if(rpc::oneId == rpc::IdHash){
             ownerShare();
+        }else {
+            loadFullDeck();
         }
+
     }else {
         Menu::sharedDeck = false;
     }
@@ -371,7 +373,6 @@ void Menu::on_listTableButton_clicked() /// Listing disabled for contract migrat
         ui->listTableButton->setEnabled(false);
         ui->delistTableButton->setEnabled(true);
     }else {
-
         Confirm::actionConfirmed = false;
     }
 
@@ -389,7 +390,6 @@ void Menu::on_delistTableButton_clicked()
         ui->listTableButton->setEnabled(true);
         Confirm::actionConfirmed = false;
     }else {
-
         Confirm::actionConfirmed = false;
     }
 
@@ -412,7 +412,6 @@ void Menu::on_forceButton_clicked()
         forceStart();
         Confirm::actionConfirmed = false;
     }else {
-
         Confirm::actionConfirmed = false;
     }
 

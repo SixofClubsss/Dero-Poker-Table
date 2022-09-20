@@ -1,5 +1,5 @@
 /*
-dReam Tables Holdero Poker
+dReam Tables Five Card Draw Poker
 
 Copyright (C) 2022  dReam Tables
 
@@ -22,9 +22,9 @@ https://dreamtables.net
 */
 
 #include "mainwindow.h"
-#include "./ui_mainwindow.h"
+#include "ui_mainwindow.h"
 #include "menu.h"
-#include "./ui_menu.h"
+#include "ui_menu.h"
 
 
 QString MainWindow::readmeStandard(QString find)

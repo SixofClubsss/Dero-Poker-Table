@@ -24,7 +24,7 @@ https://dreamtables.net
 #include "mainwindow.h"
 #include "menu.h"
 #include "ui_menu.h"
-#include "rpc/rpc.h"
+
 
 bool Menu::daemonConnected;
 bool Menu::walletConnected;
@@ -42,6 +42,14 @@ void Menu::loginInfo()   /// Used to get wallet login info for wallet functions
 void Menu::delay()            /// Delay to ensure mulitple calls get in different blocks
 {
     QTime dieTime= QTime::currentTime().addSecs(36);
+    while (QTime::currentTime() < dieTime)
+    QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+}
+
+
+void Menu::loadDelay(int ms)
+{
+    QTime dieTime = QTime::currentTime().addMSecs(ms);
     while (QTime::currentTime() < dieTime)
     QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 }
