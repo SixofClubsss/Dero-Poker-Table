@@ -21,8 +21,6 @@ Always play responsibly.
 https://dreamtables.net
 */
 
-#include "hands/handranks.h"
-#include "rpc/rpc.h"
 #include "ui_handranks.h"
 #include "mainwindow.h"
 #include "QDebug"
@@ -79,6 +77,8 @@ int MainWindow::getPlayer1() /// Gets player hand and hand rank
     p1HighPair = getHighPair(p1HighCardArr);
     p1HighTrip = getHighTrip(p1HighCardArr);
 
+    displayResult1(player1HandRaw[0], player1HandRaw[1]);
+
     return Rank;
 }
 
@@ -103,6 +103,8 @@ int MainWindow::getPlayer2()
     std::sort(p2HighCardArr, p2HighCardArr + 5);
     p2HighPair = getHighPair(p2HighCardArr);
     p2HighTrip = getHighTrip(p2HighCardArr);
+
+    displayResult2(player2HandRaw[0], player2HandRaw[1]);
 
     return Rank;
 }
@@ -129,6 +131,8 @@ int MainWindow::getPlayer3()
     p3HighPair = getHighPair(p3HighCardArr);
     p3HighTrip = getHighTrip(p3HighCardArr);
 
+    displayResult3(player3HandRaw[0], player3HandRaw[1]);
+
     return Rank;
 }
 
@@ -153,6 +157,8 @@ int MainWindow::getPlayer4()
     std::sort(p4HighCardArr, p4HighCardArr + 5);
     p4HighPair = getHighPair(p4HighCardArr);
     p4HighTrip = getHighTrip(p4HighCardArr);
+
+    displayResult4(player4HandRaw[0], player4HandRaw[1]);
 
     return Rank;
 }
@@ -179,6 +185,8 @@ int MainWindow::getPlayer5()
     p5HighPair = getHighPair(p5HighCardArr);
     p5HighTrip = getHighTrip(p5HighCardArr);
 
+    displayResult5(player5HandRaw[0], player5HandRaw[1]);
+
     return Rank;
 }
 
@@ -203,6 +211,8 @@ int MainWindow::getPlayer6()
     std::sort(p6HighCardArr, p6HighCardArr + 5);
     p6HighPair = getHighPair(p6HighCardArr);
     p6HighTrip = getHighTrip(p6HighCardArr);
+
+    displayResult6(player6HandRaw[0], player6HandRaw[1]);
 
     return Rank;
 }

@@ -42,7 +42,7 @@ Confirm::Confirm(QWidget *parent) :
         palette.setBrush(QPalette::Window, bkgnd);
         this->setPalette(palette);
     }else {
-         setConfirmTheme();
+        setConfirmTheme();
     }
     setFonts(Menu::os);
     Confirm::actionConfirmed = false;

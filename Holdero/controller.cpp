@@ -22,27 +22,20 @@ https://dreamtables.net
 */
 
 #include "mainwindow.h"
-#include "./ui_mainwindow.h"
+#include "ui_mainwindow.h"
 #include "menu.h"
-#include "rpc/rpc.h"
-#include "hands/handranks.h"
 
+
+QImage Hand::sharedImage0;
 QString MainWindow::faceUrl;
 QString MainWindow::backUrl;
 bool MainWindow::notified;
 bool MainWindow::emptyBool;
-bool MainWindow::shared0;
-bool MainWindow::shared1;
-bool MainWindow::shared2;
-bool MainWindow::shared3;
-bool MainWindow::shared4;
-bool MainWindow::shared5;
-bool MainWindow::shared6;
-bool MainWindow::shared7;
 bool MainWindow::clicked;
 bool MainWindow::startUpSkip;
 bool MainWindow::displayedRes;
 int MainWindow::skipCount;
+QString MainWindow::winner;
 
 bool Hand::hasBet;
 bool Hand::called;
@@ -54,6 +47,7 @@ bool Hand::foldFour;
 bool Hand::foldFive;
 bool Hand::foldSix;
 bool Hand::keyIsPub;
+bool Hand::push;
 
 string rpc::rpcLogin;
 bool rpc::inGame;
@@ -209,7 +203,7 @@ void MainWindow::checkBalance(double balance)   /// Gets players Dero balance
 void MainWindow::setOpenClosed(int seats, double ante, double dealer)       /// Sets display for seats open or closed, set dealer display, sets minium bet == ante
 {
     ui->turnReadOut->setStyleSheet( "QTextBrowser{border-color: rgb(128, 128, 128); border-style: inset; border-width: 2px; border-radius: 6px; padding: 3px; background-color: rgba(85, 88, 93, 90); color: rgb(255, 255, 255);};" );
-    ui->groupBoxP1->setStyleSheet( "QGroupBox{ border: 2px solid gray; border-radius: 5px; background-color: rgba(0, 0, 0, 120); };" );
+    ui->groupBoxP1->setStyleSheet( "QGroupBox{ border: 3px solid gray; border-style: outset; border-radius: 60px; background-color: rgba(0, 0, 0, 120); };" );
     ui->betSpinBox->setMinimum(ante/100000);
     ui->anteIsDSB->setValue(ante/100000);
     QString bb = QString::number(rpc::smallBlind*2/100000);
@@ -227,21 +221,43 @@ void MainWindow::setOpenClosed(int seats, double ante, double dealer)       /// 
         break;
 
     case 2: ui->p2CheckBox->setText("Seat Open");
+            if(rpc::end != 1){
+                blankResult1();
+                blankResult2();
+            }
         break;
 
     case 3: ui->p2CheckBox->setText("Seat Open");
             ui->p3CheckBox->setText("Seat Open");
+            if(rpc::end != 1){
+                blankResult1();
+                blankResult2();
+                blankResult3();
+            }
         break;
 
     case 4: ui->p2CheckBox->setText("Seat Open");
             ui->p3CheckBox->setText("Seat Open");
             ui->p4CheckBox->setText("Seat Open");
+            if(rpc::end != 1){
+                blankResult1();
+                blankResult2();
+                blankResult3();
+                blankResult4();
+            }
         break;
 
     case 5: ui->p2CheckBox->setText("Seat Open");
             ui->p3CheckBox->setText("Seat Open");
             ui->p4CheckBox->setText("Seat Open");
             ui->p5CheckBox->setText("Seat Open");
+            if(rpc::end != 1){
+                blankResult1();
+                blankResult2();
+                blankResult3();
+                blankResult4();
+                blankResult5();
+            }
         break;
 
     case 6: ui->p2CheckBox->setText("Seat Open");
@@ -249,6 +265,14 @@ void MainWindow::setOpenClosed(int seats, double ante, double dealer)       /// 
             ui->p4CheckBox->setText("Seat Open");
             ui->p5CheckBox->setText("Seat Open");
             ui->p6CheckBox->setText("Seat Open");
+            if(rpc::end != 1){
+                blankResult1();
+                blankResult2();
+                blankResult3();
+                blankResult4();
+                blankResult5();
+                blankResult6();
+            }
         break;
     }
 }
@@ -260,7 +284,7 @@ void MainWindow::setPlayerStatus(int p1Out, QString oneId, QString twoId, QStrin
         ui->p1CheckBox->setChecked(true);
 
         if(Hand::foldOne == true){
-            ui->p1CheckBox->setText("Player 1 Folded");
+            ui->p1CheckBox->setText("Folded");
             if(p1Out == 1){
                 ui->p1CheckBox->setText("Sitting Out");
             }
@@ -277,7 +301,7 @@ void MainWindow::setPlayerStatus(int p1Out, QString oneId, QString twoId, QStrin
         ui->p2CheckBox->setChecked(true);
 
         if(Hand::foldTwo == true){
-            ui->p2CheckBox->setText("Player 2 Folded");
+            ui->p2CheckBox->setText("Folded");
         }else {
             ui->p2CheckBox->setText("Player 2");
         }
@@ -291,7 +315,7 @@ void MainWindow::setPlayerStatus(int p1Out, QString oneId, QString twoId, QStrin
         ui->p3CheckBox->setChecked(true);
 
         if(Hand::foldThree == true){
-            ui->p3CheckBox->setText("Player 3 Folded");
+            ui->p3CheckBox->setText("Folded");
         }else {
             ui->p3CheckBox->setText("Player 3");
         }
@@ -305,7 +329,7 @@ void MainWindow::setPlayerStatus(int p1Out, QString oneId, QString twoId, QStrin
         ui->p4CheckBox->setChecked(true);
 
         if(Hand::foldFour == true){
-            ui->p4CheckBox->setText("Player 4 Folded");
+            ui->p4CheckBox->setText("Folded");
         }else {
             ui->p4CheckBox->setText("Player 4");
         }
@@ -319,7 +343,7 @@ void MainWindow::setPlayerStatus(int p1Out, QString oneId, QString twoId, QStrin
         ui->p5CheckBox->setChecked(true);
 
         if(Hand::foldFive == true){
-            ui->p5CheckBox->setText("Player 5 Folded");
+            ui->p5CheckBox->setText("Folded");
         }else {
             ui->p5CheckBox->setText("Player 5");
         }
@@ -333,7 +357,7 @@ void MainWindow::setPlayerStatus(int p1Out, QString oneId, QString twoId, QStrin
         ui->p6CheckBox->setChecked(true);
 
         if(Hand::foldSix == true){
-            ui->p6CheckBox->setText("Player 6 Folded");
+            ui->p6CheckBox->setText("Folded");
         }else {
             ui->p6CheckBox->setText("Player 6");
         }
@@ -412,19 +436,12 @@ void MainWindow::potEmpty(double pot)       ///  When post is empty or has pot &
         Hand::endSignal = false;
         blankDisplay();
         ui->payoutPushButton->setEnabled(false);
-        ui->winnerComboBox->setEnabled(false);
         rpc::paidOut = false;
         Hand::keyIsPub = false;
         MainWindow::displayedRes = false;
-        MainWindow::shared0 = false;
-        MainWindow::shared1 = false;
-        MainWindow::shared2 = false;
-        MainWindow::shared3 = false;
-        MainWindow::shared4 = false;
-        MainWindow::shared5 = false;
-        MainWindow::shared6 = false;
-        MainWindow::shared7 = false;
         MainWindow::emptyBool = true;
+        Hand::push = false;
+        MainWindow::winner.clear();
 
         if(Menu::os == "macos" || Menu::os == "osx" || Menu::os == "darwin" ){
             ui->logTextBrowser->setFontPointSize(30);
@@ -475,7 +492,6 @@ void MainWindow::setMinBet(double wager, double raised)     /// Sets minimum bet
 void MainWindow::atTable()                  /// Player table button control
 {
     if(ui->playerId->value()  > 1){
-        ui->winnerComboBox->setEnabled(false);
         ui->payoutPushButton->setEnabled(false);
         ui->entryPushButton->setEnabled(false);
     }
@@ -546,15 +562,15 @@ void MainWindow::localPlayerControl(int bet, double wager, double ante, double r
             ui->leaveButton->setEnabled(false);
             QString w = QString::number(wager/100000);
             ui->turnReadOut->setStyleSheet( "QTextBrowser{border-color: rgb(128, 128, 128); border-style: inset; border-width: 2px; border-radius: 6px; padding: 3px; color: rgb(255, 255, 255); background-color: rgb(56, 47, 165); };" );
-            ui->groupBoxP1->setStyleSheet( "QGroupBox{ border-color: rgb(56, 47, 165); background-color: rgba(0, 0, 0, 150); };" );
+            ui->groupBoxP1->setStyleSheet( "QGroupBox{ border-width: 3px; border-color: rgb(56, 47, 165); border-style: outset; border-radius: 60px; background-color: rgba(0, 0, 0, 150); };" );
             ui->turnReadOut->setText("Bet is "+w);
-            ui->turnReadOut->insertPlainText("Your Turn    ");
+            ui->turnReadOut->insertPlainText("Your Turn  ");
         }else {
             if(Hand::keyIsPub == false){
                 ui->turnReadOut->setText("Your Turn");
             }
             ui->turnReadOut->setStyleSheet( "QTextBrowser{border-color: rgb(128, 128, 128); border-style: inset; border-width: 2px; border-radius: 6px; padding: 3px; color: rgb(255, 255, 255); background-color: rgb(56, 47, 165); };" );
-            ui->groupBoxP1->setStyleSheet( "QGroupBox{ border-color: rgb(56, 47, 165); background-color: rgba(0, 0, 0, 150); };" );
+            ui->groupBoxP1->setStyleSheet( "QGroupBox{ border-width: 3px; border-color: rgb(56, 47, 165); border-radius: 60px; border-style: outset; background-color: rgba(0, 0, 0, 150); };" );
 
         }
 
@@ -574,7 +590,7 @@ void MainWindow::localPlayerControl(int bet, double wager, double ante, double r
             QString r = QString::number(raised/100000);
             ui->betButton->setText("Call");
             ui->turnReadOut->setText("     Raised "+r);
-            ui->turnReadOut->insertPlainText("Your Turn    ");
+            ui->turnReadOut->insertPlainText("Your Turn  ");
             ui->turnReadOut->insertPlainText("Bet is "+w);
         }
 
@@ -617,7 +633,6 @@ void MainWindow::storedEnd(int end, QString oneId)     /// End game show all han
                 if(Menu::autoPayout == false){
                     payoutDelay(30);
                     ui->payoutPushButton->setEnabled(true);
-                    ui->winnerComboBox->setEnabled(true);
                 }
             }
         }
@@ -635,7 +650,6 @@ void MainWindow::localEndSignal(QString oneId)     /// Local end signal, all pla
         ui->leaveButton->setEnabled(false);
         if(oneId == rpc::IdHash && Menu::autoPayout == false){
             ui->payoutPushButton->setEnabled(true);
-            ui->winnerComboBox->setEnabled(true);
         }
     }
 }
@@ -647,7 +661,6 @@ void MainWindow::disableButtons()   /// Buttons not in play
         ui->checkButton->setEnabled(false);
         ui->betButton->setEnabled(false);
         ui->payoutPushButton->setEnabled(false);
-        ui->winnerComboBox->setEnabled(false);
         blankDisplay();
     }
 
@@ -663,60 +676,41 @@ void MainWindow::disableButtons()   /// Buttons not in play
 
 void MainWindow::foldedBools(int p1Fold, int p2Fold, int p3Fold, int p4Fold, int p5Fold, int p6Fold)      /// Sets player indicator text to fold when player folds and sets payout menu
 {
-    if(rpc::end != 1){
-        ui->winnerComboBox->insertItem(0, "Player1");
-        ui->winnerComboBox->insertItem(1, "Player2");
-        ui->winnerComboBox->insertItem(2, "Player3");
-        ui->winnerComboBox->insertItem(3, "Player4");
-        ui->winnerComboBox->insertItem(4, "Player5");
-        ui->winnerComboBox->insertItem(5, "Player6");
-
-        ui->winnerComboBox->setMaxCount(rpc::seats);
-
-        if(p6Fold == 1){
-            Hand::foldSix = true;
-            ui->winnerComboBox->removeItem(5);
-        }else {
-            Hand::foldSix = false;
-        }
-
-        if(p5Fold == 1){
-            Hand::foldFive = true;
-            ui->winnerComboBox->removeItem(4);
-        }else {
-            Hand::foldFive = false;
-        }
-
-        if(p4Fold == 1){
-            Hand::foldFour = true;
-            ui->winnerComboBox->removeItem(3);
-        }else {
-            Hand::foldFour = false;
-        }
-
-        if(p3Fold == 1){
-            Hand::foldThree = true;
-            ui->winnerComboBox->removeItem(2);
-        }else {
-            Hand::foldThree = false;
-        }
-
-        if(p2Fold == 1){
-            Hand::foldTwo = true;
-            ui->winnerComboBox->removeItem(1);
-        }else {
-            Hand::foldTwo = false;
-        }
-
-        if(p1Fold == 1){
-            Hand::foldOne = true;
-            ui->winnerComboBox->removeItem(0);
-        }else {
-            Hand::foldOne = false;
-        }
-
+    if(p6Fold == 1){
+        Hand::foldSix = true;
+    }else {
+        Hand::foldSix = false;
     }
 
+    if(p5Fold == 1){
+        Hand::foldFive = true;
+    }else {
+        Hand::foldFive = false;
+    }
+
+    if(p4Fold == 1){
+        Hand::foldFour = true;
+    }else {
+        Hand::foldFour = false;
+    }
+
+    if(p3Fold == 1){
+        Hand::foldThree = true;
+    }else {
+        Hand::foldThree = false;
+    }
+
+    if(p2Fold == 1){
+        Hand::foldTwo = true;
+    }else {
+        Hand::foldTwo = false;
+    }
+
+    if(p1Fold == 1){
+        Hand::foldOne = true;
+    }else {
+        Hand::foldOne = false;
+    }
 }
 
 
@@ -786,61 +780,58 @@ void MainWindow::localEnd(QString oneId, int seats, int p1Fold, int p2Fold, int 
 
       if(oneId == rpc::IdHash){
 
-          if(Menu::autoPayout == true && rpc::pot != 0){         /// If autopay is selected in menu it will send to remaining player
+          if(p1Fold == 0){
+              MainWindow::winner = "Player1";
+              if(Menu::autoPayout == true && rpc::pot != 0 && rpc::paidOut == false){
+                    rpc::paidOut = true;
+                    QString whoWon = "Player1";
+                    payoutDelay(15);
+                    autopayWinner(whoWon);
+              }
 
-              if(p1Fold == 0){
-                  if(rpc::paidOut == false){
-                        rpc::paidOut = true;
-                        QString whoWon = "Player1";
-                        payoutDelay(15);
-                        autopayWinner(whoWon);
+          }else if(p2Fold == 0){
+              MainWindow::winner = "Player2";
+              if(Menu::autoPayout == true && rpc::pot != 0 && rpc::paidOut == false){
+                    rpc::paidOut = true;
+                    QString whoWon = "Player2";
+                    payoutDelay(15);
+                    autopayWinner(whoWon);
+              }
 
-                  }
+          }else if(p3Fold == 0){
+              MainWindow::winner = "Player3";
+              if(Menu::autoPayout == true && rpc::pot != 0 && rpc::paidOut == false){
+                    rpc::paidOut = true;
+                    QString whoWon = "Player3";
+                    payoutDelay(15);
+                    autopayWinner(whoWon);
+              }
 
-              }else if(p2Fold == 0){
-                  if(rpc::paidOut == false){
-                        rpc::paidOut = true;
-                        QString whoWon = "Player2";
-                        payoutDelay(15);
-                        autopayWinner(whoWon);
+          }else if(p4Fold == 0){
+              MainWindow::winner = "Player4";
+              if(Menu::autoPayout == true && rpc::pot != 0 && rpc::paidOut == false){
+                    rpc::paidOut = true;
+                    QString whoWon = "Player4";
+                    payoutDelay(15);
+                    autopayWinner(whoWon);
+              }
 
-                  }
+          }else if(p5Fold == 0){
+              MainWindow::winner = "Player5";
+              if(Menu::autoPayout == true && rpc::pot != 0 && rpc::paidOut == false){
+                    rpc::paidOut = true;
+                    QString whoWon = "Player5";
+                    payoutDelay(15);
+                    autopayWinner(whoWon);
+              }
 
-              }else if(p3Fold == 0){
-                  if(rpc::paidOut == false){
-                        rpc::paidOut = true;
-                        QString whoWon = "Player3";
-                        payoutDelay(15);
-                        autopayWinner(whoWon);
-
-                  }
-
-              }else if(p4Fold == 0){
-                  if(rpc::paidOut == false){
-                        rpc::paidOut = true;
-                        QString whoWon = "Player4";
-                        payoutDelay(15);
-                        autopayWinner(whoWon);
-
-                  }
-
-              }else if(p5Fold == 0){
-                  if(rpc::paidOut == false){
-                        rpc::paidOut = true;
-                        QString whoWon = "Player5";
-                        payoutDelay(15);
-                        autopayWinner(whoWon);
-
-                  }
-
-              }else if(p6Fold == 0){
-                  if(rpc::paidOut == false){
-                        rpc::paidOut = true;
-                        QString whoWon = "Player6";
-                        payoutDelay(15);
-                        autopayWinner(whoWon);
-
-                  }
+          }else if(p6Fold == 0){
+              MainWindow::winner = "Player6";
+              if(Menu::autoPayout == true && rpc::pot != 0 && rpc::paidOut == false){
+                    rpc::paidOut = true;
+                    QString whoWon = "Player6";
+                    payoutDelay(15);
+                    autopayWinner(whoWon);
               }
 
           }
@@ -858,48 +849,49 @@ void MainWindow::displayLocalHand(QString hashOne, QString hashTwo) /// Displays
     if(card(hashOne) > 0){
         if(Menu::sharedDeck == false || rpc::IdHash == rpc::oneId || ui->playerId->value() == 0){
             if(ui->deckComboBox->currentIndex() > 1){
-                ui->holeCard1Label->setGeometry(70, 20, 166, 227);
-                ui->holeCard2Label->setGeometry(0, 10, 166, 227);
+                ui->holeCard1Label->setGeometry(0, 10, 166, 227);
+                ui->holeCard2Label->setGeometry(70, 20, 166, 227);
                 ui->holeCard1Label->setPixmap(QPixmap::fromImage(displayCustom(card(hashOne))));
                 ui->holeCard2Label->setPixmap(QPixmap::fromImage(displayCustom(card(hashTwo))));
             }else {
-                ui->holeCard1Label->setGeometry(80, 20, 166, 227);
-                ui->holeCard2Label->setGeometry(-10, 10, 166, 227);
+                ui->holeCard1Label->setGeometry(-10, 10, 166, 227);
+                ui->holeCard2Label->setGeometry(80, 20, 166, 227);
                 ui->holeCard1Label->setPixmap(QPixmap(displayStandard(card(hashOne))));
                 ui->holeCard2Label->setPixmap(QPixmap(displayStandard(card(hashTwo))));
             }
         }else {
-            ui->holeCard1Label->setGeometry(70, 20, 166, 227);
-            ui->holeCard2Label->setGeometry(0, 10, 166, 227);
-            displayShared(card(hashOne), 1);
-            displayShared(card(hashTwo), 2);
+            ui->holeCard1Label->setGeometry(0, 10, 166, 227);
+            ui->holeCard2Label->setGeometry(70, 20, 166, 227);
+            ui->holeCard1Label->setPixmap(QPixmap::fromImage(displayShared(card(hashOne))));
+            ui->holeCard2Label->setPixmap(QPixmap::fromImage(displayShared(card(hashTwo))));
         }
     }else {
         if(Menu::sharedDeck == false || ui->playerId->value() == 0){
             if(ui->backComboBox->currentIndex() > 1){
-                ui->holeCard1Label->setGeometry(70, 20, 166, 227);
-                ui->holeCard2Label->setGeometry(0, 10, 166, 227);
+                ui->holeCard1Label->setGeometry(0, 10, 166, 227);
+                ui->holeCard2Label->setGeometry(70, 20, 166, 227);
                 ui->holeCard1Label->setPixmap(QPixmap::fromImage(displayCustom(0)));
                 ui->holeCard2Label->setPixmap(QPixmap::fromImage(displayCustom(0)));
             }else {
-                ui->holeCard1Label->setGeometry(80, 20, 166, 227);
-                ui->holeCard2Label->setGeometry(-10, 10, 166, 227);
+                ui->holeCard1Label->setGeometry(-10, 10, 166, 227);
+                ui->holeCard2Label->setGeometry(80, 20, 166, 227);
                 ui->holeCard1Label->setPixmap(QPixmap(displayStandard(0)));
                 ui->holeCard2Label->setPixmap(QPixmap(displayStandard(0)));
             }
         }else if(ui->playerId->value() > 1){
-            ui->holeCard1Label->setGeometry(70, 20, 166, 227);
-            ui->holeCard2Label->setGeometry(0, 10, 166, 227);
-            displayShared(0, 0);
+            ui->holeCard1Label->setGeometry(0, 10, 166, 227);
+            ui->holeCard2Label->setGeometry(70, 20, 166, 227);
+            ui->holeCard1Label->setPixmap(QPixmap::fromImage(displayShared(0)));
+            ui->holeCard2Label->setPixmap(QPixmap::fromImage(displayShared(0)));
         }else {
             if(ui->backComboBox->currentIndex() > 1){
-                ui->holeCard1Label->setGeometry(70, 20, 166, 227);
-                ui->holeCard2Label->setGeometry(0, 10, 166, 227);
+                ui->holeCard1Label->setGeometry(0, 10, 166, 227);
+                ui->holeCard2Label->setGeometry(70, 20, 166, 227);
                 ui->holeCard1Label->setPixmap(QPixmap::fromImage(displayCustom(0)));
                 ui->holeCard2Label->setPixmap(QPixmap::fromImage(displayCustom(0)));
             }else {
-                ui->holeCard1Label->setGeometry(80, 20, 166, 227);
-                ui->holeCard2Label->setGeometry(-10, 10, 166, 227);
+                ui->holeCard1Label->setGeometry(-10, 10, 166, 227);
+                ui->holeCard2Label->setGeometry(80, 20, 166, 227);
                 ui->holeCard1Label->setPixmap(QPixmap(displayStandard(0)));
                 ui->holeCard2Label->setPixmap(QPixmap(displayStandard(0)));
             }
@@ -1142,6 +1134,7 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
 
         if(p1Rank < p2Rank && p1Rank < p3Rank && p1Rank < p4Rank && p1Rank < p5Rank && p1Rank < p6Rank){    /// If a players hand outrightly beats all other hands
             ui->turnReadOut->setText("Player 1 Wins");
+            MainWindow::winner = "Player1";
             if(rpc::oneId == rpc::IdHash){
 
                 if(Menu::autoPayout == true && rpc::paidOut == false && rpc::pot != 0){
@@ -1154,6 +1147,7 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
             }
         }else if(p2Rank < p1Rank && p2Rank < p3Rank && p2Rank < p4Rank && p2Rank < p5Rank && p2Rank < p6Rank){
             ui->turnReadOut->setText("Player 2 Wins");
+            MainWindow::winner = "Player2";
             if(rpc::oneId == rpc::IdHash){
 
                 if(Menu::autoPayout == true && rpc::paidOut == false && rpc::pot != 0){
@@ -1166,6 +1160,7 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
             }
         }else if(p3Rank < p1Rank && p3Rank < p2Rank && p3Rank < p4Rank && p3Rank < p5Rank && p3Rank < p6Rank){
             ui->turnReadOut->setText("Player 3 Wins");
+            MainWindow::winner = "Player3";
             if(rpc::oneId == rpc::IdHash){
 
                 if(Menu::autoPayout == true && rpc::paidOut == false && rpc::pot != 0){
@@ -1178,6 +1173,7 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
             }
         }else if(p4Rank < p1Rank && p4Rank < p2Rank && p4Rank < p3Rank && p4Rank < p5Rank && p4Rank < p6Rank){
             ui->turnReadOut->setText("Player 4 Wins");
+            MainWindow::winner = "Player4";
             if(rpc::oneId == rpc::IdHash){
 
                 if(Menu::autoPayout == true && rpc::paidOut == false && rpc::pot != 0){
@@ -1190,6 +1186,7 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
             }
         }else if(p5Rank < p1Rank && p5Rank < p2Rank && p5Rank < p3Rank && p5Rank < p4Rank && p5Rank < p6Rank){
             ui->turnReadOut->setText("Player 5 Wins");
+            MainWindow::winner = "Player5";
             if(rpc::oneId == rpc::IdHash){
 
                 if(Menu::autoPayout == true && rpc::paidOut == false && rpc::pot != 0){
@@ -1202,6 +1199,7 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
             }
         }else if(p6Rank < p1Rank && p6Rank < p2Rank && p6Rank < p3Rank && p6Rank < p4Rank && p6Rank < p5Rank){
             ui->turnReadOut->setText("Player 6 Wins");
+            MainWindow::winner = "Player6";
             if(rpc::oneId == rpc::IdHash){
 
                 if(Menu::autoPayout == true && rpc::paidOut == false && rpc::pot != 0){
@@ -1251,6 +1249,7 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
             if(p1HighPair > p2HighPair && p1HighPair > p3HighPair && p1HighPair > p4HighPair && p1HighPair > p5HighPair && p1HighPair > p6HighPair){  /// If player has highest pairing
                 if(p1Rank == winningRank[0]){
                     ui->turnReadOut->setText("Hand Over, Player 1 Wins");
+                    MainWindow::winner = "Player1";
                     if(rpc::oneId == rpc::IdHash){
 
                         if(Menu::autoPayout == true && rpc::paidOut == false && rpc::pot != 0){
@@ -1265,6 +1264,7 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
             }else if(p2HighPair > p1HighPair && p2HighPair > p3HighPair && p2HighPair > p4HighPair && p2HighPair > p5HighPair && p2HighPair > p6HighPair){
                 if(p2Rank == winningRank[0]){
                     ui->turnReadOut->setText("Hand Over, Player 2 Wins");
+                    MainWindow::winner = "Player2";
                     if(rpc::oneId == rpc::IdHash){
 
                         if(Menu::autoPayout == true && rpc::paidOut == false && rpc::pot != 0){
@@ -1279,6 +1279,7 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
             }else if(p3HighPair > p1HighPair && p3HighPair > p2HighPair && p3HighPair > p4HighPair && p3HighPair > p5HighPair && p3HighPair > p6HighPair){
                 if(p3Rank == winningRank[0]){
                     ui->turnReadOut->setText("Hand Over, Player 3 Wins");
+                    MainWindow::winner = "Player3";
                     if(rpc::oneId == rpc::IdHash){
 
                         if(Menu::autoPayout == true && rpc::paidOut == false && rpc::pot != 0){
@@ -1293,6 +1294,7 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
             }else if(p4HighPair > p1HighPair && p4HighPair > p2HighPair && p4HighPair > p3HighPair && p4HighPair > p5HighPair && p4HighPair > p6HighPair){
                 if(p4Rank == winningRank[0]){
                     ui->turnReadOut->setText("Hand Over, Player 4 Wins");
+                    MainWindow::winner = "Player4";
                     if(rpc::oneId == rpc::IdHash){
 
                         if(Menu::autoPayout == true && rpc::paidOut == false && rpc::pot != 0){
@@ -1308,6 +1310,7 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
             }else if(p5HighPair > p1HighPair && p5HighPair > p2HighPair && p5HighPair > p3HighPair && p5HighPair > p4HighPair && p5HighPair > p6HighPair){
                 if(p5Rank == winningRank[0]){
                     ui->turnReadOut->setText("Hand Over, Player 5 Wins");
+                    MainWindow::winner = "Player5";
                     if(rpc::oneId == rpc::IdHash){
 
                         if(Menu::autoPayout == true && rpc::paidOut == false && rpc::pot != 0){
@@ -1323,6 +1326,7 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
             }else if(p6HighPair > p1HighPair && p6HighPair > p2HighPair && p6HighPair > p3HighPair && p6HighPair > p4HighPair && p6HighPair > p5HighPair){
                 if(p6Rank == winningRank[0]){
                     ui->turnReadOut->setText("Hand Over, Player 6 Wins");
+                    MainWindow::winner = "Player6";
                     if(rpc::oneId == rpc::IdHash){
 
                         if(Menu::autoPayout == true && rpc::paidOut == false && rpc::pot != 0){
@@ -1357,6 +1361,7 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
 
                 if(p1Rank == winningRank[0]){
                     ui->turnReadOut->setText("Hand Over, Player 1 Wins");
+                    MainWindow::winner = "Player1";
                     if(rpc::oneId == rpc::IdHash){
 
                         if(Menu::autoPayout == true && rpc::paidOut == false && rpc::pot != 0){
@@ -1392,6 +1397,7 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
 
                 if(p2Rank == winningRank[0]){
                     ui->turnReadOut->setText("Hand Over, Player 2 Wins");
+                    MainWindow::winner = "Player2";
                     if(rpc::oneId == rpc::IdHash){
 
                         if(Menu::autoPayout == true && rpc::paidOut == false && rpc::pot != 0){
@@ -1427,6 +1433,7 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
 
                 if(p3Rank == winningRank[0]){
                     ui->turnReadOut->setText("Hand Over, Player 3 Wins");
+                    MainWindow::winner = "Player3";
                     if(rpc::oneId == rpc::IdHash){
 
                         if(Menu::autoPayout == true && rpc::paidOut == false && rpc::pot != 0){
@@ -1462,6 +1469,7 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
 
                 if(p4Rank == winningRank[0]){
                     ui->turnReadOut->setText("Hand Over, Player 4 Wins");
+                    MainWindow::winner = "Player4";
                     if(rpc::oneId == rpc::IdHash){
 
                         if(Menu::autoPayout == true && rpc::paidOut == false && rpc::pot != 0){
@@ -1497,6 +1505,7 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
 
                 if(p5Rank == winningRank[0]){
                     ui->turnReadOut->setText("Hand Over, Player 5 Wins");
+                    MainWindow::winner = "Player5";
                     if(rpc::oneId == rpc::IdHash){
 
                         if(Menu::autoPayout == true && rpc::paidOut == false && rpc::pot != 0){
@@ -1532,6 +1541,7 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
 
                 if(p6Rank == winningRank[0]){
                     ui->turnReadOut->setText("Hand Over, Player 6 Wins");
+                    MainWindow::winner = "Player6";
                     if(rpc::oneId == rpc::IdHash){
 
                         if(Menu::autoPayout == true && rpc::paidOut == false && rpc::pot != 0){
@@ -1547,7 +1557,7 @@ void MainWindow::endResults(int seats, int p1Fold, int p2Fold, int p3Fold, int p
 
             }else { 
                 ui->turnReadOut->setText("Push, Split pot");
-                compareLoop();
+                Hand::push = true;
                 if(rpc::oneId == rpc::IdHash){
 
                     if(Menu::autoPayout == true && rpc::paidOut == false && rpc::pot != 0){
@@ -1613,43 +1623,27 @@ QString MainWindow::backSelect(int d)   /// Gets back path prefix for card image
 
 void MainWindow::blankDisplay()  /// Shows null cards when not playing
 {
+    rpc::hashTwo.clear();
+    rpc::hashOne.clear();
     if(Menu::sharedDeck == false || rpc::IdHash == rpc::oneId || ui->playerId->value() == 0){
         if(ui->backComboBox->currentIndex() > 1){
-            ui->flopCard1Label->setPixmap(QPixmap::fromImage(displayCustom(0)));
-            ui->flopCard2Label->setPixmap(QPixmap::fromImage(displayCustom(0)));
-            ui->flopCard3Label->setPixmap(QPixmap::fromImage(displayCustom(0)));
-            ui->turnCardLabel->setPixmap(QPixmap::fromImage(displayCustom(0)));
-            ui->riverCardLabel->setPixmap(QPixmap::fromImage(displayCustom(0)));
             ui->holeCard1Label->setPixmap(QPixmap::fromImage(displayCustom(0)));
             ui->holeCard2Label->setPixmap(QPixmap::fromImage(displayCustom(0)));
         }else {
-            ui->flopCard1Label->setPixmap(QPixmap(displayStandard(0)));
-            ui->flopCard2Label->setPixmap(QPixmap(displayStandard(0)));
-            ui->flopCard3Label->setPixmap(QPixmap(displayStandard(0)));
-            ui->turnCardLabel->setPixmap(QPixmap(displayStandard(0)));
-            ui->riverCardLabel->setPixmap(QPixmap(displayStandard(0)));
             ui->holeCard1Label->setPixmap(QPixmap(displayStandard(0)));
             ui->holeCard2Label->setPixmap(QPixmap(displayStandard(0)));
         }
     }else if(ui->playerId->value() > 1){
-        ui->holeCard1Label->setGeometry(70, 20, 166, 227);
-        ui->holeCard2Label->setGeometry(0, 10, 166, 227);
-        displayShared(0, 0);
+        ui->holeCard1Label->setGeometry(0, 10, 166, 227);
+        ui->holeCard2Label->setGeometry(70, 20, 166, 227);
+        ui->holeCard1Label->setPixmap(QPixmap::fromImage(displayShared(0)));
+        ui->holeCard2Label->setPixmap(QPixmap::fromImage(displayShared(0)));
+
     }else {
         if(ui->backComboBox->currentIndex() > 1){
-            ui->flopCard1Label->setPixmap(QPixmap::fromImage(displayCustom(0)));
-            ui->flopCard2Label->setPixmap(QPixmap::fromImage(displayCustom(0)));
-            ui->flopCard3Label->setPixmap(QPixmap::fromImage(displayCustom(0)));
-            ui->turnCardLabel->setPixmap(QPixmap::fromImage(displayCustom(0)));
-            ui->riverCardLabel->setPixmap(QPixmap::fromImage(displayCustom(0)));
             ui->holeCard1Label->setPixmap(QPixmap::fromImage(displayCustom(0)));
             ui->holeCard2Label->setPixmap(QPixmap::fromImage(displayCustom(0)));
         }else {
-            ui->flopCard1Label->setPixmap(QPixmap(displayStandard(0)));
-            ui->flopCard2Label->setPixmap(QPixmap(displayStandard(0)));
-            ui->flopCard3Label->setPixmap(QPixmap(displayStandard(0)));
-            ui->turnCardLabel->setPixmap(QPixmap(displayStandard(0)));
-            ui->riverCardLabel->setPixmap(QPixmap(displayStandard(0)));
             ui->holeCard1Label->setPixmap(QPixmap(displayStandard(0)));
             ui->holeCard2Label->setPixmap(QPixmap(displayStandard(0)));
         }
@@ -1936,112 +1930,68 @@ QString MainWindow::displayStandard(int card)   /// Gets suffix for standard car
 }
 
 
-void MainWindow::displayShared(int card, int where)   /// Gets shared card image
+QImage MainWindow::displayShared(int card)   /// Gets shared card image
 {
-    QByteArray backData = rpc::sharedBack.toUtf8();
-    QByteArray faceData = rpc::sharedFace.toUtf8();
-    QByteArray backText = QByteArray::fromHex(backData);
-    QByteArray faceText = QByteArray::fromHex(faceData);
-    QString back = QString::fromLatin1(backText.data());
-    QString face = QString::fromLatin1(faceText.data());
-    QString suffix;
+    QImage image;
 
-    if(card > 0){
-        switch (card){
-        case 0: suffix = "card1.png"; break;
-        case 1: suffix = "card1.png"; break;
-        case 2: suffix = "card2.png"; break;
-        case 3: suffix = "card3.png"; break;
-        case 4: suffix = "card4.png"; break;
-        case 5: suffix = "card5.png"; break;
-        case 6: suffix = "card6.png"; break;
-        case 7: suffix = "card7.png"; break;
-        case 8: suffix = "card8.png"; break;
-        case 9: suffix = "card9.png"; break;
-        case 10: suffix = "card10.png" ; break;
-        case 11: suffix = "card11.png" ; break;
-        case 12: suffix = "card12.png" ; break;
-        case 13: suffix = "card13.png" ; break;
-        case 14: suffix = "card14.png" ; break;
-        case 15: suffix = "card15.png" ; break;
-        case 16: suffix = "card16.png" ; break;
-        case 17: suffix = "card17.png" ; break;
-        case 18: suffix = "card18.png" ; break;
-        case 19: suffix = "card19.png" ; break;
-        case 20: suffix = "card20.png" ; break;
-        case 21: suffix = "card21.png" ; break;
-        case 22: suffix = "card22.png" ; break;
-        case 23: suffix = "card23.png" ; break;
-        case 24: suffix = "card24.png" ; break;
-        case 25: suffix = "card25.png" ; break;
-        case 26: suffix = "card26.png" ; break;
-        case 27: suffix = "card27.png" ; break;
-        case 28: suffix = "card28.png" ; break;
-        case 29: suffix = "card29.png" ; break;
-        case 30: suffix = "card30.png" ; break;
-        case 31: suffix = "card31.png" ; break;
-        case 32: suffix = "card32.png" ; break;
-        case 33: suffix = "card33.png" ; break;
-        case 34: suffix = "card34.png" ; break;
-        case 35: suffix = "card35.png" ; break;
-        case 36: suffix = "card36.png" ; break;
-        case 37: suffix = "card37.png" ; break;
-        case 38: suffix = "card38.png" ; break;
-        case 39: suffix = "card39.png" ; break;
-        case 40: suffix = "card40.png" ; break;
-        case 41: suffix = "card41.png" ; break;
-        case 42: suffix = "card42.png" ; break;
-        case 43: suffix = "card43.png" ; break;
-        case 44: suffix = "card44.png" ; break;
-        case 45: suffix = "card45.png" ; break;
-        case 46: suffix = "card46.png" ; break;
-        case 47: suffix = "card47.png" ; break;
-        case 48: suffix = "card48.png" ; break;
-        case 49: suffix = "card49.png" ; break;
-        case 50: suffix = "card50.png" ; break;
-        case 51: suffix = "card51.png" ; break;
-        case 52: suffix = "card52.png" ; break;
-        }
-
-        QUrl imageUrl(face+suffix);
-
-        if(where == 1 && MainWindow::shared1 == false){
-            c1_ImgCtrl = new FileDownloader(imageUrl, this);
-            connect(c1_ImgCtrl, SIGNAL (downloaded()), this, SLOT (loadCardImage1()));
-
-        }else if(where == 2 && MainWindow::shared2 == false) {
-            c2_ImgCtrl = new FileDownloader(imageUrl, this);
-            connect(c2_ImgCtrl, SIGNAL (downloaded()), this, SLOT (loadCardImage2()));
-
-        }else if(where == 3 && MainWindow::shared3 == false) {
-            c3_ImgCtrl = new FileDownloader(imageUrl, this);
-            connect(c3_ImgCtrl, SIGNAL (downloaded()), this, SLOT (loadCardImage3()));
-
-        }else if(where == 4 && MainWindow::shared4 == false) {
-            c4_ImgCtrl = new FileDownloader(imageUrl, this);
-            connect(c4_ImgCtrl, SIGNAL (downloaded()), this, SLOT (loadCardImage4()));
-
-        }else if(where == 5 && MainWindow::shared5 == false) {
-            c5_ImgCtrl = new FileDownloader(imageUrl, this);
-            connect(c5_ImgCtrl, SIGNAL (downloaded()), this, SLOT (loadCardImage5()));
-
-        }else if(where == 6 && MainWindow::shared6 == false) {
-            c6_ImgCtrl = new FileDownloader(imageUrl, this);
-            connect(c6_ImgCtrl, SIGNAL (downloaded()), this, SLOT (loadCardImage6()));
-
-        }else if(where == 7 && MainWindow::shared7 == false) {
-            c7_ImgCtrl = new FileDownloader(imageUrl, this);
-            connect(c7_ImgCtrl, SIGNAL (downloaded()), this, SLOT (loadCardImage7()));
-        }
-
-    }else {
-        if(MainWindow::shared0 == false){
-            QUrl imageUrl(back);
-            b_ImgCtrl = new FileDownloader(imageUrl, this);
-            connect(b_ImgCtrl, SIGNAL (downloaded()), this, SLOT (loadBackImage()));
-        }
-
+    switch (card){
+    case 0: image = Hand::sharedImage0; break;
+    case 1: image = Hand::sharedImage1; break;
+    case 2: image = Hand::sharedImage2; break;
+    case 3: image = Hand::sharedImage3; break;
+    case 4: image = Hand::sharedImage4; break;
+    case 5: image = Hand::sharedImage5; break;
+    case 6: image = Hand::sharedImage6; break;
+    case 7: image = Hand::sharedImage7; break;
+    case 8: image = Hand::sharedImage8; break;
+    case 9: image = Hand::sharedImage9; break;
+    case 10: image = Hand::sharedImage10; break;
+    case 11: image = Hand::sharedImage11; break;
+    case 12: image = Hand::sharedImage12; break;
+    case 13: image = Hand::sharedImage13; break;
+    case 14: image = Hand::sharedImage14; break;
+    case 15: image = Hand::sharedImage15; break;
+    case 16: image = Hand::sharedImage16; break;
+    case 17: image = Hand::sharedImage17; break;
+    case 18: image = Hand::sharedImage18; break;
+    case 19: image = Hand::sharedImage19; break;
+    case 20: image = Hand::sharedImage20; break;
+    case 21: image = Hand::sharedImage21; break;
+    case 22: image = Hand::sharedImage22; break;
+    case 23: image = Hand::sharedImage23; break;
+    case 24: image = Hand::sharedImage24; break;
+    case 25: image = Hand::sharedImage25; break;
+    case 26: image = Hand::sharedImage26; break;
+    case 27: image = Hand::sharedImage27; break;
+    case 28: image = Hand::sharedImage28; break;
+    case 29: image = Hand::sharedImage29; break;
+    case 30: image = Hand::sharedImage30; break;
+    case 31: image = Hand::sharedImage31; break;
+    case 32: image = Hand::sharedImage32; break;
+    case 33: image = Hand::sharedImage33; break;
+    case 34: image = Hand::sharedImage34; break;
+    case 35: image = Hand::sharedImage35; break;
+    case 36: image = Hand::sharedImage36; break;
+    case 37: image = Hand::sharedImage37; break;
+    case 38: image = Hand::sharedImage38; break;
+    case 39: image = Hand::sharedImage39; break;
+    case 40: image = Hand::sharedImage40; break;
+    case 41: image = Hand::sharedImage41; break;
+    case 42: image = Hand::sharedImage42; break;
+    case 43: image = Hand::sharedImage43; break;
+    case 44: image = Hand::sharedImage44; break;
+    case 45: image = Hand::sharedImage45; break;
+    case 46: image = Hand::sharedImage46; break;
+    case 47: image = Hand::sharedImage47; break;
+    case 48: image = Hand::sharedImage48; break;
+    case 49: image = Hand::sharedImage49; break;
+    case 50: image = Hand::sharedImage50; break;
+    case 51: image = Hand::sharedImage51; break;
+    case 52: image = Hand::sharedImage52; break;
+    default: image = Hand::sharedImage0; break;
     }
+
+    return image;
 
 }
 
@@ -2060,9 +2010,9 @@ void MainWindow::displayFlop(int flop1, int flop2, int flop3)   /// Displays 3 f
                 ui->flopCard3Label->setPixmap(QPixmap(displayStandard(flop3)));
             }
         }else {
-            displayShared(flop1, 3);
-            displayShared(flop2, 4);
-            displayShared(flop3, 5);
+            ui->flopCard1Label->setPixmap(QPixmap::fromImage(displayShared(flop1)));
+            ui->flopCard2Label->setPixmap(QPixmap::fromImage(displayShared(flop2)));
+            ui->flopCard3Label->setPixmap(QPixmap::fromImage(displayShared(flop3)));
         }
 
     }else {
@@ -2077,7 +2027,9 @@ void MainWindow::displayFlop(int flop1, int flop2, int flop3)   /// Displays 3 f
                 ui->flopCard3Label->setPixmap(QPixmap(displayStandard(0)));
             }
         }else if(ui->playerId->value() > 1){
-            displayShared(0, 0);
+            ui->flopCard1Label->setPixmap(QPixmap::fromImage(displayShared(0)));
+            ui->flopCard2Label->setPixmap(QPixmap::fromImage(displayShared(0)));
+            ui->flopCard3Label->setPixmap(QPixmap::fromImage(displayShared(0)));
         }else {
             if(ui->backComboBox->currentIndex() > 1){
                 ui->flopCard1Label->setPixmap(QPixmap::fromImage(displayCustom(0)));
@@ -2103,7 +2055,7 @@ void MainWindow::displayTurnCard(int card)   ///  Displays turn card
                 ui->turnCardLabel->setPixmap(QPixmap(displayStandard(card)));
             }
         }else {
-            displayShared(card, 6);
+            ui->turnCardLabel->setPixmap(QPixmap::fromImage(displayShared(card)));
         }
     }else {
         if(Menu::sharedDeck == false || ui->playerId->value() == 0){
@@ -2113,7 +2065,7 @@ void MainWindow::displayTurnCard(int card)   ///  Displays turn card
                 ui->turnCardLabel->setPixmap(QPixmap(displayStandard(0)));
             }
         }else if(ui->playerId->value() > 1){
-            displayShared(0, 0);
+            ui->turnCardLabel->setPixmap(QPixmap::fromImage(displayShared(0)));
         }else {
             if(ui->backComboBox->currentIndex() > 1){
                 ui->turnCardLabel->setPixmap(QPixmap::fromImage(displayCustom(0)));
@@ -2135,7 +2087,7 @@ void MainWindow::displayRiverCard(int card)   ///  Displays river card
                 ui->riverCardLabel->setPixmap(QPixmap(displayStandard(card)));
             }
         }else {
-            displayShared(card, 7);
+            ui->riverCardLabel->setPixmap(QPixmap::fromImage(displayShared(card)));
         }
     }else {
         if(Menu::sharedDeck == false || ui->playerId->value() == 0){
@@ -2145,7 +2097,7 @@ void MainWindow::displayRiverCard(int card)   ///  Displays river card
                 ui->riverCardLabel->setPixmap(QPixmap(displayStandard(0)));
             }
         }else if(ui->playerId->value() > 1){
-            displayShared(0, 0);
+            ui->riverCardLabel->setPixmap(QPixmap::fromImage(displayShared(0)));
         }else {
             if(ui->backComboBox->currentIndex() > 1){
                 ui->riverCardLabel->setPixmap(QPixmap::fromImage(displayCustom(0)));

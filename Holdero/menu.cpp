@@ -25,7 +25,6 @@ https://dreamtables.net
 #include "confirm.h"
 #include "menu.h"
 #include "ui_menu.h"
-#include "rpc/rpc.h"
 
 
 QImage Menu::theme;
@@ -74,6 +73,7 @@ Menu::Menu(QWidget *parent) :
     ui->getTableButton->setEnabled(false);
     ui->findTablesButton->setEnabled(false);
     ui->ownerGroupBox->setEnabled(false);
+    ui->sharedRButton->setEnabled(false);
     ui->themeComboBox->setCurrentIndex(Menu::themeIndex);
     ui->daemonRPCinput->setText(rpc::daemonAddress);
     ui->walletRPCinput->setText(rpc::playerAddress);
@@ -111,6 +111,7 @@ Menu::Menu(QWidget *parent) :
         checkWallet();
         checkContract();
         checkIfListed();
+        ui->sharedRButton->setEnabled(true);
     }
 
     qInfo() << ("\033[36m♤♡♧♢♧♡♤♡♧♢♧♡♤♡♧♢♧♡♤♡♧♢♧♡♤♡♧♢♧♡♤\033[0m");
@@ -183,7 +184,7 @@ void Menu::setFonts(QString os)
     QFont macondoRegular(fontFamily);
     macondoRegular.setPointSize(mcR);
     ui->menuTextBrowser->setFont(macondoRegular);
-    ui->menuTextBrowser->setText("Welcome to dReam Tables Holdero Poker\nTable v1.0.1");
+    ui->menuTextBrowser->setText("Welcome to dReam Tables Holdero Poker\nTable v1.1.0");
 
     int fontId2 = QFontDatabase::addApplicationFont(":/fonts/Ubuntu-R.ttf");
     QString fontFamily2 = QFontDatabase::applicationFontFamilies(fontId2).at(0);
@@ -350,17 +351,12 @@ void Menu::on_sharedRButton_clicked()
 {
     if(ui->sharedRButton->isChecked()){
         Menu::sharedDeck = true;
-        MainWindow::shared0 = false;
-        MainWindow::shared1 = false;
-        MainWindow::shared2 = false;
-        MainWindow::shared3 = false;
-        MainWindow::shared4 = false;
-        MainWindow::shared5 = false;
-        MainWindow::shared6 = false;
-        MainWindow::shared7 = false;
         if(rpc::oneId == rpc::IdHash){
             ownerShare();
+        }else {
+            loadFullDeck();
         }
+
     }else {
         Menu::sharedDeck = false;
     }
@@ -430,8 +426,6 @@ void Menu::on_blindSpinBox_valueChanged(double arg1)
 {
     QString bb = QString::number(arg1*2);
     ui->blindSpinBox->setPrefix("Big Blind: "+bb+" / Small Blind: ");
-    QString s1 = QString::number(arg1*100000, 'g', 10);
-    qInfo() << s1;
 }
 
 

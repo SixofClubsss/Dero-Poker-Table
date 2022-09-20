@@ -51,8 +51,10 @@ SOURCES += \
     confirm.cpp \
     controller.cpp \
     hands/decks.cpp \
+    hands/endhands.cpp \
     hands/handranks.cpp \
     hands/players.cpp \
+    hands/viewdeck.cpp \
     main.cpp \
     mainwindow.cpp \
     menu.cpp \
@@ -65,6 +67,7 @@ HEADERS += \
     aes/qaesencryption.h \
     confirm.h \
     hands/handranks.h \
+    hands/viewdeck.h \
     mainwindow.h \
     menu.h \
     rpc/rpc.h \
@@ -73,6 +76,7 @@ HEADERS += \
 FORMS += \
     confirm.ui \
     hands/handranks.ui \
+    hands/viewdeck.ui \
     mainwindow.ui \
     menu.ui
 

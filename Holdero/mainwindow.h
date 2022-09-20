@@ -35,6 +35,8 @@ https://dreamtables.net
 #include "QMenu"
 #include "QSystemTrayIcon"
 #include "rpc/rpc.h"
+#include "hands/handranks.h"
+#include "hands/viewdeck.h"
 #include "shared/filedownloader.h"
 
 
@@ -53,30 +55,15 @@ public:
     QIcon bIcon;
     QMenu *trayIconMenu;
     QSystemTrayIcon *trayIcon;
-    FileDownloader *b_ImgCtrl;
-    FileDownloader *c1_ImgCtrl;
-    FileDownloader *c2_ImgCtrl;
-    FileDownloader *c3_ImgCtrl;
-    FileDownloader *c4_ImgCtrl;
-    FileDownloader *c5_ImgCtrl;
-    FileDownloader *c6_ImgCtrl;
-    FileDownloader *c7_ImgCtrl;
     static QString faceUrl;
     static QString backUrl;
     static bool notified;
     static bool emptyBool;
-    static bool shared0;
-    static bool shared1;
-    static bool shared2;
-    static bool shared3;
-    static bool shared4;
-    static bool shared5;
-    static bool shared6;
-    static bool shared7;
     static bool clicked;
     static bool startUpSkip;
     static bool displayedRes;
     static int skipCount;
+    static QString winner;
     void offset();
     void setFonts(QString);
     void checkDecks();
@@ -110,7 +97,7 @@ public:
     void displayTurnCard(int);
     void displayRiverCard(int);
     void blankDisplay();
-    int winner();
+    int payWinner();
     int autopayWinner(QString whoWon);
     int splitWinner(int p1Fold, int p2Fold, int p3Fold, int p4Fold, int p5Fold, int p6Fold);
     int revealKey();
@@ -132,7 +119,7 @@ public:
     void hasLeft(int p1Out, int p2Out, int p3Out, int p4Out, int p5Out, int p6Out);
     void clearFoldedDisplay(int p1Fold, int p2Fold, int p3Fold, int p4Fold, int p5Fold, int p6Fold);
     void localEnd(QString oneId, int seats, int p1Fold, int p2Fold, int p3Fold, int p4Fold, int p5Fold, int p6Fold);
-    void displayShared(int, int);
+    QImage displayShared(int);
 
 
 signals:
@@ -166,22 +153,6 @@ private slots:
 
     void on_handRankButton_clicked();
 
-    void loadBackImage();
-
-    void loadCardImage1();
-
-    void loadCardImage2();
-
-    void loadCardImage3();
-
-    void loadCardImage4();
-
-    void loadCardImage5();
-
-    void loadCardImage6();
-
-    void loadCardImage7();
-
     void revealNotify();
 
     void turnNotify();
@@ -191,6 +162,8 @@ private slots:
     void on_deckComboBox_currentTextChanged(const QString &arg1);
 
     void on_backComboBox_currentTextChanged(const QString &arg1);
+
+    void on_deckButton_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -306,6 +279,37 @@ private:
     int getHighTrip(int h[5]);
     int makeHand(int h[], int s[]);
     QString handToText(int rank);
+
+    void deltTo();
+    void blankResult1();
+    void displayResult1(int a, int b);
+    void displayResultCard1_a(int);
+    void displayResultCard1_b(int);
+
+    void blankResult2();
+    void displayResult2(int a, int b);
+    void displayResultCard2_a(int);
+    void displayResultCard2_b(int);
+
+    void blankResult3();
+    void displayResult3(int a, int b);
+    void displayResultCard3_a(int);
+    void displayResultCard3_b(int);
+
+    void blankResult4();
+    void displayResult4(int a, int b);
+    void displayResultCard4_a(int);
+    void displayResultCard4_b(int);
+
+    void blankResult5();
+    void displayResult5(int a, int b);
+    void displayResultCard5_a(int);
+    void displayResultCard5_b(int);
+
+    void blankResult6();
+    void displayResult6(int a, int b);
+    void displayResultCard6_a(int);
+    void displayResultCard6_b(int);
 
 };
 

@@ -22,7 +22,6 @@ https://dreamtables.net
 */
 
 #include "mainwindow.h"
-#include "rpc/rpc.h"
 #include "menu.h"
 
 
@@ -241,7 +240,6 @@ int rpc::fetchScData()       /// Get SC variables
 
       QJsonValue Back_jv = cbStringKeys.value("Back:");
       QJsonValue Face_jv = cbStringKeys.value("Face:");
-
 
       rpc::seats = Seats_jv.toInt();
       rpc::count = Count_jv.toInt();

@@ -22,10 +22,8 @@ https://dreamtables.net
 */
 
 #include "mainwindow.h"
-#include "./ui_mainwindow.h"
+#include "ui_mainwindow.h"
 #include "menu.h"
-#include "rpc/rpc.h"
-#include "hands/handranks.h"
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -58,7 +56,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->p5CheckBox->setFocusPolicy(Qt::NoFocus);
     ui->p6CheckBox->setAttribute(Qt::WA_TransparentForMouseEvents);
     ui->p6CheckBox->setFocusPolicy(Qt::NoFocus);
-    ui->logTextBrowser->setText("dReam Tables, Built on Dero\n\nHoldero Table v1.0.1");
+    ui->logTextBrowser->setText("dReam Tables, Built on Dero\n\nHoldero Table v1.1.0");
     MainWindow::skipCount = 0;
     ui->entryPushButton->setEnabled(false);
     ui->dealHandPushButton->setEnabled(false);
@@ -66,7 +64,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->checkButton->setEnabled(false);
     ui->leaveButton->setEnabled(false);
     ui->payoutPushButton->setEnabled(false);
-    ui->winnerComboBox->setEnabled(false);
     MainWindow::clicked = false;
     blankDisplay();
     generateKey();
@@ -140,7 +137,7 @@ void MainWindow::setFonts(QString os)
         ubR = 13;
     }else {
         mcR1 = 24;
-        mcR2 = 20;
+        mcR2 = 18;
         mcR3 = 12;
         ubR = 10;
     }
@@ -176,7 +173,6 @@ void MainWindow::setFonts(QString os)
     ui->betButton->setFont(ubuntuRegular);
     ui->dealHandPushButton->setFont(ubuntuRegular);
     ui->payoutPushButton->setFont(ubuntuRegular);
-    ui->winnerComboBox->setFont(ubuntuRegular);
     ui->balanceDoubleSpinBox->setFont(ubuntuRegular);
     ui->menuButton->setFont(ubuntuRegular);
     ui->leaveButton->setFont(ubuntuRegular);
@@ -190,6 +186,7 @@ void MainWindow::setFonts(QString os)
     ui->txLogTextBrowser->setFont(ubuntuRegular);
     ui->backComboBox->setFont(ubuntuRegular);
     ui->deckComboBox->setFont(ubuntuRegular);
+    ui->deckButton->setFont(ubuntuRegular);
 }
 
 
@@ -249,9 +246,8 @@ void MainWindow::buttonDelay()  /// When any button has been pressed disabled al
     ui->checkButton->setEnabled(false);
     ui->betButton->setEnabled(false);
     ui->payoutPushButton->setEnabled(false);
-    ui->winnerComboBox->setEnabled(false);
     ui->turnReadOut->setStyleSheet( "QTextBrowser{border-color: rgb(128, 128, 128); border-style: inset; border-width: 2px; border-radius: 6px; padding: 3px; background-color: rgba(85, 88, 93, 90); color: rgb(255, 255, 255);};" );
-    ui->groupBoxP1->setStyleSheet( "QGroupBox{ border: 2px solid gray; border-radius: 5px; background-color: rgba(0, 0, 0, 150);};" );
+    ui->groupBoxP1->setStyleSheet( "QGroupBox{ border: 3px solid gray; border-style: outset; border-radius: 60px; background-color: rgba(0, 0, 0, 150);};" );
     ui->turnReadOut->setText("Wait For Block");
 }
 
@@ -282,7 +278,12 @@ void MainWindow::on_payoutPushButton_clicked()
 {
     buttonCatch();
     Hand::endSignal = false;
-    winner();
+    if(Hand::push == true){
+        splitWinner(rpc::p1Fold, rpc::p2Fold, rpc::p3Fold, rpc::p4Fold, rpc::p5Fold, rpc::p6Fold);
+    }else {
+        payWinner();
+    }
+
 }
 
 
@@ -314,90 +315,6 @@ void MainWindow::on_handRankButton_clicked()
     hr.exec();
 }
 
-
-void MainWindow::loadBackImage()    /// Load images for shared cards
-{
-    QPixmap image;
-    image.loadFromData(b_ImgCtrl->downloadedData());
-    ui->holeCard1Label->setPixmap(image);
-    ui->holeCard2Label->setPixmap(image);
-    ui->flopCard1Label->setPixmap(image);
-    ui->flopCard2Label->setPixmap(image);
-    ui->flopCard3Label->setPixmap(image);
-    ui->turnCardLabel->setPixmap(image);
-    ui->riverCardLabel->setPixmap(image);
-    MainWindow::shared0 = true;
-
-}
-
-
-void MainWindow::loadCardImage1()
-{
-    QPixmap image;
-    image.loadFromData(c1_ImgCtrl->downloadedData());
-    ui->holeCard1Label->setPixmap(image);
-    MainWindow::shared1 = true;
-}
-
-
-void MainWindow::loadCardImage2()
-{
-    QPixmap image;
-    image.loadFromData(c2_ImgCtrl->downloadedData());
-    ui->holeCard2Label->setPixmap(image);
-    MainWindow::shared2 = true;
-
-}
-
-
-void MainWindow::loadCardImage3()
-{
-    QPixmap image;
-    image.loadFromData(c3_ImgCtrl->downloadedData());
-    ui->flopCard1Label->setPixmap(image);
-    MainWindow::shared3 = true;
-
-}
-
-
-void MainWindow::loadCardImage4()
-{
-    QPixmap image;
-    image.loadFromData(c4_ImgCtrl->downloadedData());
-    ui->flopCard2Label->setPixmap(image);
-    MainWindow::shared4 = true;
-
-}
-
-
-void MainWindow::loadCardImage5()
-{
-    QPixmap image;
-    image.loadFromData(c5_ImgCtrl->downloadedData());
-    ui->flopCard3Label->setPixmap(image);
-    MainWindow::shared5 = true;
-
-}
-
-
-void MainWindow::loadCardImage6()
-{
-    QPixmap image;
-    image.loadFromData(c6_ImgCtrl->downloadedData());
-    ui->turnCardLabel->setPixmap(image);
-    MainWindow::shared6 = true;
-
-}
-
-
-void MainWindow::loadCardImage7()
-{
-    QPixmap image;
-    image.loadFromData(c7_ImgCtrl->downloadedData());
-    ui->riverCardLabel->setPixmap(image);
-    MainWindow::shared7 = true;
-
-}
 
 void MainWindow::manualReveal()
 {
@@ -494,4 +411,12 @@ void MainWindow::on_backComboBox_currentTextChanged(const QString &arg1)
             MainWindow::backUrl = "https://raw.githubusercontent.com/SixofClubsss/"+arg1+"/main/"+arg1+".png";
         }
     }
+}
+
+
+void MainWindow::on_deckButton_clicked()
+{
+    ViewDeck vd;
+    vd.setModal(true);
+    vd.exec();
 }

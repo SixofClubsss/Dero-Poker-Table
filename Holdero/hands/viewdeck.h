@@ -1,5 +1,5 @@
-#ifndef FILEDOWNLOADER_H
-#define FILEDOWNLOADER_H
+#ifndef VIEWDECK_H
+#define VIEWDECK_H
 /*
 dReam Tables Holdero Poker
 
@@ -23,34 +23,24 @@ Always play responsibly.
 https://dreamtables.net
 */
 
-#include "QObject"
-#include "QByteArray"
-#include "QNetworkAccessManager"
-#include "QNetworkRequest"
-#include "QNetworkReply"
+#include "hands/handranks.h"
+#include "QDialog"
 
+namespace Ui {
+class ViewDeck;
+}
 
-class FileDownloader : public QObject
+class ViewDeck : public QDialog
 {
     Q_OBJECT
+
 public:
-    explicit FileDownloader(QUrl imageUrl, QObject *parent = 0);
-    virtual ~FileDownloader();
-    QByteArray downloadedData() const;
-
-
-signals:
-    void downloaded();
-
-
-private slots:
-    void fileDownloaded(QNetworkReply* pReply);
-
+    explicit ViewDeck(QWidget *parent = nullptr);
+    ~ViewDeck();
+    void setViewTheme();
 
 private:
-    QNetworkAccessManager m_WebCtrl;
-    QByteArray m_DownloadedData;
-
+    Ui::ViewDeck *ui;
 };
 
-#endif // FILEDOWNLOADER_H
+#endif // VIEWDECK_H
