@@ -175,12 +175,13 @@ private slots:
 
     void on_backComboBox_currentTextChanged(const QString &arg1);
 
-    void on_deckButton_clicked();
+    void viewSharedDeck();
 
 private:
     Ui::MainWindow *ui;
     QAction *minimizeAction;
     QAction *maximizeAction;
+    QAction *viewDeckAction;
     QAction *revealAction;
     QAction *quitAction;
 

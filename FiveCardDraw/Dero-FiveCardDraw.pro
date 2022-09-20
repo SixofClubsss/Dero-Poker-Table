@@ -70,7 +70,6 @@ HEADERS += \
 FORMS += \
     confirm.ui \
     hands/handranks.ui \
-    hands/handranks.ui \
     hands/viewdeck.ui \
     mainwindow.ui \
     menu.ui

@@ -289,42 +289,6 @@ QComboBox:hover {
       </property>
      </widget>
     </item>
-    <item row="6" column="8" alignment="Qt::AlignRight">
-     <widget class="QPushButton" name="deckButton">
-      <property name="minimumSize">
-       <size>
-        <width>84</width>
-        <height>20</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>101</width>
-        <height>20</height>
-       </size>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton:enabled{
-	color: rgb(255, 255, 255);
-	background-color: rgba(0, 0, 0, 180);
-    border: 2px solid #8f8f91;
-    border-radius: 6px;
-    min-width: 80px;
-}
-
-QPushButton:hover {
-	background-color: rgba(79, 186, 196, 150);
-}
-
-QPushButton:pressed {
-	background-color: rgb(56, 47, 165);
-}</string>
-      </property>
-      <property name="text">
-       <string>View Deck</string>
-      </property>
-     </widget>
-    </item>
     <item row="2" column="0" rowspan="3" colspan="6">
      <widget class="QGroupBox" name="groupBoxP1">
       <property name="sizePolicy">
@@ -1226,7 +1190,7 @@ QPushButton:pressed {
       </property>
       <property name="minimumSize">
        <size>
-        <width>120</width>
+        <width>84</width>
         <height>20</height>
        </size>
       </property>

@@ -188,7 +188,6 @@ void MainWindow::setFonts(QString os)
     ui->txLogTextBrowser->setFont(ubuntuRegular);
     ui->backComboBox->setFont(ubuntuRegular);
     ui->deckComboBox->setFont(ubuntuRegular);
-    ui->deckButton->setFont(ubuntuRegular);
 }
 
 
@@ -528,6 +527,14 @@ void MainWindow::manualReveal()
 }
 
 
+void MainWindow::viewSharedDeck()
+{
+    ViewDeck vd;
+    vd.setModal(true);
+    vd.exec();
+}
+
+
 void MainWindow::createActions()    /// Tray actions
 {
     connect(ui->drawComboBox, SIGNAL(activated(int)),this, SLOT(highlightCards()));
@@ -542,6 +549,9 @@ void MainWindow::createActions()    /// Tray actions
 
     revealAction = new QAction(tr("&Reveal Key"), this);
     connect(revealAction, SIGNAL(triggered()), this, SLOT(manualReveal()));
+
+    viewDeckAction = new QAction(tr("&View Deck"), this);
+    connect(viewDeckAction, SIGNAL(triggered()), this, SLOT(viewSharedDeck()));
 
     quitAction = new QAction(tr("&Quit"), this);
     connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
@@ -565,6 +575,8 @@ void MainWindow::createTrayIcon()
     trayIconMenu = new QMenu(this);
     trayIconMenu->addAction(minimizeAction);
     trayIconMenu->addAction(maximizeAction);
+    trayIconMenu->addAction(viewDeckAction);
+    trayIconMenu->addSeparator();
     trayIconMenu->addAction(revealAction);
     trayIconMenu->addSeparator();
     trayIconMenu->addAction(quitAction);
@@ -620,10 +632,3 @@ void MainWindow::on_backComboBox_currentTextChanged(const QString &arg1)
     }
 }
 
-
-void MainWindow::on_deckButton_clicked()
-{
-    ViewDeck vd;
-    vd.setModal(true);
-    vd.exec();
-}
