@@ -132,25 +132,22 @@ QComboBox:hover {
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="1" column="1">
-     <widget class="QDoubleSpinBox" name="dsbTurn">
+    <item row="1" column="2">
+     <widget class="QDoubleSpinBox" name="dsbDealer">
       <property name="minimumSize">
        <size>
-        <width>120</width>
+        <width>102</width>
         <height>20</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
-        <width>120</width>
+        <width>102</width>
         <height>20</height>
        </size>
       </property>
       <property name="focusPolicy">
        <enum>Qt::NoFocus</enum>
-      </property>
-      <property name="toolTip">
-       <string>Whos turn</string>
       </property>
       <property name="styleSheet">
        <string notr="true">QDoubleSpinBox{
@@ -169,13 +166,35 @@ QComboBox:hover {
        <enum>QAbstractSpinBox::NoButtons</enum>
       </property>
       <property name="prefix">
-       <string> Turn: </string>
+       <string> Dealer: </string>
       </property>
       <property name="decimals">
        <number>0</number>
       </property>
-      <property name="maximum">
-       <double>6.000000000000000</double>
+     </widget>
+    </item>
+    <item row="3" column="6">
+     <widget class="QPushButton" name="entryPushButton">
+      <property name="minimumSize">
+       <size>
+        <width>84</width>
+        <height>20</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>80</width>
+        <height>20</height>
+       </size>
+      </property>
+      <property name="toolTip">
+       <string>Join game</string>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::RightToLeft</enum>
+      </property>
+      <property name="text">
+       <string>Sit Down</string>
       </property>
      </widget>
     </item>
@@ -183,13 +202,13 @@ QComboBox:hover {
      <widget class="QDoubleSpinBox" name="dsbSeats">
       <property name="minimumSize">
        <size>
-        <width>0</width>
+        <width>100</width>
         <height>20</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
-        <width>238</width>
+        <width>100</width>
         <height>20</height>
        </size>
       </property>
@@ -199,7 +218,7 @@ QComboBox:hover {
       <property name="styleSheet">
        <string notr="true">QDoubleSpinBox{
     background-color: rgba(85, 88, 93, 225);
-    border-style: inset;
+    border-style: outset;
     border-width: 1px;
     border-radius: 6px;
 	border-color: rgb(207, 207, 207);
@@ -226,23 +245,17 @@ QComboBox:hover {
       </property>
      </widget>
     </item>
-    <item row="1" column="2">
-     <widget class="QDoubleSpinBox" name="dsbPot">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
+    <item row="1" column="4">
+     <widget class="QDoubleSpinBox" name="blindIsDSB">
       <property name="minimumSize">
        <size>
-        <width>0</width>
+        <width>150</width>
         <height>20</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
-        <width>588</width>
+        <width>150</width>
         <height>20</height>
        </size>
       </property>
@@ -266,87 +279,49 @@ QComboBox:hover {
        <enum>QAbstractSpinBox::NoButtons</enum>
       </property>
       <property name="prefix">
-       <string> Dero Pot: </string>
-      </property>
-      <property name="decimals">
-       <number>5</number>
-      </property>
-      <property name="maximum">
-       <double>1000000000000000000.000000000000000</double>
-      </property>
-      <property name="singleStep">
-       <double>0.010000000000000</double>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="8" rowspan="6">
-     <widget class="QTextBrowser" name="txLogTextBrowser">
-      <property name="minimumSize">
-       <size>
-        <width>101</width>
-        <height>380</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>16777215</width>
-        <height>16777215</height>
-       </size>
-      </property>
-      <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">    background-color: rgba(85, 88, 93, 150);
-    color: rgb(255, 255, 255);
-    border-color: rgb(128, 128, 128);
-    border-style: inset;
-    border-width: 2px;
-    border-radius: 6px;</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="5">
-     <widget class="QDoubleSpinBox" name="anteIsDSB">
-      <property name="minimumSize">
-       <size>
-        <width>150</width>
-        <height>20</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>150</width>
-        <height>20</height>
-       </size>
-      </property>
-      <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QDoubleSpinBox{
-    background-color: rgba(85, 88, 93, 225);
-    border-style: inset;
-    border-width: 1px;
-    border-radius: 6px;
-	border-color: rgb(207, 207, 207);
-    padding-right: 10px;
-}</string>
-      </property>
-      <property name="readOnly">
-       <bool>true</bool>
-      </property>
-      <property name="buttonSymbols">
-       <enum>QAbstractSpinBox::NoButtons</enum>
-      </property>
-      <property name="prefix">
-       <string> Ante: </string>
+       <string> Blinds: </string>
       </property>
       <property name="decimals">
        <number>2</number>
       </property>
       <property name="maximum">
        <double>1200.000000000000000</double>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="8" alignment="Qt::AlignRight">
+     <widget class="QPushButton" name="deckButton">
+      <property name="minimumSize">
+       <size>
+        <width>84</width>
+        <height>20</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>101</width>
+        <height>20</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton:enabled{
+	color: rgb(255, 255, 255);
+	background-color: rgba(0, 0, 0, 180);
+    border: 2px solid #8f8f91;
+    border-radius: 6px;
+    min-width: 80px;
+}
+
+QPushButton:hover {
+	background-color: rgba(79, 186, 196, 150);
+}
+
+QPushButton:pressed {
+	background-color: rgb(56, 47, 165);
+}</string>
+      </property>
+      <property name="text">
+       <string>View Deck</string>
       </property>
      </widget>
     </item>
@@ -1141,28 +1116,103 @@ QComboBox:hover {
       <zorder>player1ResultLabel_b</zorder>
      </widget>
     </item>
-    <item row="3" column="6">
-     <widget class="QPushButton" name="entryPushButton">
+    <item row="1" column="5">
+     <widget class="QDoubleSpinBox" name="anteIsDSB">
       <property name="minimumSize">
        <size>
-        <width>84</width>
+        <width>150</width>
         <height>20</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
-        <width>94</width>
+        <width>150</width>
         <height>20</height>
        </size>
       </property>
-      <property name="toolTip">
-       <string>Join game</string>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
       </property>
-      <property name="layoutDirection">
-       <enum>Qt::RightToLeft</enum>
+      <property name="styleSheet">
+       <string notr="true">QDoubleSpinBox{
+    background-color: rgba(85, 88, 93, 225);
+    border-style: outset;
+    border-width: 1px;
+    border-radius: 6px;
+	border-color: rgb(207, 207, 207);
+    padding-right: 10px;
+}</string>
       </property>
-      <property name="text">
-       <string>Sit Down</string>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+      <property name="buttonSymbols">
+       <enum>QAbstractSpinBox::NoButtons</enum>
+      </property>
+      <property name="prefix">
+       <string> Ante: </string>
+      </property>
+      <property name="decimals">
+       <number>2</number>
+      </property>
+      <property name="maximum">
+       <double>1200.000000000000000</double>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="3">
+     <widget class="QDoubleSpinBox" name="dsbPot">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>204</width>
+        <height>20</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>588</width>
+        <height>20</height>
+       </size>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QDoubleSpinBox{
+    background-color: rgba(85, 88, 93, 225);
+    border-style: outset;
+    border-width: 1px;
+    border-radius: 6px;
+	border-color: rgb(207, 207, 207);
+    padding-right: 10px;
+}</string>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+      <property name="buttonSymbols">
+       <enum>QAbstractSpinBox::NoButtons</enum>
+      </property>
+      <property name="prefix">
+       <string> Dero Pot: </string>
+      </property>
+      <property name="decimals">
+       <number>5</number>
+      </property>
+      <property name="maximum">
+       <double>1000000000000000000.000000000000000</double>
+      </property>
+      <property name="singleStep">
+       <double>0.010000000000000</double>
+      </property>
+      <property name="value">
+       <double>0.000000000000000</double>
       </property>
      </widget>
     </item>
@@ -1208,27 +1258,30 @@ QPushButton:pressed {
       </property>
      </widget>
     </item>
-    <item row="1" column="4">
-     <widget class="QDoubleSpinBox" name="blindIsDSB">
+    <item row="1" column="1">
+     <widget class="QDoubleSpinBox" name="dsbTurn">
       <property name="minimumSize">
        <size>
-        <width>150</width>
+        <width>100</width>
         <height>20</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
-        <width>150</width>
+        <width>100</width>
         <height>20</height>
        </size>
       </property>
       <property name="focusPolicy">
        <enum>Qt::NoFocus</enum>
       </property>
+      <property name="toolTip">
+       <string>Whos turn</string>
+      </property>
       <property name="styleSheet">
        <string notr="true">QDoubleSpinBox{
     background-color: rgba(85, 88, 93, 225);
-    border-style: inset;
+    border-style: outset;
     border-width: 1px;
     border-radius: 6px;
 	border-color: rgb(207, 207, 207);
@@ -1242,13 +1295,112 @@ QPushButton:pressed {
        <enum>QAbstractSpinBox::NoButtons</enum>
       </property>
       <property name="prefix">
-       <string> Blinds: </string>
+       <string> Turn: </string>
       </property>
       <property name="decimals">
-       <number>2</number>
+       <number>0</number>
       </property>
       <property name="maximum">
-       <double>1200.000000000000000</double>
+       <double>6.000000000000000</double>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="7">
+     <widget class="QPushButton" name="leaveButton">
+      <property name="minimumSize">
+       <size>
+        <width>84</width>
+        <height>20</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>94</width>
+        <height>20</height>
+       </size>
+      </property>
+      <property name="toolTip">
+       <string>Leave game</string>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::RightToLeft</enum>
+      </property>
+      <property name="text">
+       <string>Leave Table</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="8" rowspan="6">
+     <widget class="QTextBrowser" name="txLogTextBrowser">
+      <property name="minimumSize">
+       <size>
+        <width>101</width>
+        <height>380</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">    background-color: rgba(85, 88, 93, 150);
+    color: rgb(255, 255, 255);
+    border-color: rgb(128, 128, 128);
+    border-style: inset;
+    border-width: 2px;
+    border-radius: 6px;</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="6" colspan="2">
+     <widget class="QTextBrowser" name="turnReadOut">
+      <property name="minimumSize">
+       <size>
+        <width>237</width>
+        <height>120</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>237</width>
+        <height>120</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>18</pointsize>
+        <italic>true</italic>
+       </font>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QTextBrowser{
+    border-color: rgb(128, 128, 128);
+    border-style: inset;
+    border-width: 2px;
+    border-radius: 6px;
+    padding: 3px;
+    background-color: rgba(85, 88, 93, 90);
+    color: rgb(255, 255, 255);
+}
+</string>
+      </property>
+      <property name="html">
+       <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:18pt; font-weight:400; font-style:italic;&quot;&gt;
+&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:10pt; font-style:normal;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="overwriteMode">
+       <bool>true</bool>
       </property>
      </widget>
     </item>
@@ -1303,83 +1455,11 @@ QPushButton:pressed {
       </property>
      </widget>
     </item>
-    <item row="3" column="7">
-     <widget class="QPushButton" name="leaveButton">
-      <property name="minimumSize">
-       <size>
-        <width>84</width>
-        <height>20</height>
-       </size>
-      </property>
+    <item row="6" column="3">
+     <widget class="QDoubleSpinBox" name="dsbBlockHeight">
       <property name="maximumSize">
        <size>
-        <width>94</width>
-        <height>20</height>
-       </size>
-      </property>
-      <property name="toolTip">
-       <string>Leave game</string>
-      </property>
-      <property name="layoutDirection">
-       <enum>Qt::RightToLeft</enum>
-      </property>
-      <property name="text">
-       <string>Leave Table</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="3">
-     <widget class="QDoubleSpinBox" name="dsbDealer">
-      <property name="minimumSize">
-       <size>
-        <width>102</width>
-        <height>20</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>102</width>
-        <height>20</height>
-       </size>
-      </property>
-      <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QDoubleSpinBox{
-    background-color: rgba(85, 88, 93, 225);
-    border-style: outset;
-    border-width: 1px;
-    border-radius: 6px;
-	border-color: rgb(207, 207, 207);
-    padding-right: 10px;
-}</string>
-      </property>
-      <property name="readOnly">
-       <bool>true</bool>
-      </property>
-      <property name="buttonSymbols">
-       <enum>QAbstractSpinBox::NoButtons</enum>
-      </property>
-      <property name="prefix">
-       <string> Dealer: </string>
-      </property>
-      <property name="decimals">
-       <number>0</number>
-      </property>
-     </widget>
-    </item>
-    <item row="6" column="1" colspan="2">
-     <widget class="QDoubleSpinBox" name="balanceDoubleSpinBox">
-      <property name="minimumSize">
-       <size>
-        <width>207</width>
-        <height>20</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>207</width>
+        <width>150</width>
         <height>20</height>
        </size>
       </property>
@@ -1392,9 +1472,12 @@ QPushButton:pressed {
     border-style: inset;
     border-width: 1px;
     border-radius: 6px;
-	border-color: rgb(0, 0, 255);
+	border-color: rgb(0, 0, 0);
     padding-right: 10px;
 }</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
       <property name="readOnly">
        <bool>true</bool>
@@ -1403,16 +1486,35 @@ QPushButton:pressed {
        <enum>QAbstractSpinBox::NoButtons</enum>
       </property>
       <property name="prefix">
-       <string>Dero Balance: </string>
+       <string>Height: </string>
       </property>
       <property name="decimals">
-       <number>5</number>
+       <number>0</number>
       </property>
       <property name="maximum">
-       <double>21000000.000000000000000</double>
+       <double>999999999.000000000000000</double>
       </property>
-      <property name="value">
-       <double>0.000000000000000</double>
+     </widget>
+    </item>
+    <item row="6" column="0">
+     <widget class="QPushButton" name="payoutPushButton">
+      <property name="minimumSize">
+       <size>
+        <width>84</width>
+        <height>20</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>132</width>
+        <height>20</height>
+       </size>
+      </property>
+      <property name="toolTip">
+       <string>Owner manual payout</string>
+      </property>
+      <property name="text">
+       <string>Pay Winner</string>
       </property>
      </widget>
     </item>
@@ -1576,8 +1678,8 @@ QPushButton:pressed {
       <property name="title">
        <string/>
       </property>
-      <layout class="QGridLayout" name="gridLayout_3">
-       <item row="0" column="0">
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
         <widget class="QDoubleSpinBox" name="playerId">
          <property name="minimumSize">
           <size>
@@ -1621,7 +1723,7 @@ QPushButton:pressed {
          </property>
         </widget>
        </item>
-       <item row="0" column="1">
+       <item>
         <spacer name="horizontalSpacer_4">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -1634,7 +1736,7 @@ QPushButton:pressed {
          </property>
         </spacer>
        </item>
-       <item row="0" column="2">
+       <item>
         <widget class="QPushButton" name="checkButton">
          <property name="minimumSize">
           <size>
@@ -1649,14 +1751,14 @@ QPushButton:pressed {
           </size>
          </property>
          <property name="toolTip">
-          <string>Check/fold</string>
+          <string>Check/Fold</string>
          </property>
          <property name="text">
           <string>Check</string>
          </property>
         </widget>
        </item>
-       <item row="0" column="3">
+       <item>
         <spacer name="horizontalSpacer_5">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -1669,7 +1771,7 @@ QPushButton:pressed {
          </property>
         </spacer>
        </item>
-       <item row="0" column="4">
+       <item>
         <widget class="QDoubleSpinBox" name="betSpinBox">
          <property name="minimumSize">
           <size>
@@ -1708,7 +1810,7 @@ QPushButton:pressed {
          </property>
         </widget>
        </item>
-       <item row="0" column="5">
+       <item>
         <widget class="QPushButton" name="betButton">
          <property name="minimumSize">
           <size>
@@ -1730,20 +1832,20 @@ QPushButton:pressed {
          </property>
         </widget>
        </item>
-       <item row="0" column="6">
+       <item>
         <spacer name="horizontalSpacer_3">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>159</width>
+           <width>51</width>
            <height>16</height>
           </size>
          </property>
         </spacer>
        </item>
-       <item row="0" column="7">
+       <item>
         <widget class="QPushButton" name="dealHandPushButton">
          <property name="minimumSize">
           <size>
@@ -1768,28 +1870,117 @@ QPushButton:pressed {
          </property>
         </widget>
        </item>
+       <item>
+        <widget class="QComboBox" name="backComboBox">
+         <property name="minimumSize">
+          <size>
+           <width>84</width>
+           <height>20</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>110</width>
+           <height>20</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>Card back selection</string>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(0, 0, 0);</string>
+         </property>
+         <item>
+          <property name="text">
+           <string>Light</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Dark</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="deckComboBox">
+         <property name="minimumSize">
+          <size>
+           <width>84</width>
+           <height>20</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>110</width>
+           <height>20</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>Card face selection</string>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(0, 0, 0);</string>
+         </property>
+         <item>
+          <property name="text">
+           <string>Light</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Dark</string>
+          </property>
+         </item>
+        </widget>
+       </item>
       </layout>
      </widget>
     </item>
-    <item row="6" column="0">
-     <widget class="QPushButton" name="payoutPushButton">
+    <item row="6" column="1" colspan="2">
+     <widget class="QDoubleSpinBox" name="balanceDoubleSpinBox">
       <property name="minimumSize">
        <size>
-        <width>84</width>
+        <width>207</width>
         <height>20</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
-        <width>132</width>
+        <width>207</width>
         <height>20</height>
        </size>
       </property>
-      <property name="toolTip">
-       <string>Owner manual payout</string>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
       </property>
-      <property name="text">
-       <string>Pay Winner</string>
+      <property name="styleSheet">
+       <string notr="true">QDoubleSpinBox{
+    background-color: rgba(85, 88, 93, 225);
+    border-style: inset;
+    border-width: 1px;
+    border-radius: 6px;
+	border-color: rgb(0, 0, 255);
+    padding-right: 10px;
+}</string>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+      <property name="buttonSymbols">
+       <enum>QAbstractSpinBox::NoButtons</enum>
+      </property>
+      <property name="prefix">
+       <string>Dero Balance: </string>
+      </property>
+      <property name="decimals">
+       <number>5</number>
+      </property>
+      <property name="maximum">
+       <double>21000000.000000000000000</double>
+      </property>
+      <property name="value">
+       <double>0.000000000000000</double>
       </property>
      </widget>
     </item>
@@ -1803,7 +1994,7 @@ QPushButton:pressed {
       </property>
       <property name="maximumSize">
        <size>
-        <width>94</width>
+        <width>81</width>
         <height>20</height>
        </size>
       </property>
@@ -1829,165 +2020,6 @@ QPushButton:pressed {
       </property>
       <property name="text">
        <string>Menu</string>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="6" colspan="2">
-     <widget class="QTextBrowser" name="turnReadOut">
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>120</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>1180</width>
-        <height>120</height>
-       </size>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>18</pointsize>
-        <italic>true</italic>
-       </font>
-      </property>
-      <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QTextBrowser{
-    border-color: rgb(128, 128, 128);
-    border-style: inset;
-    border-width: 2px;
-    border-radius: 6px;
-    padding: 3px;
-    background-color: rgba(85, 88, 93, 90);
-    color: rgb(255, 255, 255);
-}
-</string>
-      </property>
-      <property name="html">
-       <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:18pt; font-weight:400; font-style:italic;&quot;&gt;
-&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:10pt; font-style:normal;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-      </property>
-      <property name="overwriteMode">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
-    <item row="6" column="7">
-     <widget class="QDoubleSpinBox" name="dsbBlockHeight">
-      <property name="maximumSize">
-       <size>
-        <width>150</width>
-        <height>20</height>
-       </size>
-      </property>
-      <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QDoubleSpinBox{
-    background-color: rgba(85, 88, 93, 225);
-    border-style: inset;
-    border-width: 1px;
-    border-radius: 6px;
-	border-color: rgb(0, 0, 0);
-    padding-right: 10px;
-}</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-      <property name="readOnly">
-       <bool>true</bool>
-      </property>
-      <property name="buttonSymbols">
-       <enum>QAbstractSpinBox::NoButtons</enum>
-      </property>
-      <property name="prefix">
-       <string>Height: </string>
-      </property>
-      <property name="decimals">
-       <number>0</number>
-      </property>
-      <property name="maximum">
-       <double>999999999.000000000000000</double>
-      </property>
-     </widget>
-    </item>
-    <item row="6" column="6">
-     <widget class="QComboBox" name="deckComboBox">
-      <property name="minimumSize">
-       <size>
-        <width>84</width>
-        <height>22</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>150</width>
-        <height>22</height>
-       </size>
-      </property>
-      <property name="toolTip">
-       <string>Card face selection</string>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">color: rgb(0, 0, 0);</string>
-      </property>
-      <item>
-       <property name="text">
-        <string>Light</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Dark</string>
-       </property>
-      </item>
-     </widget>
-    </item>
-    <item row="6" column="5" alignment="Qt::AlignRight">
-     <widget class="QComboBox" name="backComboBox">
-      <property name="minimumSize">
-       <size>
-        <width>84</width>
-        <height>22</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>84</width>
-        <height>22</height>
-       </size>
-      </property>
-      <property name="toolTip">
-       <string>Card back selection</string>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">color: rgb(0, 0, 0);</string>
-      </property>
-      <item>
-       <property name="text">
-        <string>Light</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Dark</string>
-       </property>
-      </item>
-     </widget>
-    </item>
-    <item row="6" column="8">
-     <widget class="QPushButton" name="deckButton">
-      <property name="text">
-       <string>View Deck</string>
       </property>
      </widget>
     </item>

@@ -135,7 +135,7 @@ void MainWindow::setFonts(QString os)
     if(os == "macos" || os == "osx" || os == "darwin"){
         mcR1 = 30;
         mcR2 = 24;
-        mcR3 = 18;
+        mcR3 = 16;
         ubR = 13;
     }else {
         mcR1 = 24;

@@ -621,6 +621,7 @@ void MainWindow::localPlayerControl(int bet, int draw, double wager, double ante
         ui->leaveButton->setEnabled(false);
         QString p = QString::number(ui->dsbTurn->value());
         ui->turnReadOut->setText("Player "+p+"'s Turn");
+        clearHighlight();
     }
 }
 
