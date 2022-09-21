@@ -28,8 +28,9 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 CONFIG += c++11
 LIBS += -lcurl
 
-# CONFIG += c++11 static for windows
-# LIBS += -llibcurl for windows
+# Windows static
+# CONFIG += c++11 static
+# LIBS += -llibcurl
 
 # CONFIG += link_pkgconfig
 # PKGCONFIG += curl
