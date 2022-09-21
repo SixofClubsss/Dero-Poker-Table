@@ -899,7 +899,7 @@ QRadioButton:!enabled {
      <widget class="QPushButton" name="cleanTableButton">
       <property name="geometry">
        <rect>
-        <x>428</x>
+        <x>426</x>
         <y>81</y>
         <width>90</width>
         <height>20</height>
@@ -1052,7 +1052,7 @@ QRadioButton:!enabled {
      <widget class="QPushButton" name="myTablesButton">
       <property name="geometry">
        <rect>
-        <x>428</x>
+        <x>426</x>
         <y>10</y>
         <width>90</width>
         <height>20</height>

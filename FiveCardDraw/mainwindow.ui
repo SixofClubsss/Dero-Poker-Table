@@ -402,7 +402,7 @@ QComboBox:hover {
       </property>
       <property name="minimumSize">
        <size>
-        <width>94</width>
+        <width>84</width>
         <height>20</height>
        </size>
       </property>
@@ -918,7 +918,7 @@ QPushButton:pressed {
      <widget class="QPushButton" name="menuButton">
       <property name="minimumSize">
        <size>
-        <width>94</width>
+        <width>84</width>
         <height>20</height>
        </size>
       </property>
@@ -991,7 +991,7 @@ QPushButton:pressed {
        <property name="geometry">
         <rect>
          <x>150</x>
-         <y>10</y>
+         <y>8</y>
          <width>100</width>
          <height>24</height>
         </rect>
@@ -1030,7 +1030,7 @@ QPushButton:pressed {
        <property name="geometry">
         <rect>
          <x>480</x>
-         <y>10</y>
+         <y>8</y>
          <width>100</width>
          <height>24</height>
         </rect>
@@ -1231,7 +1231,7 @@ QPushButton:pressed {
        <property name="geometry">
         <rect>
          <x>70</x>
-         <y>40</y>
+         <y>38</y>
          <width>81</width>
          <height>110</height>
         </rect>
@@ -1259,7 +1259,7 @@ QPushButton:pressed {
        <property name="geometry">
         <rect>
          <x>95</x>
-         <y>40</y>
+         <y>38</y>
          <width>81</width>
          <height>110</height>
         </rect>
@@ -1287,7 +1287,7 @@ QPushButton:pressed {
        <property name="geometry">
         <rect>
          <x>400</x>
-         <y>40</y>
+         <y>38</y>
          <width>81</width>
          <height>110</height>
         </rect>
@@ -1315,7 +1315,7 @@ QPushButton:pressed {
        <property name="geometry">
         <rect>
          <x>425</x>
-         <y>40</y>
+         <y>38</y>
          <width>81</width>
          <height>110</height>
         </rect>
@@ -1567,7 +1567,7 @@ QPushButton:pressed {
        <property name="geometry">
         <rect>
          <x>120</x>
-         <y>40</y>
+         <y>38</y>
          <width>81</width>
          <height>110</height>
         </rect>
@@ -1595,7 +1595,7 @@ QPushButton:pressed {
        <property name="geometry">
         <rect>
          <x>145</x>
-         <y>40</y>
+         <y>38</y>
          <width>81</width>
          <height>110</height>
         </rect>
@@ -1623,7 +1623,7 @@ QPushButton:pressed {
        <property name="geometry">
         <rect>
          <x>170</x>
-         <y>40</y>
+         <y>38</y>
          <width>81</width>
          <height>110</height>
         </rect>
@@ -1651,7 +1651,7 @@ QPushButton:pressed {
        <property name="geometry">
         <rect>
          <x>450</x>
-         <y>40</y>
+         <y>38</y>
          <width>81</width>
          <height>110</height>
         </rect>
@@ -1679,7 +1679,7 @@ QPushButton:pressed {
        <property name="geometry">
         <rect>
          <x>475</x>
-         <y>40</y>
+         <y>38</y>
          <width>81</width>
          <height>110</height>
         </rect>
@@ -1707,7 +1707,7 @@ QPushButton:pressed {
        <property name="geometry">
         <rect>
          <x>500</x>
-         <y>40</y>
+         <y>38</y>
          <width>81</width>
          <height>110</height>
         </rect>

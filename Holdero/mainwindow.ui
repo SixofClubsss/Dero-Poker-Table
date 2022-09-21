@@ -759,7 +759,7 @@ QComboBox:hover {
        <property name="geometry">
         <rect>
          <x>124</x>
-         <y>120</y>
+         <y>117</y>
          <width>640</width>
          <height>184</height>
         </rect>
