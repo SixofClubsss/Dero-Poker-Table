@@ -505,9 +505,9 @@ void Menu::unlockTable()   /// Unlocks contract file for use
         QFile lockedFile("contract/FiveCard.enc");
         lockedFile.open(QIODevice::ReadWrite);
 
-            if(lockedFile.exists()){
-                lockedBytes = lockedFile.readAll();
-            }
+        if(lockedFile.exists()){
+            lockedBytes = lockedFile.readAll();
+        }
 
         QAESEncryption encryption(QAESEncryption::AES_256, QAESEncryption::OFB);
         QString lock = QString::fromLocal8Bit(lockedBytes);
@@ -517,11 +517,11 @@ void Menu::unlockTable()   /// Unlocks contract file for use
         QByteArray hashIV = QCryptographicHash::hash(iv.toLocal8Bit(), QCryptographicHash::Md5);
         QByteArray decodeText = encryption.decode(lockedBytes, hashKey, hashIV);
         QString decodedString = QString(encryption.removePadding(decodeText));
-       if(Menu::dReams == true){
+        if(Menu::dReams == true){
             QFile unlockedFile("contract/FiveCard.bas");
             unlockedFile.open(QIODevice::ReadWrite);
             if(unlockedFile.exists()){
-              unlockedFile.write(decodedString.toUtf8());
+                unlockedFile.write(decodedString.toUtf8());
             }
 
             unlockedFile.close();

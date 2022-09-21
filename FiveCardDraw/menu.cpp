@@ -213,6 +213,7 @@ void Menu::setFonts(QString os)
     ui->sharedRButton->setFont(ubuntuRegular);
     ui->forceButton->setFont(ubuntuRegular);
     ui->themeComboBox->setFont(ubuntuRegular);
+    ui->myTablesButton->setFont(ubuntuRegular);
     ui->buttonBox->setFont(ubuntuRegular);
 
 }
@@ -342,7 +343,7 @@ void Menu::on_autoPayRButton_clicked()
     }else {
         Menu::autoPayout = false;
     }
-
+     qInfo() << Menu::autoPayout;
 }
 
 
@@ -418,6 +419,52 @@ void Menu::on_forceButton_clicked()
 }
 
 
+void Menu::on_myTablesButton_clicked()
+{
+    int mcR;
+    int mcRs;
+
+    if(os == "macos" || os == "osx" || os == "darwin"){
+        mcR = 23;
+        mcRs = 21;
+    }else {
+        mcR = 17;
+        mcRs = 15;
+    }
+
+    QByteArray tableBytes;
+    QFile tablesFile("contract/Tables.txt");
+    tablesFile.open(QIODevice::ReadOnly);
+    if(tablesFile.exists()){
+        if(Menu::os == "windows"){
+            if(!QDir::setCurrent(QDir::currentPath()+QStringLiteral("/contract"))){
+                ui->menuTextBrowser->setText("Could Not Navigate to /contract");
+            }else {
+
+                if(tablesFile.exists()){
+                    tableBytes = tablesFile.readAll();
+                }
+                ui->menuTextBrowser->setFontPointSize(mcRs);
+                ui->menuTextBrowser->setText(tableBytes);
+                QDir dir = QDir::currentPath();
+                dir.cdUp();
+                QDir::setCurrent(dir.path());
+            }
+        }else {
+            if(tablesFile.exists()){
+                tableBytes = tablesFile.readAll();
+            }
+            ui->menuTextBrowser->setFontPointSize(mcRs);
+            ui->menuTextBrowser->setText(tableBytes);
+        }
+    }else {
+        ui->menuTextBrowser->setText("Tables file not found");
+    }
+    tablesFile.close();
+    ui->menuTextBrowser->setFontPointSize(mcR);
+}
+
+
 void Menu::loadThemeImage()
 {
     Menu::theme.loadFromData(tImgCtrl->downloadedData());
@@ -484,3 +531,4 @@ void Menu::on_themeComboBox_currentTextChanged(const QString &arg1)
         connect(tImgCtrl, SIGNAL (downloaded()), this, SLOT (loadThemeImage()));
     }
 }
+

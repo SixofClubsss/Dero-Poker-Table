@@ -126,6 +126,8 @@ private slots:
 
     void on_themeComboBox_currentTextChanged(const QString &arg1);
 
+    void on_myTablesButton_clicked();
+
     void loadSharedImage0();
     void loadSharedImage1();
     void loadSharedImage2();

@@ -173,7 +173,7 @@ QComboBox:hover {
       </property>
      </widget>
     </item>
-    <item row="3" column="6">
+    <item row="3" column="6" alignment="Qt::AlignRight">
      <widget class="QPushButton" name="entryPushButton">
       <property name="minimumSize">
        <size>
@@ -1196,7 +1196,7 @@ QComboBox:hover {
       </property>
       <property name="maximumSize">
        <size>
-        <width>120</width>
+        <width>84</width>
         <height>20</height>
        </size>
       </property>
@@ -1218,7 +1218,7 @@ QPushButton:pressed {
 }</string>
       </property>
       <property name="text">
-       <string>Poker Hand Ranks</string>
+       <string>Hand Ranks</string>
       </property>
      </widget>
     </item>
@@ -1948,7 +1948,7 @@ p, li { white-space: pre-wrap; }
       </property>
      </widget>
     </item>
-    <item row="1" column="6">
+    <item row="1" column="6" alignment="Qt::AlignRight">
      <widget class="QPushButton" name="menuButton">
       <property name="minimumSize">
        <size>

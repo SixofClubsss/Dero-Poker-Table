@@ -695,7 +695,7 @@ QGroupBox::indicator {
        </size>
       </property>
       <property name="toolTip">
-       <string>Enable auto payouts</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enable auto payouts, (30s between hands)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="styleSheet">
        <string notr="true">QRadioButton {
@@ -707,7 +707,10 @@ QRadioButton:!enabled {
 }</string>
       </property>
       <property name="text">
-       <string>Auto Payout Enabled</string>
+       <string>Auto Payout</string>
+      </property>
+      <property name="checked">
+       <bool>false</bool>
       </property>
      </widget>
      <widget class="QPushButton" name="newTableButton">
@@ -896,15 +899,21 @@ QRadioButton:!enabled {
      <widget class="QPushButton" name="cleanTableButton">
       <property name="geometry">
        <rect>
-        <x>434</x>
+        <x>428</x>
         <y>81</y>
-        <width>84</width>
+        <width>90</width>
         <height>20</height>
        </rect>
       </property>
       <property name="minimumSize">
        <size>
         <width>84</width>
+        <height>20</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>90</width>
         <height>20</height>
        </size>
       </property>
@@ -1039,6 +1048,37 @@ QRadioButton:!enabled {
         <string>Main Theme</string>
        </property>
       </item>
+     </widget>
+     <widget class="QPushButton" name="myTablesButton">
+      <property name="geometry">
+       <rect>
+        <x>428</x>
+        <y>10</y>
+        <width>90</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>84</width>
+        <height>20</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>90</width>
+        <height>20</height>
+       </size>
+      </property>
+      <property name="toolTip">
+       <string>Lookup my tables</string>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="text">
+       <string>My Tables</string>
+      </property>
      </widget>
     </widget>
    </item>

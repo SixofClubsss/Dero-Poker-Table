@@ -547,11 +547,11 @@ void MainWindow::createActions()    /// Tray actions
     maximizeAction = new QAction(tr("&Show"), this);
     connect(maximizeAction, SIGNAL(triggered()), this, SLOT(show()));
 
-    revealAction = new QAction(tr("&Reveal Key"), this);
-    connect(revealAction, SIGNAL(triggered()), this, SLOT(manualReveal()));
-
     viewDeckAction = new QAction(tr("&View Deck"), this);
     connect(viewDeckAction, SIGNAL(triggered()), this, SLOT(viewSharedDeck()));
+
+    revealAction = new QAction(tr("&Reveal Key"), this);
+    connect(revealAction, SIGNAL(triggered()), this, SLOT(manualReveal()));
 
     quitAction = new QAction(tr("&Quit"), this);
     connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
