@@ -261,7 +261,41 @@ QGroupBox::indicator {
      <property name="title">
       <string>Player</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout_3">
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="userpassInput">
+        <property name="minimumSize">
+         <size>
+          <width>615</width>
+          <height>24</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>615</width>
+          <height>24</height>
+         </size>
+        </property>
+        <property name="toolTip">
+         <string>Enter rpc login info</string>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="echoMode">
+         <enum>QLineEdit::Password</enum>
+        </property>
+        <property name="readOnly">
+         <bool>false</bool>
+        </property>
+        <property name="placeholderText">
+         <string>user:pass</string>
+        </property>
+       </widget>
+      </item>
       <item row="1" column="0">
        <widget class="QCheckBox" name="daemonConnectedBox">
         <property name="enabled">
@@ -292,6 +326,69 @@ QGroupBox::indicator {
         </property>
         <property name="autoExclusive">
          <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QComboBox" name="daemonRPCinput">
+        <property name="minimumSize">
+         <size>
+          <width>84</width>
+          <height>22</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>615</width>
+          <height>22</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QComboBox {
+	color: rgb(0, 0, 0);
+}</string>
+        </property>
+        <property name="editable">
+         <bool>true</bool>
+        </property>
+        <item>
+         <property name="text">
+          <string>127.0.0.1:10102</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>derostats.io:10102</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>https://dero-node.mysrv.cloud</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string/>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QPushButton" name="daemonRPCbutton">
+        <property name="minimumSize">
+         <size>
+          <width>84</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>84</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Connect</string>
         </property>
        </widget>
       </item>
@@ -328,110 +425,7 @@ QGroupBox::indicator {
         </property>
        </widget>
       </item>
-      <item row="3" column="3">
-       <widget class="QPushButton" name="contractButton">
-        <property name="minimumSize">
-         <size>
-          <width>84</width>
-          <height>20</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>84</width>
-          <height>20</height>
-         </size>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::StrongFocus</enum>
-        </property>
-        <property name="styleSheet">
-         <string notr="true"/>
-        </property>
-        <property name="text">
-         <string>Check</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="3">
-       <widget class="QPushButton" name="walletRPCbutton">
-        <property name="minimumSize">
-         <size>
-          <width>84</width>
-          <height>20</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>84</width>
-          <height>20</height>
-         </size>
-        </property>
-        <property name="styleSheet">
-         <string notr="true"/>
-        </property>
-        <property name="text">
-         <string>Connect</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QLineEdit" name="userpassInput">
-        <property name="minimumSize">
-         <size>
-          <width>615</width>
-          <height>24</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>615</width>
-          <height>24</height>
-         </size>
-        </property>
-        <property name="toolTip">
-         <string>Enter rpc login info</string>
-        </property>
-        <property name="styleSheet">
-         <string notr="true"/>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="echoMode">
-         <enum>QLineEdit::Password</enum>
-        </property>
-        <property name="readOnly">
-         <bool>false</bool>
-        </property>
-        <property name="placeholderText">
-         <string>user:pass</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1" colspan="2">
-       <widget class="QLineEdit" name="contractLineEdit">
-        <property name="minimumSize">
-         <size>
-          <width>615</width>
-          <height>24</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>615</width>
-          <height>24</height>
-         </size>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="placeholderText">
-         <string>Table Contract Address:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1" colspan="2">
+      <item row="2" column="1">
        <widget class="QLineEdit" name="walletRPCinput">
         <property name="minimumSize">
          <size>
@@ -453,8 +447,8 @@ QGroupBox::indicator {
         </property>
        </widget>
       </item>
-      <item row="1" column="3">
-       <widget class="QPushButton" name="daemonRPCbutton">
+      <item row="2" column="2">
+       <widget class="QPushButton" name="walletRPCbutton">
         <property name="minimumSize">
          <size>
           <width>84</width>
@@ -466,6 +460,9 @@ QGroupBox::indicator {
           <width>84</width>
           <height>20</height>
          </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
         </property>
         <property name="text">
          <string>Connect</string>
@@ -496,8 +493,8 @@ QGroupBox::indicator {
         </property>
        </widget>
       </item>
-      <item row="1" column="1" colspan="2">
-       <widget class="QLineEdit" name="daemonRPCinput">
+      <item row="3" column="1">
+       <widget class="QLineEdit" name="contractLineEdit">
         <property name="minimumSize">
          <size>
           <width>615</width>
@@ -514,7 +511,32 @@ QGroupBox::indicator {
          <string/>
         </property>
         <property name="placeholderText">
-         <string>Enter Daemon RPC Address</string>
+         <string>Table Contract Address:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="2">
+       <widget class="QPushButton" name="contractButton">
+        <property name="minimumSize">
+         <size>
+          <width>84</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>84</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string>Check</string>
         </property>
        </widget>
       </item>
@@ -1100,7 +1122,6 @@ QPushButton:!enabled{
  </widget>
  <tabstops>
   <tabstop>userpassInput</tabstop>
-  <tabstop>daemonRPCinput</tabstop>
   <tabstop>daemonRPCbutton</tabstop>
   <tabstop>walletRPCinput</tabstop>
   <tabstop>walletRPCbutton</tabstop>

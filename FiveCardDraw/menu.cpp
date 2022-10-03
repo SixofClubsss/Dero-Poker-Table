@@ -73,12 +73,11 @@ Menu::Menu(QWidget *parent) :
     ui->getTableButton->setEnabled(false);
     ui->findTablesButton->setEnabled(false);
     ui->sharedRButton->setEnabled(false);
+    ui->themeComboBox->setCurrentIndex(Menu::themeIndex);
     ui->ownerGroupBox->setEnabled(false);
-    ui->daemonRPCinput->setText(rpc::daemonAddress);
     ui->walletRPCinput->setText(rpc::playerAddress);
     ui->contractLineEdit->setText(Menu::contractAddress);
     for (int i = 0; i < 9; i++) {
-        ui->daemonRPCinput->backspace();
         ui->walletRPCinput->backspace();
     }
     ui->userpassInput->setText(Menu::userInfo);
@@ -91,7 +90,7 @@ Menu::Menu(QWidget *parent) :
         ui->sharedRButton->setChecked(true);
     }
 
-    connect(ui->daemonRPCinput, SIGNAL(textChanged(QString)),
+    connect(ui->daemonRPCinput, SIGNAL(currentTextChanged(QString)),
           this, SLOT(daemonToggle()));
 
     connect(ui->walletRPCinput, SIGNAL(textChanged(QString)),
@@ -110,6 +109,7 @@ Menu::Menu(QWidget *parent) :
         checkContract();
         checkIfListed();
         ui->sharedRButton->setEnabled(true);
+        ui->themeComboBox->setCurrentIndex(Menu::themeIndex);
     }
 
     qInfo() << ("\033[36m ♤♡♧♢♧♡♤♡♧♢♧♡♤♡♧♢♧♡♤♡♧♢♧♡♤♡♧♢♧♡♤\033[0m");
@@ -134,7 +134,7 @@ Menu::~Menu()
 
 void Menu::daemonToggle()
 {
-    rpc::daemonAddress =  ui->daemonRPCinput->text();
+    rpc::daemonAddress =  ui->daemonRPCinput->currentText();
     ui->daemonConnectedBox->setChecked(false);
     ui->ownerGroupBox->setEnabled(false);
     ui->getTableButton->setEnabled(false);
@@ -247,7 +247,7 @@ void Menu::on_contractButton_clicked()
 
 void Menu::on_daemonRPCbutton_clicked()
 {
-    rpc::daemonAddress = ui->daemonRPCinput->text()+"/json_rpc";
+    rpc::daemonAddress = ui->daemonRPCinput->currentText()+"/json_rpc";
     checkDaemon();
 }
 
@@ -258,7 +258,6 @@ void Menu::on_walletRPCbutton_clicked()
     rpc::playerAddress = ui->walletRPCinput->text()+"/json_rpc";
     checkAddress();
     checkWallet();
-    checkThemes();
 }
 
 
@@ -343,7 +342,6 @@ void Menu::on_autoPayRButton_clicked()
     }else {
         Menu::autoPayout = false;
     }
-     qInfo() << Menu::autoPayout;
 }
 
 
@@ -484,51 +482,14 @@ void Menu::on_themeComboBox_currentTextChanged(const QString &arg1)
         Menu::themeChanged = true;
         Menu::themeIndex = 0;
         qInfo() << ("\033[36m ♤♡♧♢ Loading Standard Theme♢♧♡♤\033[0m");
-    }
-
-    if(arg1 == "AZYDS0001"){
-        qInfo() << ("\033[36m ♤♡♧♢♧♡♤Loading AZYDS0001♤♡♧♢♧♡♤\033[0m");
+    }else {
+        qInfo() << ("\033[36m ♤♡♧♢♧♡Loading AZYDS Theme♡♧♢♧♡♤\033[0m");
         Menu::loading = true;
-        Menu::themeIndex = 1;
-        imageUrl = "https://raw.githubusercontent.com/Azylem/AZYDS0001/main/AZYDS0001-EnterTheMachine-DS.png";
+        Menu::themeIndex = ui->themeComboBox->currentIndex();
+        imageUrl = "https://raw.githubusercontent.com/Azylem/"+arg1+"/main/"+arg1+".png";
         tImgCtrl = new FileDownloader(imageUrl, this);
         connect(tImgCtrl, SIGNAL (downloaded()), this, SLOT (loadThemeImage()));
     }
 
-    if(arg1 == "AZYDS0002"){
-        qInfo() << ("\033[36m ♤♡♧♢♧♡♤Loading AZYDS0002♤♡♧♢♧♡♤\033[0m");
-        Menu::loading = true;
-        Menu::themeIndex = 2;
-        imageUrl = "https://raw.githubusercontent.com/Azylem/AZYDS0002/main/AZYDS0002-CriticalMass-DS.png";
-        tImgCtrl = new FileDownloader(imageUrl, this);
-        connect(tImgCtrl, SIGNAL (downloaded()), this, SLOT (loadThemeImage()));
-    }
-
-    if(arg1 == "AZYDS0003"){
-        qInfo() << ("\033[36m ♤♡♧♢♧♡♤Loading AZYDS0003♤♡♧♢♧♡♤\033[0m");
-        Menu::loading = true;
-        Menu::themeIndex = 3;
-        imageUrl = "https://raw.githubusercontent.com/Azylem/AZYDS0003/main/AZYDS0003-GateReactor-DS.png";
-        tImgCtrl = new FileDownloader(imageUrl, this);
-        connect(tImgCtrl, SIGNAL (downloaded()), this, SLOT (loadThemeImage()));
-    }
-
-    if(arg1 == "AZYDS0004"){
-        qInfo() << ("\033[36m ♤♡♧♢♧♡♤Loading AZYDS0004♤♡♧♢♧♡♤\033[0m");
-        Menu::loading = true;
-        Menu::themeIndex = 4;
-        imageUrl = "https://raw.githubusercontent.com/Azylem/AZYDS0004/main/AZYDS0004-MaximumSimplicity-DS.png";
-        tImgCtrl = new FileDownloader(imageUrl, this);
-        connect(tImgCtrl, SIGNAL (downloaded()), this, SLOT (loadThemeImage()));
-    }
-
-    if(arg1 == "AZYDS0005"){
-        qInfo() << ("\033[36m ♤♡♧♢♧♡♤Loading AZYDS0005♤♡♧♢♧♡♤\033[0m");
-        Menu::loading = true;
-        Menu::themeIndex = 5;
-        imageUrl = "https://raw.githubusercontent.com/Azylem/AZYDS0005/main/AZYDS0005-ConstructReality-DS.png";
-        tImgCtrl = new FileDownloader(imageUrl, this);
-        connect(tImgCtrl, SIGNAL (downloaded()), this, SLOT (loadThemeImage()));
-    }
 }
 

@@ -381,26 +381,7 @@ QGroupBox::indicator {
      <property name="title">
       <string>Player</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout_3">
-      <item row="1" column="3">
-       <widget class="QPushButton" name="daemonRPCbutton">
-        <property name="minimumSize">
-         <size>
-          <width>84</width>
-          <height>20</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>84</width>
-          <height>20</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>Connect</string>
-        </property>
-       </widget>
-      </item>
+     <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="1">
        <widget class="QLineEdit" name="userpassInput">
         <property name="minimumSize">
@@ -432,154 +413,6 @@ QGroupBox::indicator {
         </property>
         <property name="placeholderText">
          <string>user:pass</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1" colspan="2">
-       <widget class="QLineEdit" name="daemonRPCinput">
-        <property name="minimumSize">
-         <size>
-          <width>615</width>
-          <height>24</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>615</width>
-          <height>24</height>
-         </size>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="placeholderText">
-         <string>Enter Daemon RPC Address</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QCheckBox" name="contractCheckBox">
-        <property name="maximumSize">
-         <size>
-          <width>99</width>
-          <height>22</height>
-         </size>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
-        </property>
-        <property name="layoutDirection">
-         <enum>Qt::RightToLeft</enum>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QCheckBox {
-	color: rgb(255, 255, 255);
-}</string>
-        </property>
-        <property name="text">
-         <string>Valid Table</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QCheckBox" name="walletConnectedBox">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>90</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
-        </property>
-        <property name="layoutDirection">
-         <enum>Qt::RightToLeft</enum>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QCheckBox {
-	color: rgb(255, 255, 255);
-}</string>
-        </property>
-        <property name="text">
-         <string>Connected</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="autoExclusive">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1" colspan="2">
-       <widget class="QLineEdit" name="contractLineEdit">
-        <property name="minimumSize">
-         <size>
-          <width>615</width>
-          <height>24</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>615</width>
-          <height>24</height>
-         </size>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="placeholderText">
-         <string>Table Contract Address:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1" colspan="2">
-       <widget class="QLineEdit" name="walletRPCinput">
-        <property name="minimumSize">
-         <size>
-          <width>615</width>
-          <height>24</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>615</width>
-          <height>24</height>
-         </size>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="placeholderText">
-         <string>Enter Wallet RPC Address</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="3">
-       <widget class="QPushButton" name="contractButton">
-        <property name="minimumSize">
-         <size>
-          <width>84</width>
-          <height>20</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>84</width>
-          <height>20</height>
-         </size>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::StrongFocus</enum>
-        </property>
-        <property name="styleSheet">
-         <string notr="true"/>
-        </property>
-        <property name="text">
-         <string>Check</string>
         </property>
        </widget>
       </item>
@@ -616,7 +449,125 @@ QGroupBox::indicator {
         </property>
        </widget>
       </item>
-      <item row="2" column="3">
+      <item row="1" column="1">
+       <widget class="QComboBox" name="daemonRPCinput">
+        <property name="minimumSize">
+         <size>
+          <width>84</width>
+          <height>22</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>615</width>
+          <height>22</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QComboBox {
+	color: rgb(0, 0, 0);
+}</string>
+        </property>
+        <property name="editable">
+         <bool>true</bool>
+        </property>
+        <item>
+         <property name="text">
+          <string>127.0.0.1:10102</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>derostats.io:10102</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>https://dero-node.mysrv.cloud</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string/>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QPushButton" name="daemonRPCbutton">
+        <property name="minimumSize">
+         <size>
+          <width>84</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>84</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Connect</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QCheckBox" name="walletConnectedBox">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>90</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="layoutDirection">
+         <enum>Qt::RightToLeft</enum>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QCheckBox {
+	color: rgb(255, 255, 255);
+}</string>
+        </property>
+        <property name="text">
+         <string>Connected</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="autoExclusive">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLineEdit" name="walletRPCinput">
+        <property name="minimumSize">
+         <size>
+          <width>615</width>
+          <height>24</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>615</width>
+          <height>24</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="placeholderText">
+         <string>Enter Wallet RPC Address</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
        <widget class="QPushButton" name="walletRPCbutton">
         <property name="minimumSize">
          <size>
@@ -635,6 +586,77 @@ QGroupBox::indicator {
         </property>
         <property name="text">
          <string>Connect</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QCheckBox" name="contractCheckBox">
+        <property name="maximumSize">
+         <size>
+          <width>99</width>
+          <height>22</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="layoutDirection">
+         <enum>Qt::RightToLeft</enum>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QCheckBox {
+	color: rgb(255, 255, 255);
+}</string>
+        </property>
+        <property name="text">
+         <string>Valid Table</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QLineEdit" name="contractLineEdit">
+        <property name="minimumSize">
+         <size>
+          <width>615</width>
+          <height>24</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>615</width>
+          <height>24</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="placeholderText">
+         <string>Table Contract Address:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="2">
+       <widget class="QPushButton" name="contractButton">
+        <property name="minimumSize">
+         <size>
+          <width>84</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>84</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string>Check</string>
         </property>
        </widget>
       </item>
@@ -1157,7 +1179,6 @@ QRadioButton:!enabled {
  </widget>
  <tabstops>
   <tabstop>userpassInput</tabstop>
-  <tabstop>daemonRPCinput</tabstop>
   <tabstop>daemonRPCbutton</tabstop>
   <tabstop>walletRPCinput</tabstop>
   <tabstop>walletRPCbutton</tabstop>

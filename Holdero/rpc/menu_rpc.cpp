@@ -157,6 +157,7 @@ int Menu::checkWallet()  /// Echo blockchain to confirm wallet is connected
       QJsonValue okCheck = cbObj["result"];
 
       if(okCheck == "WALLET Hello World !"){
+          checkThemes();
           ui->walletConnectedBox->setChecked(true);
           ui->menuTextBrowser->insertPlainText("Wallet Connected\n");
           Menu::walletConnected = true;

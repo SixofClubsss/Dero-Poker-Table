@@ -34,6 +34,7 @@ https://dreamtables.net
 #include "QAction"
 #include "QMenu"
 #include "QSystemTrayIcon"
+#include "QFile"
 #include "rpc/rpc.h"
 #include "hands/handranks.h"
 #include "shared/filedownloader.h"
@@ -92,7 +93,7 @@ public:
     int drawCards();
     int card(QString hash, int salt);
     int keyCard(QString hash, int salt, int who);
-    QString readmeStandard(QString);
+    QString readmeStandard(QFile &);
     QString findCards(int);
     QString deckSelect(int);
     QString backSelect(int);

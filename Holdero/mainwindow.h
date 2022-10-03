@@ -28,6 +28,7 @@ https://dreamtables.net
 #include "QCryptographicHash"
 #include "QThread"
 #include "QTimer"
+#include "QFile"
 #include "QFont"
 #include "QFontDatabase"
 #include "QImageReader"
@@ -85,7 +86,7 @@ public:
     int bet();
     int card(QString hash);
     int keyCard(QString hash, int);
-    QString readmeStandard(QString);
+    QString readmeStandard(QFile &);
     QString hasDisplay(int);
     QString thisHandIs(int);
     QString findCards(int);

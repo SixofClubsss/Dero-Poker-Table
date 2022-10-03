@@ -61,6 +61,7 @@ public:
     static bool sharedDeck;
     void AZYDS(QString, rpc&);
     void setFonts(QString);
+    QString readmeStandard(QFile &);
     void checkThemes();
     void setMenuTheme();
     void loginInfo();

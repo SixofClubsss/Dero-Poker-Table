@@ -27,109 +27,139 @@ https://dreamtables.net
 #include "ui_menu.h"
 
 
-QString MainWindow::readmeStandard(QString find)
+QString MainWindow::readmeStandard(QFile &file)
 {
-    find.remove(0, 123);
-    find.remove(0, 1);
-    find.chop(78);
+    QString scid;
+    QTextStream in(&file);
+    while (!in.atEnd())
+    {
+        QString s = "SCID:";
+        QString line = in.readLine();
+        QString check = line;
+        check.chop(65);
+        if(check == s){
+            scid = line;
+            scid.remove(0, 6);
+            return scid;
+        }
+    }
+    return scid;
+}
 
-    return find;
+QString Menu::readmeStandard(QFile &file)
+{
+    QString scid;
+    QTextStream in(&file);
+    while (!in.atEnd())
+    {
+        QString s = "SCID:";
+        QString line = in.readLine();
+        QString check = line;
+        check.chop(65);
+        if(check == s){
+            scid = line;
+            scid.remove(0, 6);
+            return scid;
+        }
+    }
+    return scid;
 }
 
 
 void Menu::AZYDS(QString pre, rpc& r)
 {
-    QString ds0001 = "93e797c6d8e8d60e720f7cb7f87ae7c050acb601dec9849069ae8b676c7fa6bc";
-    QString ds0002 = "f82dd64b0355d23dcb58f6e5aff59194d75e9a7eb4c0520c6b495f2a5933fdcf";
-    QString ds0003 = "c5cb0f5b8bfc9fe870c30f206851e0fd5f8a5b415afd90eded81a60d36928ae8";
-    QString ds0004 = "bade80d4fa9a246aa43f4853b986a1e5c980f4db84248bec27c0dc41eb6f8284";
-    QString ds0005 = "f8811a25186c799b58c8f1cd89f484ef428be662ccc58afc6d67c31095018bba";
+    QString start;
+    QString add;
+    int i = 1;
 
+    do {
+        start = "000";
+        add = start+QString::number(i);
+        QFile nfaScape(pre+"/cards/AZYDS"+add+"/README.md");
+        nfaScape.open(QIODevice::ReadOnly);
 
-    QFile nfaScape1(pre+"/cards/AZYDS0001/README.md");
-    nfaScape1.open(QIODevice::ReadOnly);
+        if(nfaScape.exists()){
+            QString findAddr = readmeStandard(nfaScape);
+            r.verifyNFAcreator(findAddr);
+            if(rpc::assetConfirmed == true){
+                ui->themeComboBox->insertItem(ui->themeComboBox->count()+1, "AZYDS"+add);
+                qInfo() << ("\033[35m♤Loading AZYDS♢\033[0m");
+                rpc::assetConfirmed = false;
+                nfaScape.close();
+            }else {
+                rpc::assetConfirmed = false;
+                nfaScape.close();
+            }
 
-    if(nfaScape1.exists()){
-        r.verifyNFAcreator(ds0001);
+        }
+        ++i;
+    }while(i < 10);
+
+    do {
+        start = "00";
+        add = start+QString::number(i);
+        QFile nfaScape(pre+"/cards/AZYDS"+add+"/README.md");
+        nfaScape.open(QIODevice::ReadOnly);
+
+        if(nfaScape.exists()){
+            QString findAddr = readmeStandard(nfaScape);
+            r.verifyNFAcreator(findAddr);
+            if(rpc::assetConfirmed == true){
+                ui->themeComboBox->insertItem(ui->themeComboBox->count()+1, "AZYDS"+add);
+                qInfo() << ("\033[35m♤Loading AZYDS♢\033[0m");
+                rpc::assetConfirmed = false;
+                nfaScape.close();
+            }else {
+                rpc::assetConfirmed = false;
+                nfaScape.close();
+            }
+
+        }
+        ++i;
+    }while(i < 100);
+
+    do {
+        start = "0";
+        add = start+QString::number(i);
+        QFile nfaScape(pre+"/cards/AZYDS"+add+"/README.md");
+        nfaScape.open(QIODevice::ReadOnly);
+
+        if(nfaScape.exists()){
+            QString findAddr = readmeStandard(nfaScape);
+            r.verifyNFAcreator(findAddr);
+            if(rpc::assetConfirmed == true){
+                ui->themeComboBox->insertItem(ui->themeComboBox->count()+1, "AZYDS"+add);
+                qInfo() << ("\033[35m♤Loading AZYDS♢\033[0m");
+                rpc::assetConfirmed = false;
+                nfaScape.close();
+            }else {
+                rpc::assetConfirmed = false;
+                nfaScape.close();
+            }
+
+        }
+        ++i;
+    }while(i < 1000);
+
+    add = start+QString::number(i);
+    QFile nfaScape(pre+"/cards/AZYDS"+add+"/README.md");
+    nfaScape.open(QIODevice::ReadOnly);
+
+    if(nfaScape.exists()){
+        QString findAddr = readmeStandard(nfaScape);
+        r.verifyNFAcreator(findAddr);
         if(rpc::assetConfirmed == true){
-            ui->themeComboBox->insertItem(ui->themeComboBox->count()+1, "AZYDS0001");
-            qInfo() << ("\033[35m♧Loading AZYDS Theme♢\033[0m");
+            ui->themeComboBox->insertItem(ui->themeComboBox->count()+1, "AZYDS"+add);
+            qInfo() << ("\033[35m♤Loading AZYDS♢\033[0m");
             rpc::assetConfirmed = false;
-            nfaScape1.close();
+            nfaScape.close();
         }else {
             rpc::assetConfirmed = false;
-            nfaScape1.close();
+            nfaScape.close();
         }
 
     }
 
-    QFile nfaScape2(pre+"/cards/AZYDS0002/README.md");
-    nfaScape2.open(QIODevice::ReadOnly);
-
-    if(nfaScape2.exists()){
-        r.verifyNFAcreator(ds0002);
-        if(rpc::assetConfirmed == true){
-            ui->themeComboBox->insertItem(ui->themeComboBox->count()+1, "AZYDS0002");
-            qInfo() << ("\033[35m♧Loading AZYDS Theme♢\033[0m");
-            rpc::assetConfirmed = false;
-            nfaScape2.close();
-        }else {
-            rpc::assetConfirmed = false;
-            nfaScape2.close();
-        }
-
-    }
-
-    QFile nfaScape3(pre+"/cards/AZYDS0003/README.md");
-    nfaScape3.open(QIODevice::ReadOnly);
-
-    if(nfaScape3.exists()){
-        r.verifyNFAcreator(ds0003);
-        if(rpc::assetConfirmed == true){
-            ui->themeComboBox->insertItem(ui->themeComboBox->count()+1, "AZYDS0003");
-            qInfo() << ("\033[35m♧Loading AZYDS Theme♢\033[0m");
-            rpc::assetConfirmed = false;
-            nfaScape3.close();
-        }else {
-            rpc::assetConfirmed = false;
-            nfaScape3.close();
-        }
-
-    }
-
-    QFile nfaScape4(pre+"/cards/AZYDS0004/README.md");
-    nfaScape4.open(QIODevice::ReadOnly);
-
-    if(nfaScape4.exists()){
-        r.verifyNFAcreator(ds0004);
-        if(rpc::assetConfirmed == true){
-            ui->themeComboBox->insertItem(ui->themeComboBox->count()+1, "AZYDS0004");
-            qInfo() << ("\033[35m♧Loading AZYDS Theme♢\033[0m");
-            rpc::assetConfirmed = false;
-            nfaScape4.close();
-        }else {
-            rpc::assetConfirmed = false;
-            nfaScape4.close();
-        }
-
-    }
-
-    QFile nfaScape5(pre+"/cards/AZYDS0005/README.md");
-    nfaScape5.open(QIODevice::ReadOnly);
-
-    if(nfaScape5.exists()){
-        r.verifyNFAcreator(ds0005);
-        if(rpc::assetConfirmed == true){
-            ui->themeComboBox->insertItem(ui->themeComboBox->count()+1, "AZYDS0005");
-            qInfo() << ("\033[35m♧Loading AZYDS Theme♢\033[0m");
-            rpc::assetConfirmed = false;
-            nfaScape5.close();
-        }else {
-            rpc::assetConfirmed = false;
-            nfaScape5.close();
-        }
-
-    }
 }
 
 
@@ -146,8 +176,7 @@ void MainWindow::AZYPC(QString pre, rpc& r)
         nfaDeck.open(QIODevice::ReadOnly);
 
         if(nfaDeck.exists()){
-            QString findAddr = nfaDeck.readAll();
-            findAddr = readmeStandard(findAddr);
+            QString findAddr = readmeStandard(nfaDeck);
             r.verifyNFAcreator(findAddr);
             if(rpc::assetConfirmed == true){
                 ui->deckComboBox->insertItem(ui->deckComboBox->count()+1, "AZYPC"+add);
@@ -170,8 +199,7 @@ void MainWindow::AZYPC(QString pre, rpc& r)
         nfaDeck.open(QIODevice::ReadOnly);
 
         if(nfaDeck.exists()){
-            QString findAddr = nfaDeck.readAll();
-            findAddr = readmeStandard(findAddr);
+            QString findAddr = readmeStandard(nfaDeck);
             r.verifyNFAcreator(findAddr);
             if(rpc::assetConfirmed == true){
                 ui->deckComboBox->insertItem(ui->deckComboBox->count()+1, "AZYPC"+add);
@@ -194,8 +222,7 @@ void MainWindow::AZYPC(QString pre, rpc& r)
         nfaDeck.open(QIODevice::ReadOnly);
 
         if(nfaDeck.exists()){
-            QString findAddr = nfaDeck.readAll();
-            findAddr = readmeStandard(findAddr);
+            QString findAddr = readmeStandard(nfaDeck);
             r.verifyNFAcreator(findAddr);
             if(rpc::assetConfirmed == true){
                 ui->deckComboBox->insertItem(ui->deckComboBox->count()+1, "AZYPC"+add);
@@ -216,8 +243,7 @@ void MainWindow::AZYPC(QString pre, rpc& r)
     nfaDeck.open(QIODevice::ReadOnly);
 
     if(nfaDeck.exists()){
-        QString findAddr = nfaDeck.readAll();
-        findAddr = readmeStandard(findAddr);
+        QString findAddr = readmeStandard(nfaDeck);
         r.verifyNFAcreator(findAddr);
         if(rpc::assetConfirmed == true){
             ui->deckComboBox->insertItem(ui->deckComboBox->count()+1, "AZYPC"+add);
@@ -247,8 +273,7 @@ void MainWindow::AZYPCB(QString pre, rpc& r)
         nfaBack.open(QIODevice::ReadOnly);
 
         if(nfaBack.exists()){
-            QString findAddr = nfaBack.readAll();
-            findAddr = readmeStandard(findAddr);
+            QString findAddr = readmeStandard(nfaBack);
             r.verifyNFAcreator(findAddr);
             if(rpc::assetConfirmed == true){
                 ui->backComboBox->insertItem(ui->backComboBox->count()+1, "AZYPCB"+add);
@@ -270,8 +295,7 @@ void MainWindow::AZYPCB(QString pre, rpc& r)
         nfaBack.open(QIODevice::ReadOnly);
 
         if(nfaBack.exists()){
-            QString findAddr = nfaBack.readAll();
-            findAddr = readmeStandard(findAddr);
+            QString findAddr = readmeStandard(nfaBack);
             r.verifyNFAcreator(findAddr);
             if(rpc::assetConfirmed == true){
                 ui->backComboBox->insertItem(ui->backComboBox->count()+1, "AZYPCB"+add);
@@ -293,8 +317,7 @@ void MainWindow::AZYPCB(QString pre, rpc& r)
         nfaBack.open(QIODevice::ReadOnly);
 
         if(nfaBack.exists()){
-            QString findAddr = nfaBack.readAll();
-            findAddr = readmeStandard(findAddr);
+            QString findAddr = readmeStandard(nfaBack);
             r.verifyNFAcreator(findAddr);
             if(rpc::assetConfirmed == true){
                 ui->backComboBox->insertItem(ui->backComboBox->count()+1, "AZYPCB"+add);
@@ -314,8 +337,7 @@ void MainWindow::AZYPCB(QString pre, rpc& r)
     nfaBack.open(QIODevice::ReadOnly);
 
     if(nfaBack.exists()){
-        QString findAddr = nfaBack.readAll();
-        findAddr = readmeStandard(findAddr);
+        QString findAddr = readmeStandard(nfaBack);
         r.verifyNFAcreator(findAddr);
         if(rpc::assetConfirmed == true){
             ui->deckComboBox->insertItem(ui->backComboBox->count()+1, "AZYPCB"+add);
@@ -344,8 +366,7 @@ void MainWindow::SIXPC(QString pre, rpc& r)
         nfaDeck.open(QIODevice::ReadOnly);
 
         if(nfaDeck.exists()){
-            QString findAddr = nfaDeck.readAll();
-            findAddr = readmeStandard(findAddr);
+            QString findAddr = readmeStandard(nfaDeck);
             r.verifyNFAcreator(findAddr);
             if(rpc::assetConfirmed == true){
                 ui->deckComboBox->insertItem(ui->deckComboBox->count()+1, "SIXPC"+add);
@@ -368,8 +389,7 @@ void MainWindow::SIXPC(QString pre, rpc& r)
         nfaDeck.open(QIODevice::ReadOnly);
 
         if(nfaDeck.exists()){
-            QString findAddr = nfaDeck.readAll();
-            findAddr = readmeStandard(findAddr);
+            QString findAddr = readmeStandard(nfaDeck);
             r.verifyNFAcreator(findAddr);
             if(rpc::assetConfirmed == true){
                 ui->deckComboBox->insertItem(ui->deckComboBox->count()+1, "SIXPC"+add);
@@ -392,8 +412,7 @@ void MainWindow::SIXPC(QString pre, rpc& r)
         nfaDeck.open(QIODevice::ReadOnly);
 
         if(nfaDeck.exists()){
-            QString findAddr = nfaDeck.readAll();
-            findAddr = readmeStandard(findAddr);
+            QString findAddr = readmeStandard(nfaDeck);
             r.verifyNFAcreator(findAddr);
             if(rpc::assetConfirmed == true){
                 ui->deckComboBox->insertItem(ui->deckComboBox->count()+1, "SIXPC"+add);
@@ -414,8 +433,7 @@ void MainWindow::SIXPC(QString pre, rpc& r)
     nfaDeck.open(QIODevice::ReadOnly);
 
     if(nfaDeck.exists()){
-        QString findAddr = nfaDeck.readAll();
-        findAddr = readmeStandard(findAddr);
+        QString findAddr = readmeStandard(nfaDeck);
         r.verifyNFAcreator(findAddr);
         if(rpc::assetConfirmed == true){
             ui->deckComboBox->insertItem(ui->deckComboBox->count()+1, "SIXPC"+add);
@@ -445,8 +463,7 @@ void MainWindow::SIXPCB(QString pre, rpc& r)
         nfaBack.open(QIODevice::ReadOnly);
 
         if(nfaBack.exists()){
-            QString findAddr = nfaBack.readAll();
-            findAddr = readmeStandard(findAddr);
+            QString findAddr = readmeStandard(nfaBack);
             r.verifyNFAcreator(findAddr);
             if(rpc::assetConfirmed == true){
                 ui->backComboBox->insertItem(ui->backComboBox->count()+1, "SIXPCB"+add);
@@ -468,8 +485,7 @@ void MainWindow::SIXPCB(QString pre, rpc& r)
         nfaBack.open(QIODevice::ReadOnly);
 
         if(nfaBack.exists()){
-            QString findAddr = nfaBack.readAll();
-            findAddr = readmeStandard(findAddr);
+            QString findAddr = readmeStandard(nfaBack);
             r.verifyNFAcreator(findAddr);
             if(rpc::assetConfirmed == true){
                 ui->backComboBox->insertItem(ui->backComboBox->count()+1, "SIXPCB"+add);
@@ -491,8 +507,7 @@ void MainWindow::SIXPCB(QString pre, rpc& r)
         nfaBack.open(QIODevice::ReadOnly);
 
         if(nfaBack.exists()){
-            QString findAddr = nfaBack.readAll();
-            findAddr = readmeStandard(findAddr);
+            QString findAddr = readmeStandard(nfaBack);
             r.verifyNFAcreator(findAddr);
             if(rpc::assetConfirmed == true){
                 ui->backComboBox->insertItem(ui->backComboBox->count()+1, "SIXPCB"+add);
@@ -512,8 +527,7 @@ void MainWindow::SIXPCB(QString pre, rpc& r)
     nfaBack.open(QIODevice::ReadOnly);
 
     if(nfaBack.exists()){
-        QString findAddr = nfaBack.readAll();
-        findAddr = readmeStandard(findAddr);
+        QString findAddr = readmeStandard(nfaBack);
         r.verifyNFAcreator(findAddr);
         if(rpc::assetConfirmed == true){
             ui->deckComboBox->insertItem(ui->backComboBox->count()+1, "SIXPCB"+add);

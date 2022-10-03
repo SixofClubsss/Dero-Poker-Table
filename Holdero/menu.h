@@ -59,6 +59,7 @@ public:
     static bool dReams;
     static bool autoPayout;
     static bool sharedDeck;
+    QString readmeStandard(QFile &);
     void AZYDS(QString, rpc&);
     void setFonts(QString);
     void checkThemes();

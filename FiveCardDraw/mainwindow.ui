@@ -2694,7 +2694,6 @@ p, li { white-space: pre-wrap; }
    <zorder>txLogTextBrowser</zorder>
    <zorder>payoutPushButton</zorder>
    <zorder>groupBox_2</zorder>
-   <zorder>anteIsDSB</zorder>
    <zorder>dsbDealer</zorder>
    <zorder>turnReadOut</zorder>
    <zorder>groupBox</zorder>
@@ -2704,6 +2703,7 @@ p, li { white-space: pre-wrap; }
    <zorder>balanceDoubleSpinBox</zorder>
    <zorder>horizontalSpacer_5</zorder>
    <zorder>dsbBlockHeight</zorder>
+   <zorder>anteIsDSB</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
