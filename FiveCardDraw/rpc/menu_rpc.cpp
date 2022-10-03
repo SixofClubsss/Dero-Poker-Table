@@ -103,6 +103,9 @@ int Menu::checkDaemon()       /// Check connection to daemon
           ui->menuTextBrowser->setText("Daemon Connected");     /// Connected message
           ui->findTablesButton->setEnabled(true);
           Menu::daemonConnected = true;
+          if(ui->daemonRPCinput->currentIndex() == 3){
+            Menu::customDaemonAddr = ui->daemonRPCinput->currentText();
+          }
       }else {
           ui->daemonConnectedBox->setChecked(false);   
           ui->menuTextBrowser->setText("Daemon Not Connected"); /// Not connected

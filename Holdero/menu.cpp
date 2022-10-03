@@ -34,6 +34,8 @@ QString Menu::passInfo;
 QString Menu::contractAddress;
 QString Menu::listingAddress;
 QString Menu::donationAddress;
+QString Menu::customDaemonAddr;
+int Menu::daemonIndex;
 int Menu::themeIndex;
 bool Menu::loading;
 bool Menu::mainnet;
@@ -75,6 +77,8 @@ Menu::Menu(QWidget *parent) :
     ui->ownerGroupBox->setEnabled(false);
     ui->sharedRButton->setEnabled(false);
     ui->walletRPCinput->setText(rpc::playerAddress);
+    ui->daemonRPCinput->setItemText(3, Menu::customDaemonAddr);
+    ui->daemonRPCinput->setCurrentIndex(Menu::daemonIndex);
     ui->contractLineEdit->setText(Menu::contractAddress);
     for (int i = 0; i < 9; i++) {
         ui->walletRPCinput->backspace();
@@ -500,4 +504,9 @@ void Menu::on_themeComboBox_currentTextChanged(const QString &arg1)
         connect(tImgCtrl, SIGNAL (downloaded()), this, SLOT (loadThemeImage()));
     }
 
+}
+
+void Menu::on_daemonRPCinput_currentIndexChanged(int index)
+{
+    Menu::daemonIndex = index;
 }

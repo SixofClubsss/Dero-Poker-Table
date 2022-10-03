@@ -50,6 +50,8 @@ public:
     static QString contractAddress;
     static QString listingAddress;
     static QString donationAddress;
+    static QString customDaemonAddr;
+    static int daemonIndex;
     static int themeIndex;
     static bool loading;
     static bool themeChanged;
@@ -182,6 +184,8 @@ private slots:
     void loadSharedImage50();
     void loadSharedImage51();
     void loadSharedImage52();
+
+    void on_daemonRPCinput_currentIndexChanged(int index);
 
 private:
     Ui::Menu *ui;
