@@ -175,7 +175,6 @@ void Menu::setFonts(QString os)
     if(os == "macos" || os == "osx" || os == "darwin"){
         mcR = 23;
         ubR = 13;
-        ui->themeComboBox->setEnabled(false);
     }else {
         mcR = 17;
         ubR = 10;
