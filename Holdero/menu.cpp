@@ -185,7 +185,7 @@ void Menu::setFonts(QString os)
     QFont macondoRegular(fontFamily);
     macondoRegular.setPointSize(mcR);
     ui->menuTextBrowser->setFont(macondoRegular);
-    ui->menuTextBrowser->setText("Welcome to dReam Tables Holdero Poker\nTable v1.1.0");
+    ui->menuTextBrowser->setText("Welcome to dReam Tables Holdero Poker\nTable v1.1.1");
 
     int fontId2 = QFontDatabase::addApplicationFont(":/fonts/Ubuntu-R.ttf");
     QString fontFamily2 = QFontDatabase::applicationFontFamilies(fontId2).at(0);
