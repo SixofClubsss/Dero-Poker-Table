@@ -15,7 +15,7 @@ Written in C++/Qt. Used Qt 5.12.8 to build the Ui. These apps are for playing dR
   - Automated or manual payouts. 
   - In game [Non-Fungible-Assets](https://github.com/civilware/artificer-nfa-standard) for customization.
   
-![FiveCardTableMain](https://user-images.githubusercontent.com/84689659/185278305-71c68b5a-1326-4c8d-afc0-24d083a61342.png)
+![image](https://user-images.githubusercontent.com/84689659/194955902-4235c8aa-052d-47ff-81ea-d91901185188.png)
 
 ---
 - **Holdero** (*Texas Hold'em*)
@@ -27,7 +27,7 @@ Written in C++/Qt. Used Qt 5.12.8 to build the Ui. These apps are for playing dR
   - Automated or manual payouts.
   - In game [Non-Fungible-Assets](https://github.com/civilware/artificer-nfa-standard) for customization.
   
-![HolderoMain](https://user-images.githubusercontent.com/84689659/185277836-a32fccb5-e737-402b-b87b-f8a2378fcfd3.png)
+![image](https://user-images.githubusercontent.com/84689659/194955958-836f29b4-c0e2-48b2-aff1-6affd120fd6a.png)
 
 More updates to come...
 
